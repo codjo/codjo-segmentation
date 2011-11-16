@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cases PUBLIC "-//AGF, Inc.//DTD cases 2.0//EN" "cases.dtd">
+
+<cases>
+    <case id="ImportStandard">
+
+        <input>
+            <table name="PM_CLASSIFICATION">
+                <row id="nonModifiable">
+                    <field name="CLASSIFICATION_ID" value="1"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe event"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+            </table>
+        </input>
+
+        <output>
+            <table name="PM_CLASSIFICATION">
+                <copy row="nonModifiable"/>
+                <row id="ligneImportee1">
+                    <field name="CLASSIFICATION_ID" value="2"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe event 2"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+                <row id="ligneImportee2">
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe event 3"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+            </table>
+
+            <table name="PM_SEGMENTATION" orderClause="SEGMENTATION_ID">
+                <row>
+                    <field name="SEGMENTATION_ID" value="1"/>
+                    <field name="SEGMENTATION_NAME" value="Axe event"/>
+                    <field name="FAMILY" value="EVENT"/>
+                </row>
+                <row>
+                    <field name="SEGMENTATION_ID" value="2"/>
+                    <field name="SEGMENTATION_NAME" value="Axe event 2"/>
+                    <field name="FAMILY" value="EVENT"/>
+                </row>
+                <row>
+                    <field name="SEGMENTATION_ID" value="3"/>
+                    <field name="SEGMENTATION_NAME" value="Axe event 3"/>
+                    <field name="FAMILY" value="EVENT"/>
+                </row>
+            </table>
+        </output>
+    </case>
+
+    <case id="ImportCustomise" inheritId="ImportStandard">
+        <input>
+            <table name="PM_CLASSIFICATION">
+                <replace row="nonModifiable">
+                    <field name="CUSTOM_FIELD" value="Youpi"/>
+                </replace>
+            </table>
+        </input>
+
+        <output>
+            <table name="PM_CLASSIFICATION">
+                <replace row="ligneImportee1">
+                     <field name="CUSTOM_FIELD" value="Custom1"/>
+                 </replace>
+                <replace row="ligneImportee2">
+                     <field name="CUSTOM_FIELD" value="Custom2"/>
+                 </replace>
+              </table>
+
+        </output>
+    </case>
+
+</cases>

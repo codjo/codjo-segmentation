@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<release-test name="WizardExportAxeTest"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="http://test-release.xsd">
+    <description>Export de poches.
+        On teste aussi qu'il est possible de customiser l'Export en simulant l'ajout d'un champ dans PM_CLASSIFICATION_STRUCTURE.
+    </description>
+
+    <tokio-load id="tokio.load" file="WizardExportPocheTest.tokio"/>
+
+    <security-model user="${testEnvironment.user}" roles="admin"/>
+
+    <call-method file="WizardExportPocheTest.xmf">
+        <parameter name="case" value="ExportStandard"/>
+        <parameter name="file" value="segmentationPocheExport"/>
+    </call-method>
+
+    <call-method file="WizardExportPocheTest.xmf">
+        <parameter name="case" value="ExportCustomise"/>
+        <parameter name="file" value="segmentationPocheExportCustom"/>
+    </call-method>
+
+</release-test>

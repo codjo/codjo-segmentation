@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<select-config>
+    <where-clause>AP_PORTFOLIO.PHOTO='$photo$'</where-clause>
+
+    <join-key left="AP_ROOT" type="inner" right="AP_A">
+        <part left="COL_R1" operator="=" right="COL_A1"/>
+    </join-key>
+
+    <join-key left="AP_A" type="left" right="AP_B">
+        <part left="COL_A1" operator="=" right="COL_B1"/>
+        <part left="COL_A2" operator="&lt;" right="COL_B2"/>
+    </join-key>
+
+    <join-key left="AP_C" type="right" right="AP_ROOT">
+        <part left="COL_C1" operator="&gt;=" right="COL_R1"/>
+    </join-key>
+</select-config>

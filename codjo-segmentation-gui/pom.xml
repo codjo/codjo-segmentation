@@ -1,0 +1,133 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <!-- POM's layout - http://www.javaworld.com/javaworld/jw-05-2006/jw-0529-maven.html -->
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--
+     | POM Relationships
+     -->
+
+    <artifactId>codjo-segmentation-gui</artifactId>
+    <parent>
+        <groupId>net.codjo.segmentation</groupId>
+        <artifactId>codjo-segmentation</artifactId>
+        <version>1.73-SNAPSHOT</version>
+    </parent>
+    <dependencies>
+        <dependency>
+            <groupId>net.codjo.segmentation</groupId>
+            <artifactId>codjo-segmentation-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.codjo.mad</groupId>
+            <artifactId>codjo-mad-gui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.codjo.mad</groupId>
+            <artifactId>codjo-mad-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.codjo.workflow</groupId>
+            <artifactId>codjo-workflow-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.codjo.workflow</groupId>
+            <artifactId>codjo-workflow-gui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jade</groupId>
+            <artifactId>jade-tools</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.codjo.expression</groupId>
+            <artifactId>codjo-expression</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>regexp</groupId>
+            <artifactId>regexp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.codjo.variable</groupId>
+            <artifactId>codjo-variable</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.intellij</groupId>
+            <artifactId>forms_rt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.codjo.util</groupId>
+            <artifactId>codjo-util</artifactId>
+        </dependency>
+        <!--Test-->
+        <dependency>
+            <groupId>net.codjo.security</groupId>
+            <artifactId>codjo-security-common</artifactId>
+            <scope>test</scope>
+            <classifier>tests</classifier>
+        </dependency>
+        <dependency>
+            <groupId>net.codjo.mad</groupId>
+            <artifactId>codjo-mad-client</artifactId>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.codjo.mad</groupId>
+            <artifactId>codjo-mad-gui</artifactId>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.codjo.test</groupId>
+            <artifactId>codjo-test-common</artifactId>
+            <scope>test</scope>
+        </dependency>
+<!-- desactive lors de la migration vers codjo        
+        <dependency>
+            <groupId>net.codjo.tools</groupId>
+            <artifactId>codjo-event-recorder</artifactId>
+            <scope>test</scope>
+        </dependency>
+-->        
+        <dependency>
+            <groupId>net.codjo.plugin</groupId>
+            <artifactId>codjo-plugin-server</artifactId>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.codjo.agent</groupId>
+            <artifactId>codjo-agent</artifactId>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>uispec4j</groupId>
+            <artifactId>uispec4j</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!--
+    | Project Information
+    -->
+
+    <name>Lib &gt; Segmentation &gt; GUI</name>
+
+    <!--
+    | Build Settings
+    -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>ideauidesigner-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

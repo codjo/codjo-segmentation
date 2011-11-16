@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<release-test name="SegmentationDistinctValuesTest">
+
+    <tokio-load id="tokio.load" file="SegmentationDistinctValuesTest.tokio"/>
+    <tokio-set-db id="tokio.setdb" refId="tokio.load" scenario="SegmentationDistinctValuesTest"/>
+
+    <security-model user="${testEnvironment.user}" roles="admin"/>
+
+    <gui-test>
+
+        <group name="Modification d'un axe d'analyse">
+            <click menu="Segmentation:Axes d&apos;analyse"/>
+            <assertFrame title="Axes d'analyse"/>
+            <assertListSize name="ClassificationWindow" expected="1"/>
+            <select name="ClassificationWindow" row="0"/>
+            <click name="ClassificationWindow.EditAction"/>
+
+            <assertFrame title="Axes d'analyse"/>
+            <assertValue name="classificationName" expected="Répartition par fourchettes de coûts"/>
+            <assertValue name="classificationType" expected="ACTION"/>
+
+            <assertTree name="axisTree"
+                        path="Répartition par fourchettes de coûts:MOINS DE 100 KEUR" exists="true"/>
+
+            <select name="axisTree"
+                    path="Répartition par fourchettes de coûts:MOINS DE 100 KEUR"/>
+
+            <click name="editExpressionButton"/>
+            <assertFrame title="Paramétrage des expressions"/>
+
+            <selectTab name="editor.helperTabs" tabIndex="2"/>
+
+            <select name="editor.columnList" label="ma clé"/>
+            <assertListSize name="editor.valueList" expected="0"/>
+
+            <clickRight name="editor.columnList" row="2">
+                <assertListSize expected="1"/>
+                <assertList row="0" expected="Afficher les valeurs"/>
+                <select label="Afficher les valeurs"/>
+            </clickRight>
+
+            <assertProgressDisplay name="waitingPanel"/>
+
+            <assertListSize name="editor.valueList" expected="3"/>
+            <assertList name="editor.valueList" row="0" expected="val4"/>
+            <assertList name="editor.valueList" row="1" expected="val5"/>
+            <assertList name="editor.valueList" row="2" expected="val6"/>
+            <select name="editor.columnList" label="mon num"/>
+            <assertListSize name="editor.valueList" expected="0"/>
+
+        </group>
+
+    </gui-test>
+
+
+</release-test>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<story id="SegmentationCheckBeforeValidation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="file:C:/dev/platform/cache/xsd/codjo-segmentation-story.xsd">
+    <input>
+        <PM_SEGMENTATION/>
+        <PM_EXPRESSION/>
+
+        <PM_CLASSIFICATION>
+            <row id="axe3">
+                <CLASSIFICATION_ID value="3"/>
+                <CLASSIFICATION_NAME value="Répartition par fourchettes de coûts"/>
+                <CLASSIFICATION_TYPE value="ACTION"/>
+            </row>
+        </PM_CLASSIFICATION>
+        <PM_CLASSIFICATION_STRUCTURE>
+            <row id="ENTRE_100_ET_500KEUR-Axe3">
+                <CLASSIFICATION_ID value="3"/>
+                <SLEEVE_ROW_ID value="0001"/>
+                <SLEEVE_CODE value="01-1"/>
+                <SLEEVE_DUSTBIN value="false"/>
+                <SLEEVE_ID value="31"/>
+                <SLEEVE_NAME value="ENTRE 100 ET 500 KEUR"/>
+                <FORMULA value=" "/>
+                <TERMINAL_ELEMENT value="false"/>
+            </row>
+            <row id="ENTRE_200_ET_500KEUR-Axe3">
+                <CLASSIFICATION_ID value="3"/>
+                <SLEEVE_ROW_ID value="1234567891234"/>
+                <SLEEVE_CODE value="02-1.1"/>
+                <SLEEVE_DUSTBIN value="false"/>
+                <SLEEVE_ID value="32"/>
+                <SLEEVE_NAME value="ENTRE 200 ET 500 KEUR"/>
+                <FORMULA
+                      value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE &#062;&#061; 200000 &amp;&amp; SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE &#060;&#061; 500000"/>
+                <TERMINAL_ELEMENT value="true"/>
+            </row>
+            <row id="ENTRE_100_ET_200KEUR-Axe3">
+                <CLASSIFICATION_ID value="3"/>
+                <SLEEVE_ROW_ID value="0012"/>
+                <SLEEVE_CODE value="02-1.2"/>
+                <SLEEVE_DUSTBIN value="false"/>
+                <SLEEVE_ID value="33"/>
+                <SLEEVE_NAME value="ENTRE 100 ET 200 KEUR"/>
+                <FORMULA
+                      value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE &#062;&#061; 100000 &amp;&amp; SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE &#060; 200000"/>
+                <TERMINAL_ELEMENT value="true"/>
+            </row>
+            <row id="MOINS_DE_100KEUR-Axe3">
+                <CLASSIFICATION_ID value="3"/>
+                <SLEEVE_ROW_ID value="1234567891235"/>
+                <SLEEVE_CODE value="01-2"/>
+                <SLEEVE_DUSTBIN value="false"/>
+                <SLEEVE_ID value="34"/>
+                <SLEEVE_NAME value="MOINS DE 100 KEUR"/>
+                <FORMULA value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE &#060; 100000"/>
+                <TERMINAL_ELEMENT value="true"/>
+            </row>
+            <row id="fourre-tout-Axe3">
+                <CLASSIFICATION_ID value="3"/>
+                <SLEEVE_ROW_ID value="0003"/>
+                <SLEEVE_CODE value="01-3"/>
+                <SLEEVE_DUSTBIN value="true"/>
+                <SLEEVE_ID value="35"/>
+                <SLEEVE_NAME value="LE RESTE"/>
+                <FORMULA value=" "/>
+                <TERMINAL_ELEMENT value="true"/>
+            </row>
+        </PM_CLASSIFICATION_STRUCTURE>
+    </input>
+    <output>
+        <PM_CLASSIFICATION_STRUCTURE orderClause="SLEEVE_ID">
+            <copy row="ENTRE_100_ET_500KEUR-Axe3"/>
+            <copy row="ENTRE_200_ET_500KEUR-Axe3"/>
+            <copy row="ENTRE_100_ET_200KEUR-Axe3"/>
+            <copy row="MOINS_DE_100KEUR-Axe3"/>
+            <copy row="fourre-tout-Axe3"/>
+
+            <row>
+                <CLASSIFICATION_ID value="4"/>
+                <SLEEVE_CODE value="01-1"/>
+                <SLEEVE_DUSTBIN value="true"/>
+                <SLEEVE_NAME value="AUTRE"/>
+                <SLEEVE_ID value="36"/>
+                <FORMULA value=" "/>
+                <TERMINAL_ELEMENT value="true"/>
+            </row>
+            <row>
+                <CLASSIFICATION_ID value="4"/>
+                <SLEEVE_CODE value="01-2"/>
+                <SLEEVE_DUSTBIN value="false"/>
+                <SLEEVE_NAME value="ENTRE 200 ET 500 KEUR"/>
+                <SLEEVE_ID value="37"/>
+                <FORMULA value="VAR_myVariable==&quot;une valeur&quot; &amp;&amp; SRC_SEG_INPUT_ACTION$NUM==10"/>
+                <TERMINAL_ELEMENT value="true"/>
+            </row>
+        </PM_CLASSIFICATION_STRUCTURE>
+    </output>
+</story>

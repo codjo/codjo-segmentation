@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<release-test name="SegmentationSettingsCopyTest">
+
+    <tokio-load id="tokio.load" file="SegmentationSettingsCopyTest.tokio"/>
+    <tokio-set-db id="tokio.setdb" refId="tokio.load" scenario="SegmentationSettingsCopyTest"/>
+
+    <security-model user="${testEnvironment.user}" roles="admin"/>
+
+    <gui-test>
+        <group name="Ouverture de la liste des axes d'analyse">
+            <click menu="Segmentation:Axes d&apos;analyse"/>
+            <assertFrame title="Axes d'analyse"/>
+            <assertListSize name="ClassificationWindow" expected="2"/>
+            <assertTable name="ClassificationWindow" expected="Répartition par fourchettes de coûts"
+                         row="0" column="Nom"/>
+            <assertTable name="ClassificationWindow" expected="ACTION" row="0" column="Famille"/>
+            <assertTable name="ClassificationWindow" expected="Répartition par manager" row="1"
+                         column="Nom"/>
+        </group>
+
+        <group name="Duplication d'un axe d'analyse">
+            <select name="ClassificationWindow" row="0"/>
+            <click name="ClassificationWindow.CopyAction"/>
+        </group>
+
+        <group name="Vérification de la liste des axes d'analyse">
+            <assertListSize name="ClassificationWindow" expected="3"/>
+            <assertTable name="ClassificationWindow" expected="Répartition par fourchettes de coûts" row="0" column="Nom"/>
+            <assertTable name="ClassificationWindow" expected="ACTION" row="0" column="Famille"/>
+
+            <assertTable name="ClassificationWindow" expected="Répartition par manager" row="1" column="Nom"/>
+
+            <assertTable name="ClassificationWindow" expected="Copie (5) de Répartition par fourchettes de coûts" row="2" column="Nom"/>
+            <assertTable name="ClassificationWindow" expected="ACTION" row="2" column="Famille"/>
+
+            <select name="ClassificationWindow" row="2"/>
+            <click name="ClassificationWindow.EditAction"/>
+
+            <assertFrame title="Axes d'analyse"/>
+            <assertValue name="classificationName" expected="Copie (5) de Répartition par fourchettes de coûts"/>
+            <assertValue name="classificationType" expected="ACTION"/>
+
+            <assertTree name="axisTree" path="Copie (5) de Répartition par fourchettes de coûts" exists="true"/>
+            <assertTree name="axisTree" path="Copie (5) de Répartition par fourchettes de coûts:ENTRE 100 ET 500 KEUR" exists="true"/>
+            <assertTree name="axisTree" path="Copie (5) de Répartition par fourchettes de coûts:ENTRE 100 ET 500 KEUR:ENTRE 200 ET 500 KEUR" exists="true"/>
+            <assertTree name="axisTree" path="Copie (5) de Répartition par fourchettes de coûts:ENTRE 100 ET 500 KEUR:ENTRE 100 ET 200 KEUR" exists="true"/>
+            <assertTree name="axisTree" path="Copie (5) de Répartition par fourchettes de coûts:MOINS DE 100 KEUR" exists="true"/>
+            <assertTree name="axisTree" path="Copie (5) de Répartition par fourchettes de coûts:LE RESTE" exists="true"/>
+
+            <click name="ButtonPanelGui.cancelButton"/>
+            <assertFrame title="Axe d'analyse" closed="true"/>
+        </group>
+    </gui-test>
+
+    <!-- Vérification des données résultat en base -->
+    <tokio-assert refId="tokio.setdb" allTables="true"/>
+
+</release-test>

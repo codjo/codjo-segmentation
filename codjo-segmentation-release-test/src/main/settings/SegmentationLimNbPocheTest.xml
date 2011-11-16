@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<release-test name="SegmentationLimNbPocheTest">
+
+    <security-model user="${testEnvironment.user}" roles="admin"/>
+
+    <gui-test>
+
+        <group name="Vérification que l'on ne peut pas créer plus de 4 niveaux d'un axe d'analyse">
+            <click menu="Segmentation:Axes d&apos;analyse"/>
+            <assertFrame title="Axes d'analyse"/>
+
+            <click name="ClassificationWindow.AddAction"/>
+            <setValue name="classificationName" value="Répartition par semestre"/>
+            <setValue name="classificationType" value="EVENT"/>
+            <select name="axisTree" path="Répartition par semestre"/>
+            <click name="addFolderNode"/>
+            <select name="axisTree" path="Répartition par semestre:NOUVEAU NOEUD"/>
+            <setValue name="sleeveName" value="Noeud1" mode="keyboard"/>
+            <assertEnabled name="addSleeveNode" expected="true"/>
+            <assertEnabled name="addFolderNode" expected="true"/>
+            <assertEnabled name="deleteNode" expected="true"/>
+            <click name="addSleeveNode"/>
+            <select name="axisTree"
+                    path="Répartition par semestre:Noeud1:NOUVELLE POCHE"/>
+            <setValue name="sleeveName" value="Noeud1poche" mode="keyboard"/>
+            <assertEnabled name="addSleeveNode" expected="false"/>
+            <assertEnabled name="addFolderNode" expected="false"/>
+            <assertEnabled name="deleteNode" expected="true"/>
+
+
+           <select name="axisTree" path="Répartition par semestre:Noeud1"/>
+            <click name="addFolderNode"/>
+            <select name="axisTree" path="Répartition par semestre:Noeud1:NOUVEAU NOEUD"/>
+            <setValue name="sleeveName" value="Noeud2" mode="keyboard"/>
+            <assertEnabled name="addSleeveNode" expected="true"/>
+            <assertEnabled name="addFolderNode" expected="true"/>
+            <assertEnabled name="deleteNode" expected="true"/>
+            <click name="addSleeveNode"/>
+            <select name="axisTree"
+                    path="Répartition par semestre:Noeud1:Noeud2:NOUVELLE POCHE"/>
+            <setValue name="sleeveName" value="Noeud2poche" mode="keyboard"/>
+            <assertEnabled name="addSleeveNode" expected="false"/>
+            <assertEnabled name="addFolderNode" expected="false"/>
+            <assertEnabled name="deleteNode" expected="true"/>
+
+            <select name="axisTree" path="Répartition par semestre:Noeud1:Noeud2"/>
+            <click name="addFolderNode"/>
+            <select name="axisTree" path="Répartition par semestre:Noeud1:Noeud2:NOUVEAU NOEUD"/>
+            <setValue name="sleeveName" value="Noeud3" mode="keyboard"/>
+            <assertEnabled name="addSleeveNode" expected="true"/>
+            <assertEnabled name="addFolderNode" expected="true"/>
+            <assertEnabled name="deleteNode" expected="true"/>
+            <click name="addSleeveNode"/>
+            <select name="axisTree"
+                    path="Répartition par semestre:Noeud1:Noeud2:Noeud3:NOUVELLE POCHE"/>
+            <setValue name="sleeveName" value="Noeud3poche" mode="keyboard"/>
+            <assertEnabled name="addSleeveNode" expected="false"/>
+            <assertEnabled name="addFolderNode" expected="false"/>
+            <assertEnabled name="deleteNode" expected="true"/>
+
+
+            <select name="axisTree" path="Répartition par semestre:Noeud1:Noeud2:Noeud3"/>
+            <click name="addFolderNode"/>
+            <select name="axisTree" path="Répartition par semestre:Noeud1:Noeud2:Noeud3:NOUVEAU NOEUD"/>
+            <setValue name="sleeveName" value="Noeud4" mode="keyboard"/>
+            <assertEnabled name="addSleeveNode" expected="true"/>
+            <assertEnabled name="addFolderNode" expected="false"/>
+            <assertEnabled name="deleteNode" expected="true"/>
+            <click name="addSleeveNode"/>
+            <select name="axisTree"
+                    path="Répartition par semestre:Noeud1:Noeud2:Noeud3:Noeud4:NOUVELLE POCHE"/>
+            <setValue name="sleeveName" value="Noeud4poche" mode="keyboard"/>
+            <assertEnabled name="addSleeveNode" expected="false"/>
+            <assertEnabled name="addFolderNode" expected="false"/>
+            <assertEnabled name="deleteNode" expected="true"/>
+
+        </group>
+
+    </gui-test>
+
+</release-test>

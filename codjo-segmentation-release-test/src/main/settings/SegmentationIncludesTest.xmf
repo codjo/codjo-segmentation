@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<method
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="test-release.xsd">
+    <parameters>
+        <parameter name="case" required="true" comment="case"/>
+        <parameter name="assertIncludes" required="true" comment="bloc d'instructions differentes"/>
+    </parameters>
+
+    <body>
+        <tokio-set-db id="tokio.setdb_@case@" refId="tokio.load" caseId="@case@"/>
+
+        <gui-test>
+            <group name="Test Commun">
+                <click menu="Segmentation:Axes d&apos;analyse"/>
+                <assertFrame title="Axes d'analyse"/>
+                <assertListSize name="ClassificationWindow" expected="3"/>
+                <group name="Ajout d'une inclusion">
+
+                    <click name="ClassificationWindow" row="1" count="2"/>
+
+                    <select name="axisTree" path="AXE2:AXE2-POCHE1"/>
+                    <click name="editExpressionButton"/>
+                    <assertFrame title="Paramétrage des expressions"/>
+
+                    <selectTab name="editor.helperTabs" tabIndex="3"/>
+
+                    <assertTree name="editor.sleeveTree" path="Axes:AXE2" exists="false"/>
+                    <assertTree name="editor.sleeveTree" path="Axes:AXE1:AXE1-POCHE1" exists="true"/>
+                    <assertTree name="editor.sleeveTree" path="Axes:AXE1:AXE1-POCHE2" exists="true"/>
+                    <assertTree name="editor.sleeveTree" path="Axes:AXE3:AXE3-POCHE1" exists="true"/>
+                    <assertTree name="editor.sleeveTree" path="Axes:AXE3:AXE3-POCHE2" exists="true"/>
+
+                    <setValue name="editor.expression" value=""/>
+                    <select name="editor.sleeveTree" path="Axes:AXE1:AXE1-POCHE1"/>
+                    <click name="editor.sleeveTree" count="2"/>
+
+                    <assertValue name="editor.expression" expected=" AXE1$AXE1-POCHE1 "/>
+                    <click name="editor.okButton"/>
+                    <assertFrame title="Paramétrage des expressions" closed="true"/>
+
+                    <select name="axisTree" path="AXE2:AXE2-POCHE2"/>
+                    <click name="editExpressionButton"/>
+
+                    <selectTab name="editor.helperTabs" tabIndex="1"/>
+                    <click name="editor.operationList" row="5" count="2"/>
+
+                    <selectTab name="editor.helperTabs" tabIndex="3"/>
+                    <select name="editor.sleeveTree" path="Axes:AXE1:AXE1-POCHE2"/>
+                    <click name="editor.sleeveTree" count="2"/>
+
+                    <click name="editor.okButton"/>
+                    
+                    <assertFrame title="Paramétrage des expressions" closed="true"/>
+
+
+                    
+                    <click name="ButtonPanelGui.okButton"/>
+                    <assertFrame title="Axe d'analyse" closed="true"/>
+
+
+                </group>
+
+                @assertIncludes@
+            </group>
+
+        </gui-test>
+
+        <tokio-assert refId="tokio.setdb_@case@" allTables="true"/>
+
+    </body>
+</method>

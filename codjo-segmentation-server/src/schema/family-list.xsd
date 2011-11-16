@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:annotation>
+        <xs:appinfo>Schema segmentation</xs:appinfo>
+        <xs:documentation xml:lang="fr">
+            Ce schéma définit le format des fichiers permettant de configurer le
+            composant codjo-segmentation.
+        </xs:documentation>
+    </xs:annotation>
+
+    <!-- *************************************************************************
+   |  type de base
+   ************************************************************************ -->
+    <xs:simpleType name="table_type">
+        <xs:restriction base="xs:string">
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="class_type">
+        <xs:restriction base="xs:string">
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="string_with_variable">
+        <xs:restriction base="xs:string">
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="requetor_type">
+        <xs:restriction base="xs:string">
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- *************************************************************************
+   |  //family-list
+   ************************************************************************ -->
+    <xs:element name="family-list">
+        <xs:annotation>
+            <xs:documentation>Liste des préférences pour chaque famille.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence minOccurs="1" maxOccurs="unbounded">
+                <xs:element ref="family"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- *************************************************************************
+   |  //family-list/family
+   ************************************************************************ -->
+    <xs:element name="family">
+        <xs:annotation>
+            <xs:documentation>Déscription d'une famille.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="arguments"/>
+                <xs:element ref="functions"/>
+                <xs:element ref="delete-config"/>
+                <xs:element ref="select-config"/>
+                <xs:element ref="result-config"/>
+                <xs:element ref="gui" minOccurs="0"/>
+                <xs:element ref="select-filter" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:ID" use="required">
+                <xs:annotation>
+                    <xs:documentation>Identifiant de la famille.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="root" type="table_type" use="required">
+                <xs:annotation>
+                    <xs:documentation>Table source appartenant obligatoirement aux select.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="destination" type="table_type" use="required">
+                <xs:annotation>
+                    <xs:documentation>Table destination des résultats.</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- *************************************************************************
+   |  //family-list/family/arguments
+   ************************************************************************ -->
+    <xs:element name="arguments">
+        <xs:annotation>
+            <xs:documentation>
+                Liste des arguments nécessaire pour lancer un traitement de cette famille.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="name" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>Nom de l'argument.</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- *************************************************************************
+   |  //family-list/family/functions
+   ************************************************************************ -->
+    <xs:element name="functions">
+        <xs:annotation>
+            <xs:documentation>
+                Liste des fonctions holder utilisable dans un traitement de cette famille.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="holder" type="class_type">
+                    <xs:annotation>
+                        <xs:documentation>Classe du holder</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- *************************************************************************
+   |  //family-list/family/delete-config
+   ************************************************************************ -->
+    <xs:element name="delete-config">
+        <xs:annotation>
+            <xs:documentation>
+                Configuration du delete effectué avant le(s) traitement de cette famille.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="where-clause" type="string_with_variable" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Clause where du delete</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element ref="join-key" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- *************************************************************************
+   |  //family-list/family/select-config
+   ************************************************************************ -->
+    <xs:element name="select-config">
+        <xs:annotation>
+            <xs:documentation>
+                Configuration du select effectué pour récuperer les données du(des)
+                traitements de cette famille.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="where-clause" type="string_with_variable" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Clause where obligatoirement présente dans le select.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element ref="join-key" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- *************************************************************************
+   |  //family-list/family/result-config
+   ************************************************************************ -->
+    <xs:element name="result-config">
+        <xs:annotation>
+            <xs:documentation>
+                Configuration du select effectué pour récuperer les résultats
+                du(des) traitements de cette famille.
+            </xs:documentation>
+        </xs:annotation>
+
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="requetor" type="requetor_type" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="where-clause" type="string_with_variable" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Clause where obligatoirement présente dans le select pour les résultats.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element ref="join-key" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="column" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:attribute name="label" type="xs:string" use="required"/>
+                        <xs:attribute name="value" type="xs:string" use="required"/>
+                        <xs:attribute name="table" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="join-key">
+        <xs:annotation>
+            <xs:documentation>
+                Définition d'une jointure accessible pour la séléction des données.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="part" type="PartType" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="left" type="xs:string" use="required"/>
+            <xs:attribute name="type" type="JoinKeyTypeType" use="required"/>
+            <xs:attribute name="right" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="JoinKeyTypeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="inner"/>
+            <xs:enumeration value="left"/>
+            <xs:enumeration value="right"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="PartOperatorType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="="/>
+            <xs:enumeration value="!="/>
+            <xs:enumeration value="&lt;&gt;"/>
+            <xs:enumeration value="&lt;"/>
+            <xs:enumeration value="&gt;"/>
+            <xs:enumeration value="&lt;="/>
+            <xs:enumeration value="&gt;="/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="PartType">
+        <xs:attribute name="left" type="xs:string" use="required"/>
+        <xs:attribute name="operator" type="PartOperatorType" use="required"/>
+        <xs:attribute name="right" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <!-- *************************************************************************
+      |  //family-list/family/gui
+      ************************************************************************ -->
+    <xs:element name="gui">
+        <xs:annotation>
+            <xs:documentation>Paramétrage spécifique à l'ihm.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="variables" minOccurs="0"/>
+                <xs:element ref="filters" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="variables">
+        <xs:annotation>
+            <xs:documentation>
+                Liste des variables disponibles dans les expressions.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="variable">
+                    <xs:annotation>
+                        <xs:documentation>Description de la variable.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="label" type="xs:string" use="required"/>
+                        <xs:attribute name="comment" type="xs:string"/>
+                        <xs:attribute name="sqlType" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="filters">
+        <xs:annotation>
+            <xs:documentation>
+                Liste des filtres à l'affichage.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="filter">
+                    <xs:annotation>
+                        <xs:documentation>Description du filtre.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="table" type="xs:string" use="required"/>
+                        <xs:attribute name="column" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="select-filter">
+        <xs:annotation>
+            <xs:documentation>Description du filtre de lignes à exclure du calcul.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="class" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

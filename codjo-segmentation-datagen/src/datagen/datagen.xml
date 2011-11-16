@@ -1,0 +1,824 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<entities>
+    <entity name="net.codjo.segmentation.server.data.Segmentation" table="PM_SEGMENTATION">
+        <description>Une segmentation</description>
+        <feature>
+            <sql/>
+            <trigger-delete>
+                <cascade entity="net.codjo.segmentation.server.data.Expression">
+                    <key from="segmentationId" to="segmentationId"/>
+                </cascade>
+            </trigger-delete>
+            <sql-index>
+                <idx type="primary-key" name-prefix="X1_" clustered="false"/>
+            </sql-index>
+        </feature>
+
+        <primary-key key-generator="MAX">
+            <field name="segmentationId"/>
+        </primary-key>
+
+        <properties>
+            <field name="segmentationId" type="integer">
+                <description>Num&#233;ro de segmentation</description>
+                <sql required="true" type="integer"/>
+            </field>
+            <field name="segmentationName" type="string">
+                <description>Nom de la segmentation</description>
+                <sql precision="50" type="varchar" required="true"/>
+            </field>
+            <field name="family" type="string">
+                <description>Famille</description>
+                <sql precision="30" type="varchar" required="true"/>
+            </field>
+            <field name="comment" type="string">
+                <description>Commentaire</description>
+                <sql precision="255" type="varchar"/>
+            </field>
+        </properties>
+    </entity>
+
+    <entity name="net.codjo.segmentation.server.data.Expression" table="PM_EXPRESSION">
+        <description>Une expression</description>
+        <feature>
+            <sql/>
+            <sql-index>
+                <idx type="primary-key" name-prefix="X1_" clustered="false"/>
+            </sql-index>
+        </feature>
+
+        <primary-key key-generator="MAX">
+            <field name="expressionId"/>
+        </primary-key>
+
+        <properties>
+            <field name="expressionId" type="integer">
+                <description>Num&#233;ro de l'expression</description>
+                <sql required="true" type="integer"/>
+            </field>
+            <field name="segmentationId" type="integer">
+                <description>Num&#233;ro de segmentation</description>
+                <sql required="true" type="integer"/>
+            </field>
+            <field name="destinationField" type="string">
+                <description>Nom de la colonne destination</description>
+                <sql precision="100" type="varchar" required="true"/>
+            </field>
+            <field name="expression" type="string">
+                <description>Le code de l'expression</description>
+                <sql type="text" required="true"/>
+            </field>
+            <field name="priority" type="integer">
+                <description>Ordre de l'expression dans la segmentation</description>
+                <sql type="integer" required="true"/>
+            </field>
+            <field name="isVariable" type="boolean">
+                <description>Est-ce une variable</description>
+                <sql type="bit" required="true" default="0"/>
+            </field>
+            <field name="variableType" type="integer">
+                <description>Type SQL de la variable</description>
+                <sql type="integer"/>
+            </field>
+        </properties>
+    </entity>
+
+    <entity name="net.codjo.segmentation.server.data.Classification" table="PM_CLASSIFICATION">
+        <description>Axes de segmentation</description>
+
+        <feature>
+            <sql/>
+            <sql-constraint/>
+            <doc-structure/>
+            <sql-index>
+                <idx type="primary-key" name-prefix="X1_" clustered="true"/>
+            </sql-index>
+            <bean/>
+            <castor/>
+
+            <handler-update id="updateClassification"/>
+            <handler-select id="selectClassificationById" type="By_Primary-Key"/>
+            <handler-select id="selectAllClassification" type="All"/>
+            <handler-new id="newClassification"/>
+            <handler-delete id="deleteClassification"/>
+            <handler-sql id="selectAllFamily" return-pk="false">
+                <attributes>
+                    <name>familyId</name>
+                </attributes>
+                <query>
+                    select distinct CLASSIFICATION_TYPE from PM_CLASSIFICATION
+                </query>
+            </handler-sql>
+            <handler-sql id="selectAllClassificationByFamily">
+                <attributes>
+                    <name>classificationId</name>
+                    <name>classificationName</name>
+                    <name>classificationType</name>
+                </attributes>
+                <query>
+                    select CLASSIFICATION_ID, CLASSIFICATION_NAME, CLASSIFICATION_TYPE
+                    from PM_CLASSIFICATION
+                    where CLASSIFICATION_TYPE = ?
+                </query>
+                <arg type="string">classificationType</arg>
+            </handler-sql>
+
+            <trigger-delete>
+                <sql><![CDATA[
+                    declare        @ROW_COUNT int
+
+                    set rowcount 1
+                    while (@ROW_COUNT != 0)
+                    begin
+                        /*  Delete all children in "PM_CLASSIFICATION_STRUCTURE"  */
+                        delete PM_CLASSIFICATION_STRUCTURE
+                        from   PM_CLASSIFICATION_STRUCTURE t2, deleted t1
+                        where  t2.CLASSIFICATION_ID = t1.CLASSIFICATION_ID
+
+                        select @ROW_COUNT = @@rowcount
+                    end
+
+                    set rowcount 0
+
+                    /*  Delete all children in "PM_SEGMENTATION"  */
+                    delete PM_SEGMENTATION
+                    from   PM_SEGMENTATION t2, deleted t1
+                    where  t2.SEGMENTATION_ID = t1.CLASSIFICATION_ID
+                    ]]>
+                </sql>
+            </trigger-delete>
+            <trigger-insert>
+                <sql><![CDATA[
+                    insert into PM_SEGMENTATION
+                    select
+                        CLASSIFICATION_ID,
+                        CLASSIFICATION_NAME,
+                        CLASSIFICATION_TYPE,
+                        'Généré le ' + convert(varchar, getdate())
+                    from inserted
+             ]]></sql>
+            </trigger-insert>
+            <trigger-update>
+                <sql><![CDATA[
+                declare @oldType varchar(12),
+                        @newType varchar(12)
+
+                    if @numrows != 1
+                        return
+                
+                    /***********************************************************/
+                    /*  Mise à jour du paramétrage dans la table PM_SEGMENTATION  */
+                    /***********************************************************/
+
+                    if update(CLASSIFICATION_TYPE)
+                    begin
+                        select @oldType = CLASSIFICATION_TYPE
+                        from deleted
+
+                        select @newType = CLASSIFICATION_TYPE
+                        from inserted
+                
+                        if (@oldType != @newType)
+                        begin
+                       select @errno  = 99999,
+                              @errmsg = "Impossible de modifier le type de l'axe !"
+                       goto error
+                       end
+                    end
+
+                    if update(CLASSIFICATION_NAME)
+                    begin
+                        update PM_SEGMENTATION
+                            set SEGMENTATION_NAME = CLASSIFICATION_NAME
+                        from PM_SEGMENTATION t
+                            inner join inserted i
+                                on (t.SEGMENTATION_ID = i.CLASSIFICATION_ID)
+                    end
+             ]]></sql>
+            </trigger-update>
+        </feature>
+
+        <primary-key key-generator="MAX">
+            <field name="classificationId"/>
+        </primary-key>
+
+        <properties>
+            <field name="classificationId" type="integer">
+                <description>Id de l'axe</description>
+                <sql type="integer" required="true"/>
+            </field>
+            <field name="classificationName" type="string">
+                <description>Libelle de l'axe</description>
+                <sql type="varchar" precision="50"/>
+            </field>
+            <field name="classificationType" type="string">
+                <description>Type de l'axe</description>
+                <sql type="varchar" precision="12" required="true"/>
+            </field>
+        </properties>
+    </entity>
+
+    <entity name="net.codjo.segmentation.server.data.ClassificationStructure"
+            table="PM_CLASSIFICATION_STRUCTURE">
+        <description>Structure des axes de segmentation</description>
+
+        <feature>
+            <sql/>
+            <sql-constraint/>
+            <doc-structure/>
+
+            <bean/>
+            <castor/>
+
+            <!-- Ne pas utiliser le handler update générique mais un handler sql de l'appli -->
+            <!-- car Castor execute le handler update générique après l'insert alors qu'on doit avoir l'inverse -->
+            <handler-select id="selectClassificationStructureById" type="By_Primary-Key"/>
+            <handler-select id="selectAllClassificationStructure" type="All"/>
+            <handler-new id="newClassificationStructure"/>
+            <handler-sql id="deleteClassificationStructure" transaction="true">
+                <attributes>
+                    <name>rowCount</name>
+                </attributes>
+                <query><![CDATA[
+                delete PM_CLASSIFICATION_STRUCTURE
+                where SLEEVE_ID = ?
+                select @@rowcount
+            ]]>
+                </query>
+                <arg type="int">sleeveId</arg>
+            </handler-sql>
+            <handler-sql id="selectAllSleeve" return-pk="false">
+                <attributes>
+                    <name>classificationId</name>
+                    <name>sleeveRowId</name>
+                    <name>classificationName</name>
+                    <name>sleeveCode</name>
+                    <name>sleeveName</name>
+                    <name>terminalElement</name>
+                    <name>formula</name>
+                </attributes>
+                <query><![CDATA[
+                select axe.CLASSIFICATION_ID,
+                    poche.SLEEVE_ROW_ID,
+                    axe.CLASSIFICATION_NAME,
+                    poche.SLEEVE_CODE,
+                    poche.SLEEVE_NAME,
+                    poche.TERMINAL_ELEMENT,
+                    poche.FORMULA
+                from PM_CLASSIFICATION_STRUCTURE poche
+                    inner join PM_CLASSIFICATION axe
+                    on (axe.CLASSIFICATION_ID = poche.CLASSIFICATION_ID)
+                where poche.SLEEVE_DUSTBIN != 1
+                and axe.CLASSIFICATION_TYPE = ?
+                and poche.CLASSIFICATION_ID != ?
+                order by axe.CLASSIFICATION_NAME, poche.SLEEVE_CODE
+                ]]>
+                </query>
+                <arg type="string">classificationType</arg>
+                <arg>classificationId</arg>
+            </handler-sql>
+            <handler-sql id="selectValuesForFieldName" return-pk="false">
+                <attributes>
+                    <name>value</name>
+                </attributes>
+                <query factory="net.codjo.segmentation.server.preference.DbFilterSelectorFactory"/>
+            </handler-sql>
+            <handler-sql id="selectClassificationStructureByClassId" return-pk="true">
+                <attributes>
+                    <name>sleeveId</name>
+                    <name>sleeveRowId</name>
+                    <name>classificationId</name>
+                    <name>sleeveCode</name>
+                    <name>sleeveName</name>
+                    <name>sleeveDustbin</name>
+                    <name>terminalElement</name>
+                    <name>formula</name>
+                </attributes>
+                <query><![CDATA[
+                select  c.SLEEVE_ID
+                    , c.SLEEVE_ROW_ID
+                    , c.CLASSIFICATION_ID
+                    , c.SLEEVE_CODE
+                    , c.SLEEVE_NAME
+                    , c.SLEEVE_DUSTBIN
+                    , c.TERMINAL_ELEMENT
+                    , c.FORMULA
+                from PM_CLASSIFICATION_STRUCTURE c
+                where c.CLASSIFICATION_ID = ?
+                ]]>
+                </query>
+                <arg>classificationId</arg>
+            </handler-sql>
+            <handler-sql id="selectAliasSleeves" return-pk="false">
+                <attributes>
+                    <name>classificationName</name>
+                    <name>classificationId</name>
+                    <name>sleeveName</name>
+                    <name>sleeveRowId</name>
+                    <name>formula</name>
+                </attributes>
+                <query><![CDATA[
+                select  axe.CLASSIFICATION_NAME,
+                        axe.CLASSIFICATION_ID,
+                        poche.SLEEVE_NAME,
+                        poche.SLEEVE_ROW_ID,
+                        poche.FORMULA
+                from PM_CLASSIFICATION_STRUCTURE poche
+                    inner join PM_CLASSIFICATION axe
+                    on (axe.CLASSIFICATION_ID = poche.CLASSIFICATION_ID)
+                where poche.FORMULA like '%INC_$$' + ? + '$' + ? +'%'
+                order by axe.CLASSIFICATION_NAME
+                ]]>
+                </query>
+                <arg type="string">classificationId</arg>
+                <arg type="string">sleeveRowId</arg>
+            </handler-sql>
+
+            <trigger-delete>
+                <sql><![CDATA[
+                    declare @VAR_LENGTH             int,
+                            @SLEEVE_CODE            varchar(50),
+                            @SLEEVE_CODE_TRANSCODED varchar(50),
+                            @DUSTBIN_CODE           varchar(50),
+                            @SLEEVE_ROW_ID 		    varchar(20),
+                            @INCLUDE_SLEEVE_ID      int,
+                            @CLASSIFICATION_ID      int,
+                            @TERMINAL_ELEMENT       bit,
+                            @SLEEVE_DUSTBIN         bit,
+                            @SLEEVE_NAME            varchar(50),
+                            @INCLUDE_ERROR_MESSAGE  varchar(250)
+
+                    if @numrows != 1
+                        return
+
+                    /****************************************/
+                    /* Récupération des données nécessaires */
+                    /****************************************/
+
+                    select @CLASSIFICATION_ID = CLASSIFICATION_ID,
+                           @SLEEVE_CODE = SLEEVE_CODE,
+                           @SLEEVE_NAME = SLEEVE_NAME,
+                           @SLEEVE_DUSTBIN = SLEEVE_DUSTBIN,
+                           @TERMINAL_ELEMENT = TERMINAL_ELEMENT
+                    from deleted
+                    inner join PM_EXPRESSION
+                    on SEGMENTATION_ID = CLASSIFICATION_ID
+                    where DESTINATION_FIELD = 'SLEEVE_CODE'
+
+                    /************************/
+                    /* Cas du noeud         */
+                    /* On fait rien !       */
+                    /************************/
+
+                    if (@TERMINAL_ELEMENT = 1)
+                    begin
+
+                        /**********************************************************************/
+                        /* Cas de la poche non fourre tout                                    */
+                        /* 1) Vérification que la poche n'est pas utilisée dans un autre axe  */
+                        /* 2) Suppression de la variable (VAR_@SLEEVE_CODE_TRANSCODED)        */
+                        /* 3) Suppression de la variable dans l'expression globale            */
+                        /**********************************************************************/
+
+                        if (@SLEEVE_DUSTBIN = 0)
+                        begin
+
+                                select @INCLUDE_SLEEVE_ID = min(SLEEVE_ID) from PM_CLASSIFICATION_STRUCTURE
+                                where FORMULA like '%INC[_]$$'+convert(varchar,@CLASSIFICATION_ID)+'$'+@SLEEVE_ROW_ID+'%'
+
+                                if (@INCLUDE_SLEEVE_ID != NULL)
+                                begin
+                                    select @INCLUDE_ERROR_MESSAGE =
+                                    "Vous ne pouvez pas supprimer la poche '"
+                                    + @SLEEVE_NAME
+                                    + "' car elle est utilisée dans la poche '"
+                                    + SLEEVE_NAME +
+                                    "' de l'axe '"
+                                    + CLASSIFICATION_NAME +
+                                    "'."
+                                    from PM_CLASSIFICATION c
+                                        inner join PM_CLASSIFICATION_STRUCTURE cs
+                                        on c.CLASSIFICATION_ID = cs.CLASSIFICATION_ID
+                                    where SLEEVE_ID = @INCLUDE_SLEEVE_ID
+
+                                    rollback transaction
+                                    raiserror 999999 @INCLUDE_ERROR_MESSAGE
+                                    return
+                                end
+
+                                exec sp_SEG_Transcode_Sleeve_Code @SLEEVE_CODE, @SLEEVE_CODE_TRANSCODED output
+
+                            -- Suppression de la variable correspondante
+                            delete from PM_EXPRESSION
+                                where DESTINATION_FIELD = 'VAR_' + @SLEEVE_CODE_TRANSCODED and SEGMENTATION_ID = @CLASSIFICATION_ID
+
+                        end
+
+                        else
+                        begin
+                        /***************************************************************************************/
+                        /* Cas de la poche fourre tout                                                         */
+                        /* Mise à NULL de l'expression qui représente le code de la poche fourre-tout          */
+                        /***************************************************************************************/
+                            exec sp_SEG_Update_Main_Expression @CLASSIFICATION_ID, ''
+                        end
+
+                    end
+                    ]]>
+                </sql>
+            </trigger-delete>
+
+            <trigger-insert>
+                <sql><![CDATA[
+	declare	@SLEEVE_CODE	    	varchar(50),
+	        @SLEEVE_CODE_TRANSCODED varchar(50),
+		    @EXPRESSION         	varchar(15000),
+		    @SLEEVE_ROW_ID    	    varchar(20),
+		    @SLEEVE_NAME    	    varchar(50),
+		    @CLASSIFICATION_ID  	int,
+		    @TERMINAL_ELEMENT   	bit,
+		    @SLEEVE_DUSTBIN     	bit,
+		    @MAX_EXPRESSION_ID 	int,
+		    @EXPRESSION_ID 	    int,
+		    @MAX_PRIORITY_ID	int,
+		    @ERROR_MSG	varchar(255),
+            @CREATE_VARIABLES bit,
+            @LAST_PRIORITY_ID int,
+            @EXPRESSION_LENGTH int
+
+	if @numrows != 1
+      	return
+
+    select @MAX_EXPRESSION_ID = (select isnull(max(EXPRESSION_ID),0) from PM_EXPRESSION)
+
+	/****************************************/
+	/* Récupération des données nécessaires */
+	/****************************************/
+
+	select 	@CLASSIFICATION_ID = CLASSIFICATION_ID,
+		@SLEEVE_CODE = SLEEVE_CODE,
+		@TERMINAL_ELEMENT = TERMINAL_ELEMENT,
+        @SLEEVE_DUSTBIN = SLEEVE_DUSTBIN,
+        @SLEEVE_ROW_ID = SLEEVE_ROW_ID,
+        @SLEEVE_NAME = SLEEVE_NAME
+	from inserted
+
+    /****************************************************/
+    /* Insertion des expressions de base (PERIOD, ...) */
+    /****************************************************/
+
+
+	select @CREATE_VARIABLES = 0
+	if not exists (select 1 from PM_EXPRESSION where SEGMENTATION_ID = @CLASSIFICATION_ID)
+	begin
+		select @CREATE_VARIABLES = 1
+    end
+
+
+    if (@CREATE_VARIABLES = 1)
+    begin
+
+        /************************************************************/
+        /* Insertion de l'expression pour l'CLASSIFICATION_ID */
+        /************************************************************/
+        insert into PM_EXPRESSION
+        values (
+            @MAX_EXPRESSION_ID + 1,
+            @CLASSIFICATION_ID,
+            'CLASSIFICATION_ID',
+            convert(varchar, @CLASSIFICATION_ID),
+             0,
+             0,
+             NULL )
+
+        if (@@error > 0)
+        begin
+            select @ERROR_MSG = "Erreur lors de l'insertion de l'expression pour la CLASSIFICATION_ID."
+            goto error
+        end
+
+        /****************************************************************/
+        /* Insertion de l'expression pour l'SLEEVE_CODE (vide) */
+        /****************************************************************/
+        insert into PM_EXPRESSION
+        values (
+            @MAX_EXPRESSION_ID + 2,
+            @CLASSIFICATION_ID,
+            'SLEEVE_CODE',
+            '',
+            999,
+            0,
+            NULL )
+
+        if (@@error > 0)
+        begin
+            select @ERROR_MSG = "Erreur lors de l'insertion de l'expression pour la SLEEVE_CODE."
+            goto error
+        end
+
+        select @MAX_EXPRESSION_ID = @MAX_EXPRESSION_ID + 2
+
+    end
+
+	/*======================*/
+	/* Cas du noeud		*/
+	/* On fait rien !	*/
+	/*======================*/
+
+	if (@TERMINAL_ELEMENT = 1)
+    begin
+
+        /*==============================================================================*/
+        /* Cas de la poche non fourre tout 						*/
+        /* 1) Insertion de la variable (VAR_@SLEEVE_CODE_TRANSCODED)			*/
+        /* 2) Mise à jour des includes                                                  */
+        /* 3) Modification de l'expression globale (insertion de la nouvelle variable)	*/
+        /*==============================================================================*/
+
+    	if (@SLEEVE_DUSTBIN = 0)
+    	begin
+
+            -- Insertion de la variable
+            exec sp_SEG_Transcode_Sleeve_Code @SLEEVE_CODE, @SLEEVE_CODE_TRANSCODED output
+            select @MAX_PRIORITY_ID = isnull(max(PRIORITY), 100) from PM_EXPRESSION
+                            where PRIORITY > 100 and PRIORITY <> 999 and SEGMENTATION_ID = @CLASSIFICATION_ID
+
+            insert into PM_EXPRESSION
+            select
+                @MAX_EXPRESSION_ID + 1,
+                @CLASSIFICATION_ID,
+                'VAR_' + @SLEEVE_CODE_TRANSCODED,
+                cs.FORMULA,
+                @MAX_PRIORITY_ID + 1,
+                1,
+                -7
+            from PM_CLASSIFICATION_STRUCTURE cs
+            inner join inserted i
+                on (i.SLEEVE_ID = cs.SLEEVE_ID)
+
+            select @MAX_EXPRESSION_ID = @MAX_EXPRESSION_ID + 1
+            exec sp_SEG_Update_Includes @MAX_EXPRESSION_ID, @SLEEVE_NAME, @CLASSIFICATION_ID, @SLEEVE_ROW_ID
+
+            select @EXPRESSION = ''
+
+	    end
+
+        /*======================================================================================*/
+        /* Cas de la poche fourre tout								*/
+        /* Modification de l'expression globale (insertion du code poche en fin d'expression)	*/
+        /*======================================================================================*/
+
+        else
+        begin
+
+	    	select @EXPRESSION = convert(varchar(15000), @SLEEVE_CODE)
+
+	    end
+
+        /****************************************************/
+        /* MAJ de l'expression globale pour le SLEEVE_CODE  */
+        /****************************************************/
+
+        if (@EXPRESSION != '')
+        exec sp_SEG_Update_Main_Expression @CLASSIFICATION_ID, @EXPRESSION
+
+	end
+
+	select @LAST_PRIORITY_ID = 0
+
+            ]]></sql>
+            </trigger-insert>
+            <trigger-update>
+                <sql><![CDATA[
+	declare	@NEW_SLEEVE_CODE	    	varchar(50),
+            @OLD_SLEEVE_CODE		varchar(50),
+            @NEW_SLEEVE_CODE_TRANSCODED 	varchar(50),
+            @OLD_SLEEVE_CODE_TRANSCODED 	varchar(50),
+            @NEW_SLEEVE_NAME 	varchar(50),
+            @MAX_EXPRESSION_ID 		int,
+            @EXPRESSION_ID 		int,
+            @MAX_PRIORITY_ID		int,
+            @CLASSIFICATION_ID  		int,
+            @VAR_LENGTH         		int,
+            @NEW_SLEEVE_DUSTBIN     	bit,
+            @SLEEVE_CODE_CHANGED		bit,
+            @SLEEVE_DUSTBIN_CHANGED		bit,
+            @TERMINAL_ELEMENT		bit,
+            @SLEEVE_ROW_ID      varchar(20)
+
+	if @numrows != 1
+      	return
+
+	/****************************************/
+	/* Récupération des données nécessaires */
+	/****************************************/
+
+	select
+		@OLD_SLEEVE_CODE = d.SLEEVE_CODE,
+		@NEW_SLEEVE_CODE = i.SLEEVE_CODE,
+		@CLASSIFICATION_ID = i.CLASSIFICATION_ID,
+		@TERMINAL_ELEMENT = i.TERMINAL_ELEMENT,
+		@NEW_SLEEVE_DUSTBIN = i.SLEEVE_DUSTBIN,
+		@SLEEVE_CODE_CHANGED = case when i.SLEEVE_CODE != d.SLEEVE_CODE then 1 else 0 end,
+		@SLEEVE_DUSTBIN_CHANGED = case when i.SLEEVE_DUSTBIN != d.SLEEVE_DUSTBIN then 1 else 0 end,
+		@SLEEVE_ROW_ID = i.SLEEVE_ROW_ID,
+		@NEW_SLEEVE_NAME = i.SLEEVE_NAME
+	from inserted i
+	inner join deleted d
+		on (i.SLEEVE_ID = d.SLEEVE_ID)
+	inner join PM_EXPRESSION p
+		on (p.SEGMENTATION_ID = i.CLASSIFICATION_ID)
+	where p.DESTINATION_FIELD = 'SLEEVE_CODE'
+
+	/************************/
+	/* Cas du noeud		*/
+	/* On fait rien !	*/
+	/************************/
+
+	if (@TERMINAL_ELEMENT = 1)
+	begin
+
+        exec sp_SEG_Transcode_Sleeve_Code @NEW_SLEEVE_CODE, @NEW_SLEEVE_CODE_TRANSCODED output
+
+        /****************************************************************/
+        /* Cas de la mise à jour de la formule uniquement  		*/
+        /* Modification de l'expression de la variable corespondante	*/
+        /****************************************************************/
+
+        if (@SLEEVE_DUSTBIN_CHANGED = 0 and @SLEEVE_CODE_CHANGED = 0)
+        begin
+
+                update PM_EXPRESSION
+                    set EXPRESSION = cs.FORMULA
+                from PM_EXPRESSION e
+                inner join inserted i
+                    on (i.CLASSIFICATION_ID = e.SEGMENTATION_ID)
+                inner join PM_CLASSIFICATION_STRUCTURE cs
+                    on ( cs.SLEEVE_ID = i.SLEEVE_ID)
+
+                where e.DESTINATION_FIELD = 'VAR_' + @NEW_SLEEVE_CODE_TRANSCODED
+
+                select @EXPRESSION_ID = EXPRESSION_ID
+                from PM_EXPRESSION e
+                inner join inserted i
+                    on (i.CLASSIFICATION_ID = e.SEGMENTATION_ID)
+                where e.DESTINATION_FIELD = 'VAR_' + @NEW_SLEEVE_CODE_TRANSCODED
+
+                exec sp_SEG_Update_Includes @EXPRESSION_ID, @NEW_SLEEVE_NAME, @CLASSIFICATION_ID, @SLEEVE_ROW_ID
+
+        end
+
+        /****************************************************************************************/
+        /* Cas de la mise à jour d'une poche fourre-tout en non fourre-tout 			*/
+        /* 1) Insertion de la variable (VAR_@NEW_SLEEVE_CODE_TRANSCODED)			*/
+        /* 2) Modification de l'expression globale (suppression de la poche fourre-tout)	*/
+        /* 3) Modification de l'expression globale (insertion de la nouvelle variable)		*/
+        /* 4) Update de l'expression globale							*/
+        /****************************************************************************************/
+
+        if (@SLEEVE_DUSTBIN_CHANGED = 1 and @NEW_SLEEVE_DUSTBIN = 0)
+        begin
+
+            -- Insertion de la variable
+
+            select @MAX_EXPRESSION_ID = max(EXPRESSION_ID) from PM_EXPRESSION
+            select @MAX_PRIORITY_ID = max(PRIORITY) from PM_EXPRESSION where PRIORITY <> 999 and SEGMENTATION_ID = @CLASSIFICATION_ID
+
+            insert into PM_EXPRESSION
+            select
+                @MAX_EXPRESSION_ID + 1,
+                @CLASSIFICATION_ID,
+                'VAR_' + @NEW_SLEEVE_CODE_TRANSCODED,
+                cs.FORMULA,
+                @MAX_PRIORITY_ID + 1,
+                1,
+                -7
+                from inserted i
+                inner join PM_CLASSIFICATION_STRUCTURE cs
+                    on (i.SLEEVE_ID = cs.SLEEVE_ID)
+
+            select @EXPRESSION_ID = @MAX_EXPRESSION_ID + 1
+            exec sp_SEG_Update_Includes @EXPRESSION_ID, @NEW_SLEEVE_NAME, @CLASSIFICATION_ID, @SLEEVE_ROW_ID
+
+            -- Update du SLEEVE_CODE
+            exec sp_SEG_Update_Main_Expression @CLASSIFICATION_ID, ''
+
+        end
+
+        /********************************************************************************************************/
+        /* Cas de la mise à jour d'une poche non fourre-tout en fourre-tout					*/
+        /* 1) Suppression de la variable (VAR_@NEW_SLEEVE_CODE_TRANSCODED)					*/
+        /* 2) Modification de l'expression globale (suppression de la variable)					*/
+        /* 3) Modification de l'expression globale (insertion du code poche fourre-tout en fin d'expression)	*/
+        /* 4) Update de l'expression globale									*/
+        /********************************************************************************************************/
+
+        if (@SLEEVE_DUSTBIN_CHANGED = 1 and @NEW_SLEEVE_DUSTBIN = 1)
+        begin
+
+            -- Suppression de la variable
+            delete from PM_EXPRESSION
+                where DESTINATION_FIELD = 'VAR_'+ @NEW_SLEEVE_CODE_TRANSCODED and SEGMENTATION_ID = @CLASSIFICATION_ID
+
+            -- Update du SLEEVE_CODE
+            exec sp_SEG_Update_Main_Expression @CLASSIFICATION_ID, @NEW_SLEEVE_CODE
+
+        end
+
+        /****************************************************************************************/
+        /* Cas de la mise à jour du code poche seulement					*/
+        /* 1) Modification de l'expression globale (MAJ du nom de la variable et du code poche)	*/
+        /* 2) MAJ du nom de la variable pour le DESTINATION_FIELD				*/
+        /* 3) Update de l'expression globale							*/
+        /****************************************************************************************/
+
+        if (@SLEEVE_CODE_CHANGED = 1)
+        begin
+            exec sp_SEG_Transcode_Sleeve_Code @OLD_SLEEVE_CODE, @OLD_SLEEVE_CODE_TRANSCODED output
+
+            -- MAJ du nom de la variable pour le DESTINATION_FIELD
+            update PM_EXPRESSION
+                 set DESTINATION_FIELD = 'VAR_' + @NEW_SLEEVE_CODE_TRANSCODED
+            from PM_EXPRESSION
+            where SEGMENTATION_ID = @CLASSIFICATION_ID and DESTINATION_FIELD = 'VAR_' + @OLD_SLEEVE_CODE_TRANSCODED
+
+        end
+
+        if (update(SLEEVE_CODE) and @NEW_SLEEVE_DUSTBIN = 1)
+        begin
+             exec sp_SEG_Update_Main_Expression @CLASSIFICATION_ID, @NEW_SLEEVE_CODE
+        end
+
+        if (update (FORMULA))
+        begin
+            set self_recursion on
+            update PM_CLASSIFICATION_STRUCTURE
+            set FORMULA = FORMULA
+            where FORMULA like "%INC_$$"+convert(varchar, @CLASSIFICATION_ID)+"$"+@SLEEVE_ROW_ID+"%"
+            if (@@error > 0)
+            begin
+                select @errmsg = "Erreur durant la mise a jour des poches faisant reference a cette poche."
+                goto error
+            end
+        end
+    end
+    	    ]]></sql>
+            </trigger-update>
+
+            <sql-index>
+                <idx type="primary-key" name-prefix="X1_" clustered="false"/>
+                <idx type="index" unique="true" name-prefix="X2_" clustered="true">
+                    <field name="classificationId"/>
+                    <field name="sleeveCode"/>
+                </idx>
+                <idx type="index" unique="true" name-prefix="X3_" clustered="false">
+                    <field name="classificationId"/>
+                    <field name="sleeveName"/>
+                </idx>
+            </sql-index>
+        </feature>
+
+        <primary-key key-generator="MAX">
+            <field name="sleeveId"/>
+        </primary-key>
+
+        <properties>
+            <field name="sleeveId" type="integer">
+                <description>Id de la poche</description>
+                <sql type="integer" required="true"/>
+            </field>
+            <field name="sleeveRowId" type="string">
+                <description>Id unique non modifiable durant le cycle de vie de la poche
+                    (sous forme de timeStamp)
+                </description>
+                <sql type="varchar" precision="20" required="true"/>
+            </field>
+            <field name="classificationId" type="integer">
+                <description>Id de l'axe</description>
+                <sql type="integer" required="true"/>
+            </field>
+            <field name="sleeveCode" type="string">
+                <description>Code poche</description>
+                <sql type="varchar" precision="50" required="true"/>
+            </field>
+            <field name="sleeveName" type="string">
+                <description>Libelle de la poche</description>
+                <sql type="varchar" precision="50"/>
+            </field>
+            <field name="sleeveDustbin" type="boolean">
+                <description>Poche fourre-tout</description>
+                <sql type="bit" default="0" required="true"/>
+            </field>
+            <field name="terminalElement" type="boolean">
+                <description>Poche de terminaison</description>
+                <sql type="bit" default="0" required="true"/>
+            </field>
+            <field name="formula" type="string">
+                <description>Formule</description>
+                <sql type="text"/>
+            </field>
+        </properties>
+    </entity>
+
+</entities>

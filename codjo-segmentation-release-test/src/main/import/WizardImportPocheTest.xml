@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<release-test name="WizardImportAxeTest"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="http://test-release.xsd">
+    <description>Import de poches paramétrées, avec possibilité de vider les logs d'erreur à la demande.
+        On teste aussi qu'il est possible de customiser l'import en simulant l'ajout d'un champ dans PM_CLASSIFICATION_STRUCTURE.
+    </description>
+
+    <tokio-load id="tokio.load" file="WizardImportPocheTest.tokio"/>
+
+    <security-model user="${testEnvironment.user}" roles="admin"/>
+
+    <call-method file="WizardImportPocheTest.xmf">
+        <parameter name="case" value="ImportStandard"/>
+        <parameter name="file" value="segmentationPocheImport.txt"/>
+    </call-method>
+
+    <call-method file="WizardImportPocheTest.xmf">
+        <parameter name="case" value="ImportCustomise"/>
+        <parameter name="file" value="segmentationPocheImportCustom.txt"/>
+    </call-method>
+
+</release-test>

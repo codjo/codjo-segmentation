@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<family-list xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:noNamespaceSchemaLocation="http://family-list.xsd">
+
+    <family id="ACTION" root="SEG_INPUT_ACTION" destination="SEG_RESULT_ACTION">
+        <arguments>
+            <name>myKey</name>
+            <name>segmentations</name>
+        </arguments>
+
+        <functions>
+            <holder>net.codjo.segmentation.server.preference.family.DefaultFunctionHolder</holder>
+        </functions>
+
+        <delete-config>
+            <where-clause>CLASSIFICATION_ID = $segmentationId$</where-clause>
+        </delete-config>
+
+        <select-config>
+            <where-clause>SEG_INPUT_ACTION.MY_KEY='$myKey$' or '$myKey$'=''</where-clause>
+        </select-config>
+
+        <result-config>
+            <!--<requetor>allSegResultAction</requetor>-->
+            <where-clause>(SEG_RESULT_ACTION.ANOMALY=$anomaly$ or $anomaly$ =-1)
+                and SEG_RESULT_ACTION.CLASSIFICATION_ID = $segmentationId$
+                and (SEG_RESULT_ACTION.MY_KEY='$myKey$' or '$myKey$'='')
+            </where-clause>
+            <column label="Ma clé" value="MY_KEY" table="SEG_RESULT_ACTION"/>
+        </result-config>
+    </family>
+    <family id="EVENT" root="SEG_INPUT_EVENT" destination="SEG_RESULT_EVENT">
+        <arguments>
+            <name>myKey</name>
+            <name>segmentations</name>
+        </arguments>
+
+        <functions>
+            <holder>net.codjo.segmentation.server.preference.family.DefaultFunctionHolder</holder>
+        </functions>
+
+        <delete-config>
+            <where-clause>CLASSIFICATION_ID = $segmentationId$</where-clause>
+        </delete-config>
+
+        <select-config>
+            <where-clause>SEG_INPUT_EVENT.MY_KEY='$myKey$' or '$myKey$'=''</where-clause>
+        </select-config>
+
+        <result-config>
+            <!--<requetor>allSegResultEvent</requetor>-->
+            <where-clause>(SEG_RESULT_EVENT.ANOMALY=$anomaly$ or $anomaly$ =-1)
+                and SEG_RESULT_EVENT.CLASSIFICATION_ID = $segmentationId$
+                and (SEG_RESULT_EVENT.MY_KEY='$myKey$' or '$myKey$'='')
+            </where-clause>
+            <column label="Ma clé" value="MY_KEY" table="SEG_RESULT_EVENT"/>
+        </result-config>
+        <gui>
+            <variables>
+                <variable name="VAR_ANY_TABLE_NAME$COLUMN_NAME" label="column variable" sqlType="varchar"/>
+            </variables>
+        </gui>
+    </family>
+    <family id="REQUETOR" root="SEG_INPUT_REQUETOR" destination="SEG_RESULT_REQUETOR">
+        <arguments>
+            <name>myKey</name>
+            <name>segmentations</name>
+        </arguments>
+
+        <functions>
+            <holder>net.codjo.segmentation.server.preference.family.DefaultFunctionHolder</holder>
+        </functions>
+
+        <delete-config>
+            <where-clause>CLASSIFICATION_ID = $segmentationId$</where-clause>
+        </delete-config>
+
+        <select-config>
+            <where-clause>SEG_INPUT_REQUETOR.MY_KEY='$myKey$' or '$myKey$'=''</where-clause>
+        </select-config>
+
+        <result-config>
+            <requetor>allSegResultRequetor</requetor>
+            <where-clause>(SEG_RESULT_REQUETOR.ANOMALY=$anomaly$ or $anomaly$ =-1)
+                and SEG_RESULT_REQUETOR.CLASSIFICATION_ID = $segmentationId$
+                and (SEG_RESULT_REQUETOR.MY_KEY='$myKey$' or '$myKey$'='')
+            </where-clause>
+            <join-key left="SEG_RESULT_REQUETOR" type="inner" right="PM_CLASSIFICATION">
+                <part left="CLASSIFICATION_ID" operator="=" right="CLASSIFICATION_ID"/>
+            </join-key>
+            <join-key left="SEG_RESULT_REQUETOR" type="inner" right="PM_CLASSIFICATION_STRUCTURE">
+                <part left="CLASSIFICATION_ID" operator="=" right="CLASSIFICATION_ID"/>
+                <part left="SLEEVE_CODE" operator="=" right="SLEEVE_CODE"/>
+            </join-key>
+            <column label="Ma clé" value="MY_KEY" table="SEG_RESULT_REQUETOR"/>
+            <column label="Libellé axe" value="CLASSIFICATION_NAME" table="PM_CLASSIFICATION"/>
+            <column label="Code poche" value="SLEEVE_CODE" table="SEG_RESULT_REQUETOR"/>
+            <column label="Libellé poche" value="SLEEVE_NAME" table="PM_CLASSIFICATION_STRUCTURE"/>
+        </result-config>
+    </family>
+</family-list>

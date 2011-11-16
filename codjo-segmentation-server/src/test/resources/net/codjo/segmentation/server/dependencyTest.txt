@@ -1,0 +1,119 @@
+net.codjo.segmentation.server
+
+net.codjo.segmentation.server.audit
+	-> net.codjo.workflow.common.message
+
+net.codjo.segmentation.server.blackboard
+	-> net.codjo.agent
+	-> net.codjo.agent.protocol
+	-> net.codjo.agent.test
+	-> net.codjo.database.common.api
+	-> net.codjo.segmentation.server.blackboard.message
+	-> net.codjo.sql.server
+	-> net.codjo.test.common
+
+net.codjo.segmentation.server.blackboard.message
+	-> net.codjo.agent
+	-> net.codjo.test.common
+
+net.codjo.segmentation.server.paramExport
+	-> net.codjo.database.common.api
+	-> net.codjo.database.common.api.structure
+	-> net.codjo.tokio
+
+net.codjo.segmentation.server.paramExport.agent
+	-> net.codjo.agent
+	-> net.codjo.agent.test
+	-> net.codjo.test.common.fixture
+	-> net.codjo.tokio
+	-> net.codjo.util.file
+
+net.codjo.segmentation.server.paramImport
+	-> net.codjo.database.common.api
+	-> net.codjo.database.common.api.structure
+	-> net.codjo.segmentation.server
+	-> net.codjo.tokio
+
+net.codjo.segmentation.server.paramImport.agent
+	-> net.codjo.agent
+	-> net.codjo.agent.test
+	-> net.codjo.mad.common
+	-> net.codjo.segmentation.server.paramImport
+	-> net.codjo.segmentation.server.paramImport.classificationStructure
+	-> net.codjo.tokio
+
+net.codjo.segmentation.server.paramImport.classification
+	-> net.codjo.database.common.api
+
+net.codjo.segmentation.server.paramImport.classificationStructure
+	-> net.codjo.database.common.api
+	-> net.codjo.tokio
+
+net.codjo.segmentation.server.paramImport.factory
+	-> net.codjo.segmentation.server.paramImport.classification
+	-> net.codjo.segmentation.server.paramImport.classificationStructure
+
+net.codjo.segmentation.server.participant
+	-> net.codjo.database.common.api
+	-> net.codjo.database.common.api.structure
+	-> net.codjo.expression
+	-> net.codjo.segmentation.server.blackboard
+	-> net.codjo.segmentation.server.blackboard.message
+	-> net.codjo.segmentation.server.participant.common
+	-> net.codjo.segmentation.server.participant.context
+	-> net.codjo.segmentation.server.preference.family
+	-> net.codjo.segmentation.server.preference.treatment
+	-> net.codjo.sql.builder
+	-> net.codjo.test.common
+	-> net.codjo.test.common.mock
+	-> net.codjo.workflow.common.message
+
+net.codjo.segmentation.server.participant.common
+	-> net.codjo.database.common.api
+	-> net.codjo.database.common.api.structure
+	-> net.codjo.expression
+	-> net.codjo.segmentation.server.preference.family
+	-> net.codjo.segmentation.server.preference.treatment
+
+net.codjo.segmentation.server.participant.context
+	-> net.codjo.database.common.api
+	-> net.codjo.database.common.api.structure
+	-> net.codjo.segmentation.server.blackboard.message
+	-> net.codjo.segmentation.server.participant.common
+	-> net.codjo.segmentation.server.preference.family
+	-> net.codjo.segmentation.server.preference.treatment
+
+net.codjo.segmentation.server.plugin
+	-> net.codjo.agent
+    -> net.codjo.agent.behaviour
+    -> net.codjo.agent.test
+	-> net.codjo.aspect
+	-> net.codjo.expression
+	-> net.codjo.mad.server.handler
+	-> net.codjo.mad.server.plugin
+	-> net.codjo.plugin.server
+	-> net.codjo.segmentation.server.participant.context
+	-> net.codjo.segmentation.server.preference.family
+	-> net.codjo.sql.server
+	-> net.codjo.test.common
+	-> net.codjo.workflow.common.message
+	-> net.codjo.workflow.common.protocol
+	-> net.codjo.workflow.server.api
+	-> org.apache.xpath
+	-> org.w3c.dom
+	-> org.xml.sax
+
+net.codjo.segmentation.server.preference.family
+	-> net.codjo.database.common.api
+	-> net.codjo.expression
+	-> net.codjo.sql.builder
+	-> net.codjo.xml.fast
+	-> org.xml.sax
+
+net.codjo.segmentation.server.preference.treatment
+	-> net.codjo.tokio
+
+net.codjo.segmentation.server.util
+	-> net.codjo.tokio
+	-> net.codjo.variable
+

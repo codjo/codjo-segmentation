@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<family-list xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:noNamespaceSchemaLocation="http://family-list.xsd">
+
+    <family id="ACTION" root="SEG_INPUT" destination="SEG_RESULT">
+        <arguments>
+            <name>key</name>
+        </arguments>
+
+        <functions>
+            <holder>net.codjo.segmentation.server.preference.family.DefaultFunctionHolder</holder>
+        </functions>
+
+        <delete-config>
+            <where-clause>AXE = $segmentationId$</where-clause>
+        </delete-config>
+
+        <select-config>
+            <where-clause>SEG_INPUT.MY_KEY='$key$'</where-clause>
+        </select-config>
+    </family>
+
+</family-list>

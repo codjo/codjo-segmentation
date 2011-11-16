@@ -1,0 +1,77 @@
+net.codjo.segmentation.gui
+	-> net.codjo.i18n.common
+	-> net.codjo.mad.gui
+	-> net.codjo.mad.gui.framework
+	-> net.codjo.mad.gui.i18n
+
+net.codjo.segmentation.gui.editor
+	-> net.codjo.expression.help
+	-> net.codjo.gui.toolkit.waiting
+
+net.codjo.segmentation.gui.exportParam
+	-> org.uispec4j
+	-> org.uispec4j.interception
+
+net.codjo.segmentation.gui.exportParam.agent
+	-> net.codjo.agent
+	-> net.codjo.agent.test
+	-> net.codjo.segmentation.gui
+	-> net.codjo.test.common
+
+net.codjo.segmentation.gui.importParam
+	-> net.codjo.mad.gui.request
+	-> net.codjo.security.common.api
+	-> net.codjo.segmentation.gui
+	-> org.uispec4j
+	-> org.uispec4j.interception
+	-> org.xml.sax
+
+net.codjo.segmentation.gui.importParam.agent
+	-> net.codjo.agent
+	-> net.codjo.agent.test
+	-> net.codjo.mad.common
+	-> net.codjo.segmentation.gui
+	-> net.codjo.test.common
+
+net.codjo.segmentation.gui.plugin
+	-> net.codjo.mad.client.plugin
+	-> net.codjo.mad.client.request
+	-> net.codjo.mad.client.request.util
+	-> net.codjo.mad.gui.base
+	-> net.codjo.mad.gui.framework
+	-> net.codjo.mad.gui.plugin
+	-> net.codjo.mad.gui.request
+	-> net.codjo.plugin.common
+	-> net.codjo.security.common.api
+	-> net.codjo.segmentation.gui
+	-> net.codjo.workflow.gui.plugin
+	-> org.mockito
+	-> org.mockito.internal.progress
+	-> org.picocontainer
+
+net.codjo.segmentation.gui.preference
+	-> net.codjo.expression
+	-> net.codjo.expression.help
+	-> net.codjo.mad.client.request
+	-> net.codjo.mad.client.request.util
+	-> net.codjo.mad.common.structure
+
+net.codjo.segmentation.gui.progress
+	-> net.codjo.workflow.common.message
+
+net.codjo.segmentation.gui.settings
+	-> net.codjo.mad.client.request
+	-> net.codjo.mad.gui.framework
+	-> net.codjo.mad.gui.request
+	-> net.codjo.security.common.api
+	-> net.codjo.test.common
+	-> org.uispec4j
+
+net.codjo.segmentation.gui.wizard
+	-> net.codjo.mad.client.request.util
+	-> net.codjo.mad.gui.framework
+	-> net.codjo.mad.gui.request
+	-> org.mockito
+	-> org.mockito.internal.progress
+	-> org.xml.sax
+	

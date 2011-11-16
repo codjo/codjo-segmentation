@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE Scenarii SYSTEM "http://scenarii.dtd">
+<Scenarii name="exportStructureFile">
+    <Scenario id="exportClassificationFile">
+        <input>
+            <table name="PM_CLASSIFICATION">
+                <row id="classification1">
+                    <field name="CLASSIFICATION_ID" value="1"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe event 1"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+                <row id="classification2">
+                    <field name="CLASSIFICATION_ID" value="2"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe event 2"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+            </table>
+        </input>
+        <etalon/>
+    </Scenario>
+    <Scenario id="exportClassificationStructureFile">
+        <input>
+            <table name="PM_CLASSIFICATION">
+                <row inheritId="classification1">
+                    <field name="CLASSIFICATION_ID" value="1"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe event 1"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+                <row inheritId="classification2">
+                    <field name="CLASSIFICATION_ID" value="2"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe event 2"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+            </table>
+            <table name="PM_CLASSIFICATION_STRUCTURE">
+                <row>
+                    <field name="CLASSIFICATION_ID" value="1"/>
+                    <field name="SLEEVE_ID" value="1000"/>
+                    <field name="SLEEVE_ROW_ID" value="1000"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="SLEEVE_NAME" value="Poche 1"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                    <field name="FORMULA" value="manager == 1"/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+                <row>
+                    <field name="CLASSIFICATION_ID" value="1"/>
+                    <field name="SLEEVE_ID" value="1001"/>
+                    <field name="SLEEVE_ROW_ID" value="1001"/>
+                    <field name="SLEEVE_CODE" value="01-2"/>
+                    <field name="SLEEVE_NAME" value="Fourre-tout"/>
+                    <field name="SLEEVE_DUSTBIN" value="true"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                    <field name="FORMULA" value=" "/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+            </table>
+        </input>
+        <etalon/>
+    </Scenario>
+</Scenarii>

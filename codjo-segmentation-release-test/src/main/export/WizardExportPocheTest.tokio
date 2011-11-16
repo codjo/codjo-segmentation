@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cases PUBLIC "-//AGF, Inc.//DTD cases 2.0//EN" "cases.dtd">
+
+<cases>
+    <case id="ExportStandard">
+        <input>
+            <table name="PM_CLASSIFICATION">
+                <row id="Axe1">
+                    <field name="CLASSIFICATION_ID" value="1"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe1 event"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+                <row id="Axe2">
+                    <field name="CLASSIFICATION_ID" value="2"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe2 event"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+                <row id="Axe3">
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe3 event"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+            </table>
+            <table name="PM_CLASSIFICATION_STRUCTURE" orderClause="CLASSIFICATION_ID, SLEEVE_CODE">
+
+                <row id="axe1poche01-1">
+                    <field name="SLEEVE_ID" value="1"/>
+                    <field name="SLEEVE_ROW_ID" value="1"/>
+                    <field name="CLASSIFICATION_ID" value="1"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="SLEEVE_NAME" value="Poche1 correcte"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="TERMINAL_ELEMENT" value="false"/>
+                    <field name="FORMULA"/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+                <row id="axe1poche02-1.1">
+                    <field name="SLEEVE_ID" value="2"/>
+                    <field name="SLEEVE_ROW_ID" value="2"/>
+                    <field name="CLASSIFICATION_ID" value="1"/>
+                    <field name="SLEEVE_CODE" value="02-1.1"/>
+                    <field name="SLEEVE_NAME" value="Fils Poche1 correcte"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                    <field name="FORMULA" value="in(manager, &#34;CJ&#34;,&#34;AM&#34;)"/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+                <row id="axe1poche01-2">
+                    <field name="SLEEVE_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="3"/>
+                    <field name="CLASSIFICATION_ID" value="1"/>
+                    <field name="SLEEVE_CODE" value="01-2"/>
+                    <field name="SLEEVE_NAME" value="Poche1 fourretout"/>
+                    <field name="SLEEVE_DUSTBIN" value="true"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                    <field name="FORMULA"/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+                <row id="axe2poche01-1">
+                    <field name="SLEEVE_ID" value="4"/>
+                    <field name="SLEEVE_ROW_ID" value="4"/>
+                    <field name="CLASSIFICATION_ID" value="2"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="SLEEVE_NAME" value="Poche2 correcte"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="TERMINAL_ELEMENT" value="false"/>
+                    <field name="FORMULA"/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+                <row id="axe2poche02-1.1">
+                    <field name="SLEEVE_ID" value="5"/>
+                    <field name="SLEEVE_ROW_ID" value="5"/>
+                    <field name="CLASSIFICATION_ID" value="2"/>
+                    <field name="SLEEVE_CODE" value="02-1.1"/>
+                    <field name="SLEEVE_NAME" value="Fils Poche2 tab"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                    <field name="FORMULA" value="in(manager, &#34;CJ&#34;,&#34;AM&#34;)&#9;&amp;&amp; a==2"/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+                <row id="axe2poche01-2">
+                    <field name="SLEEVE_ID" value="6"/>
+                    <field name="SLEEVE_ROW_ID" value="6"/>
+                    <field name="CLASSIFICATION_ID" value="2"/>
+                    <field name="SLEEVE_CODE" value="01-2"/>
+                    <field name="SLEEVE_NAME" value="Poche2 fourretout"/>
+                    <field name="SLEEVE_DUSTBIN" value="true"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                    <field name="FORMULA"/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+                <row id="axe3poche01-1">
+                    <field name="SLEEVE_ID" value="7"/>
+                    <field name="SLEEVE_ROW_ID" value="7"/>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="SLEEVE_NAME" value="Poche3 correcte"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="TERMINAL_ELEMENT" value="false"/>
+                    <field name="FORMULA"/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+                <row id="axe3poche02-1.1">
+                    <field name="SLEEVE_ID" value="8"/>
+                    <field name="SLEEVE_ROW_ID" value="8"/>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_CODE" value="02-1.1"/>
+                    <field name="SLEEVE_NAME" value="Fils Poche3 retour chariot"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                    <field name="FORMULA" value="in(manager, &#34;CJ&#34;,&#34;AM&#34;)&#13;&#10;|| b==4"/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+                <row id="axe3poche01-2">
+                    <field name="SLEEVE_ID" value="9"/>
+                    <field name="SLEEVE_ROW_ID" value="9"/>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_CODE" value="01-2"/>
+                    <field name="SLEEVE_NAME" value="Poche3 fourretout"/>
+                    <field name="SLEEVE_DUSTBIN" value="true"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                    <field name="FORMULA"/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+            </table>
+
+        </input>
+        <output/>
+    </case>
+    <case id="ExportCustomise" inheritId="ExportStandard">
+        <input>
+            <table name="PM_CLASSIFICATION_STRUCTURE" orderClause="CLASSIFICATION_ID, SLEEVE_CODE">
+                <replace row="axe1poche01-1">
+                    <field name="CUSTOM_FIELD" value="A"/>
+                </replace>
+                <replace row="axe2poche02-1.1">
+                    <field name="CUSTOM_FIELD" value="B"/>
+                </replace>
+                <replace row="axe3poche01-2">
+                    <field name="CUSTOM_FIELD" value="C"/>
+                </replace>
+            </table>
+        </input>
+
+        <output/>
+
+    </case>
+
+</cases>

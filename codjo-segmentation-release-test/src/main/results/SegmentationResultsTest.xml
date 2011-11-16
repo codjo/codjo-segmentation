@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<release-test name="SegmentationSettingsTest"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="http://test-release.xsd">
+
+    <tokio-load id="tokio.load" file="SegmentationResultsTest.tokio"/>
+    <tokio-set-db id="tokio.setdb" refId="tokio.load" scenario="SegmentationResultsTest"/>
+
+    <security-model user="${testEnvironment.user}" roles="admin"/>
+
+    <gui-test>
+        <group name="Ouverture de la liste des axes d'analyse">
+            <click menu="Segmentation:Résultat de la segmentation"/>
+            <assertFrame title="Résultat de la segmentation"/>
+
+            <assertEnabled name="familyFilter" expected="true"/>
+            <assertEnabled name="axeFilter" expected="true"/>
+            <assertEnabled name="goButton" expected="false"/>
+
+            <assertListSize name="familyFilter" expected="3"/>
+            <select name="familyFilter" label="ACTION"/>
+            <assertEnabled name="goButton" expected="false"/>
+            <assertListSize name="axeFilter" expected="1"/>
+            <select name="axeFilter" label="Axe action"/>
+            <assertEnabled name="goButton" expected="true"/>
+            <click label="Go"/>
+            <assertListSize name="classificationResultTable" expected="1"/>
+            <assertTable name="classificationResultTable" row="0" column="Ma clé" expected="val4"/>
+
+            <select name="familyFilter" label="EVENT"/>
+            <assertEnabled name="goButton" expected="false"/>
+            <assertListSize name="axeFilter" expected="1"/>
+            <select name="axeFilter" label="Axe event"/>
+            <assertEnabled name="goButton" expected="true"/>
+            <click label="Go"/>
+            <assertListSize name="classificationResultTable" expected="3"/>
+            <assertTable name="classificationResultTable" row="0" column="Ma clé" expected="val1"/>
+            <assertTable name="classificationResultTable" row="1" column="Ma clé" expected="val2"/>
+            <assertTable name="classificationResultTable" row="2" column="Ma clé" expected="val3"/>
+            <setValue name="anomalyFilter" value="1"/>
+            <click label="Go"/>
+            <assertListSize name="classificationResultTable" expected="1"/>
+            <assertTable name="classificationResultTable" row="0" column="Ma clé" expected="val2"/>
+        </group>
+
+        <group name="Test du requeteur">
+
+            <group name="filtre">
+                <select name="familyFilter" label="REQUETOR"/>
+                <assertListSize name="axeFilter" expected="1"/>
+                <select name="axeFilter" label="Axe requetor"/>
+                <assertValue name="anomalyFilter" expected="1"/>
+                <assertEnabled name="goButton" expected="true"/>
+                <click label="Go"/>
+
+                <assertListSize name="classificationResultTable" expected="1"/>
+                <assertTable name="classificationResultTable" row="0" column="Ma clé" expected="req2"/>
+                <assertTable name="classificationResultTable" row="0" column="Libellé axe"
+                             expected="Axe requetor"/>
+                <assertTable name="classificationResultTable" row="0" column="Code poche" expected="01-1"/>
+                <assertTable name="classificationResultTable" row="0" column="Libellé poche" expected="R1"/>
+
+            </group>
+
+            <group name="recherche dans la table de résultat">
+
+                <assertEnabled name="classificationResultTable.LoadAction" expected="true"/>
+                <click name="classificationResultTable.LoadAction"/>
+                <assertValue name="axeFilter" expected="Axe requetor"/>
+                <assertValue name="familyFilter" expected="REQUETOR"/>
+
+                <assertFrame title="Recherche sur la table "/>
+                <select name="listCurrentFields" row="6"/>
+                <!--champ myKey-->
+                <select name="listOperators" row="0"/>
+                <setValue name="textFieldValue" value="req2" mode="keyboard"/>
+                <click name="validateButton"/>
+                <assertFrame title="Recherche sur la table " closed="true"/>
+
+                <assertValue name="anomalyFilter" expected=""/>
+                <assertValue name="keyField" expected=""/>
+
+                <assertListSize name="classificationResultTable" expected="1"/>
+                <assertTable name="classificationResultTable" row="0" column="Ma clé" expected="req2"/>
+                <assertTable name="classificationResultTable" row="0" column="Libellé axe"
+                             expected="Axe requetor"/>
+                <assertTable name="classificationResultTable" row="0" column="Code poche" expected="01-1"/>
+                <assertTable name="classificationResultTable" row="0" column="Libellé poche" expected="R1"/>
+            </group>
+
+            <group name="recherche dans la première table liée (AXES)">
+                <click name="classificationResultTable.LoadAction"/>
+
+                <assertFrame title="Recherche sur la table "/>
+                <assertListSize name="linkTablesComboBox" expected="3"/>
+
+                <assertList name="linkTablesComboBox" expected="Axes de segmentation" row="0"/>
+                <assertList name="linkTablesComboBox" expected="Structure des axes de segmentation"
+                            row="1"/>
+                <!--<assertList name="linkTablesComboBox" expected="" row="2"/>-->
+
+                <select name="linkTablesComboBox" label="Axes de segmentation"/>
+                <assertVisible name="listLinkFields"/>
+                <assertListSize name="listLinkFields" expected="4"/>
+                <assertList name="listLinkFields" expected="Id de l'axe" row="1"/>
+                <assertList name="listLinkFields" expected="Libelle de l'axe" row="2"/>
+                <assertList name="listLinkFields" expected="Type de l'axe" row="3"/>
+
+                <select name="listLinkFields" label="Id de l'axe"/>
+                <select name="listOperators" label="Egal"/>
+                <setValue name="textFieldValue" value="3" mode="keyboard"/>
+                <click name="validateButton"/>
+                <assertFrame title="Recherche sur la table " closed="true"/>
+
+                <assertListSize name="classificationResultTable" expected="1"/>
+                <assertTable name="classificationResultTable" row="0" column="Ma clé" expected="val1"/>
+                <assertTable name="classificationResultTable" row="0" column="Libellé axe"
+                             expected="Axe action"/>
+                <assertTable name="classificationResultTable" row="0" column="Code poche" expected="01-1"/>
+                <assertTable name="classificationResultTable" row="0" column="Libellé poche" expected="T1"/>
+
+            </group>
+
+            <group name="recherche dans la deuxième table liée">
+                <click name="classificationResultTable.LoadAction"/>
+
+                <assertFrame title="Recherche sur la table "/>
+                <assertListSize name="linkTablesComboBox" expected="3"/>
+
+                <select name="linkTablesComboBox" label="Structure des axes de segmentation"/>
+                <assertVisible name="listLinkFields"/>
+                <assertListSize name="listLinkFields" expected="9"/>
+
+                <select name="listLinkFields" label="Code poche"/>
+                <select name="listOperators" label="Egal"/>
+                <setValue name="textFieldValue" value="01-1" mode="keyboard"/>
+                <click name="validateButton"/>
+                <assertFrame title="Recherche sur la table " closed="true"/>
+
+                <assertListSize name="classificationResultTable" expected="3"/>
+
+                <assertTable name="classificationResultTable" row="0" column="Ma clé" expected="req1"/>
+                <assertTable name="classificationResultTable" row="0" column="Code poche" expected="01-1"/>
+                <assertTable name="classificationResultTable" row="1" column="Ma clé" expected="req2"/>
+                <assertTable name="classificationResultTable" row="1" column="Code poche" expected="01-1"/>
+                <assertTable name="classificationResultTable" row="2" column="Ma clé" expected="val1"/>
+                <assertTable name="classificationResultTable" row="2" column="Code poche" expected="01-1"/>
+            </group>
+        </group>
+
+        <group name="clic sur le paginateur">
+            <click name="classificationResultTable.RequestRecordNavigator"/>
+            <assertList expected="1" row="0" name="classificationResultTable.RequestRecordNavigator.List"/>
+        </group>
+    </gui-test>
+
+    <!-- Vérification des données résultat en base -->
+    <tokio-assert refId="tokio.setdb" allTables="true"/>
+
+</release-test>
+ 

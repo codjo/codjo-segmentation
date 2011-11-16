@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE Scenarii SYSTEM "http://scenarii.dtd">
+<Scenarii name="AUTOMATIC">
+    <Scenario id="SegmentationBatch2Axes1FamilyTest">
+        <input>
+            <table name="PM_CLASSIFICATION">
+                <row>
+                    <field name="CLASSIFICATION_ID" value="4"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe event"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+                <row>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe 2 event"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+            </table>
+            <table name="PM_CLASSIFICATION_STRUCTURE">
+                <row>
+                    <field name="SLEEVE_ID" value="41"/>
+                    <field name="SLEEVE_ROW_ID" value="123456789"/>
+                    <field name="CLASSIFICATION_ID" value="4"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="SLEEVE_NAME" value="S1"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                    <field name="FORMULA" value="isNotNull(SRC_SEG_INPUT_EVENT$AMF_APPROVAL_DATE ) &amp;&amp; SRC_SEG_INPUT_EVENT$AMF_APPROVAL_DATE  &#060;&#061; 200506"/>
+                </row>
+                <row>
+                    <field name="SLEEVE_ID" value="42"/>
+                    <field name="SLEEVE_ROW_ID" value="123456790"/>
+                    <field name="CLASSIFICATION_ID" value="4"/>
+                    <field name="SLEEVE_CODE" value="01-2"/>
+                    <field name="SLEEVE_NAME" value="S2"/>
+                    <field name="SLEEVE_DUSTBIN" value="true"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                    <field name="FORMULA" value=" "/>
+                </row>
+
+                <row>
+                    <field name="SLEEVE_ID" value="31"/>
+                    <field name="SLEEVE_ROW_ID" value="123456791"/>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="SLEEVE_NAME" value="T1"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                    <field name="FORMULA" value="isNotNull(SRC_SEG_INPUT_EVENT$AMF_APPROVAL_DATE ) &amp;&amp; SRC_SEG_INPUT_EVENT$AMF_APPROVAL_DATE  &gt;&#061; 200506"/>
+                </row>
+                <row>
+                    <field name="SLEEVE_ID" value="32"/>
+                    <field name="SLEEVE_ROW_ID" value="123456792"/>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_CODE" value="01-2"/>
+                    <field name="SLEEVE_NAME" value="T2"/>
+                    <field name="SLEEVE_DUSTBIN" value="true"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                    <field name="FORMULA" value=" "/>
+                </row>
+            </table>
+
+             <table name="SEG_INPUT_EVENT">
+                <row>
+                    <field name="MY_KEY" value="val1"/>
+                    <field name="NUM" value="1"/>
+                    <field name="AMF_APPROVAL_DATE" value="200504"/>
+                </row>
+                <row>
+                    <field name="MY_KEY" value="val2"/>
+                    <field name="NUM" value="2"/>
+                    <field name="AMF_APPROVAL_DATE" value="200506"/>
+                </row>
+                <row>
+                    <field name="MY_KEY" value="val3"/>
+                    <field name="NUM" value="3"/>
+                    <field name="AMF_APPROVAL_DATE" value="200507"/>
+                </row>
+            </table>
+
+            <table name="SEG_RESULT_EVENT">
+                <row>
+                    <field name="MY_KEY" value="val1"/>
+                    <field name="AMF_APPROVAL_DATE" value="200101"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="CLASSIFICATION_ID" value="4"/>
+                    <field name="ANOMALY" value="0"/>
+                    <field name="ANOMALY_LOG"/>
+                </row>
+                <row>
+                    <field name="MY_KEY" value="val2"/>
+                    <field name="AMF_APPROVAL_DATE" value="200101"/>
+                    <field name="SLEEVE_CODE" value="01-2"/>
+                    <field name="CLASSIFICATION_ID" value="4"/>
+                    <field name="ANOMALY" value="0"/>
+                    <field name="ANOMALY_LOG"/>
+                </row>
+                <row id="AXE_parasite_event">
+                    <field name="MY_KEY" value="val1"/>
+                    <field name="AMF_APPROVAL_DATE" value="200101"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="CLASSIFICATION_ID" value="2"/>
+                    <field name="ANOMALY" value="0"/>
+                    <field name="ANOMALY_LOG"/>
+                </row>
+            </table>
+        </input>
+
+        <etalon>
+            <table name="SEG_RESULT_EVENT" orderClause="CLASSIFICATION_ID,MY_KEY">
+                <row>
+                    <field name="MY_KEY" value="val1"/>
+                    <field name="AMF_APPROVAL_DATE" value="200504"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="CLASSIFICATION_ID" value="4"/>
+                    <field name="ANOMALY" value="0"/>
+                    <field name="ANOMALY_LOG"/>
+                </row>
+                <row>
+                    <field name="MY_KEY" value="val2"/>
+                    <field name="AMF_APPROVAL_DATE" value="200506"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="CLASSIFICATION_ID" value="4"/>
+                    <field name="ANOMALY" value="0"/>
+                    <field name="ANOMALY_LOG"/>
+                </row>
+                <row>
+                    <field name="MY_KEY" value="val3"/>
+                    <field name="AMF_APPROVAL_DATE" value="200507"/>
+                    <field name="SLEEVE_CODE" value="01-2"/>
+                    <field name="CLASSIFICATION_ID" value="4"/>
+                    <field name="ANOMALY" value="0"/>
+                    <field name="ANOMALY_LOG"/>
+                </row>
+
+                <row>
+                    <field name="MY_KEY" value="val3"/>
+                    <field name="AMF_APPROVAL_DATE" value="200507"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="ANOMALY" value="0"/>
+                    <field name="ANOMALY_LOG"/>
+                </row>
+                <row>
+                    <field name="MY_KEY" value="val2"/>
+                    <field name="AMF_APPROVAL_DATE" value="200506"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="ANOMALY" value="0"/>
+                    <field name="ANOMALY_LOG"/>
+                </row>
+                <row>
+                    <field name="MY_KEY" value="val1"/>
+                    <field name="AMF_APPROVAL_DATE" value="200504"/>
+                    <field name="SLEEVE_CODE" value="01-2"/>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="ANOMALY" value="0"/>
+                    <field name="ANOMALY_LOG"/>
+                </row>
+                <row inheritId="AXE_parasite_event"/>
+            </table>
+        </etalon>
+    </Scenario>
+</Scenarii>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<release-test name="SegmentationExecutionInError"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="http://test-release.xsd">
+
+    <tokio-load id="tokio.load" file="SegmentationExecutionInError.tokio"/>
+    <tokio-set-db id="tokio.setdb" refId="tokio.load" scenario="SegmentationExecutionInError"/>
+
+    <security-model user="${testEnvironment.user}" roles="admin"/>
+
+    <gui-test>
+        <group name="Ouverture de l'écran">
+            <click menu="Segmentation:Assistant segmentation"/>
+            <assertFrame title="Assistant segmentation"/>
+            <assertListSize name="ClassificationWizardWindow" expected="2"/>
+        </group>
+
+        <group name="Test de la formule invalide et détectée par le validateur de formule">
+            <select name="ClassificationWizardWindow" row="0"/>
+            <click name="WizardPanel.applyButton"/>
+            <assertFrame title="Erreur"/>
+            <assertValue name="errorMessage"
+                         expected="Impossible de compiler : Axe formule invalide détectée"
+                         matching="contains"/>
+            <click label="OK"/>
+            <click name="WizardPanel.previousButton"/>
+        </group>
+
+        <group name="Test de la formule invalide MAIS NON détectée par le validateur de formule">
+            <select name="ClassificationWizardWindow" row="1"/>
+            <click name="WizardPanel.applyButton"/>
+            <assertFrame title="Erreur"/>
+            <assertValue name="errorMessage"
+                         expected="Impossible de compiler : Axe formule invalide non détectée"
+                         matching="contains"/>
+            <click label="OK"/>
+        </group>
+    </gui-test>
+
+    <tokio-assert refId="tokio.setdb" allTables="true"/>
+
+</release-test>

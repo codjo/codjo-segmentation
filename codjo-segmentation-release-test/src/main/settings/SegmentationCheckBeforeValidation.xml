@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<release-test name="SegmentationCheckBeforeValidation"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="http://test-release.xsd">
+    <tokio-load id="tokio.load" file="SegmentationCheckBeforeValidation.tokio"/>
+    <tokio-set-db id="tokio.setdb" refId="tokio.load" scenario="SegmentationCheckBeforeValidation"/>
+
+    <security-model user="${testEnvironment.user}" roles="admin"/>
+
+    <gui-test>
+        <group name="Création d'un axe d'analyse">
+            <click menu="Segmentation:Axes d'analyse"/>
+            <assertFrame title="Axes d'analyse"/>
+            <click name="ClassificationWindow.AddAction"/>
+            <setValue name="classificationName" value="Répartition par tâches"/>
+            <setValue name="classificationType" value="ACTION"/>
+
+            <group name="poche fourre-tout">
+                <select name="axisTree" path="Répartition par tâches"/>
+                <click name="addSleeveNode"/>
+                <select name="axisTree" path="Répartition par tâches:NOUVELLE POCHE"/>
+                <setValue name="sleeveName" value="AUTRE" mode="keyboard"/>
+                <setValue name="sleeveDustbin" value="true" mode="keyboard"/>
+                <assertValue name="sleeveDustbin" expected="true"/>
+            </group>
+
+            <group name="nouvel axe">
+                <select name="axisTree" path="Répartition par tâches"/>
+                <click name="addSleeveNode"/>
+                <select name="axisTree" path="Répartition par tâches:NOUVELLE POCHE"/>
+                <setValue name="sleeveName" value="ENTRE 200 ET 500 KEUR" mode="keyboard"/>
+
+                <click name="editExpressionButton"/>
+                <assertFrame title="Paramétrage des expressions"/>
+            </group>
+
+            <group name="expression invalide">
+                <setValue name="editor.expression" value="n'importe quoi"/>
+                <click name="editor.okButton"/>
+
+                <assertFrame title="Erreur"/>
+                <assertValue name="errorMessage"
+                             expected="L'expression : &#10;'n'importe quoi'&#10; est invalide."/>
+                <click label="OK"/>
+            </group>
+
+            <group name="expression valide avec une variable">
+                <setValue name="editor.expression" value="Ma variable==&quot;une valeur&quot; &amp;&amp; mon num==10"/>
+                <click name="editor.okButton"/>
+            </group>
+
+            <click name="ButtonPanelGui.okButton"/>
+            <assertFrame title="Axe d'analyse" closed="true"/>
+        </group>
+    </gui-test>
+
+    <tokio-assert refId="tokio.setdb" allTables="true"/>
+</release-test>

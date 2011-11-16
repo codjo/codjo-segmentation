@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<release-test name="SegmentationIncludesTest"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="http://test-release.xsd">
+    <tokio-load id="tokio.load" file="SegmentationIncludesTest.tokio"/>
+
+    <call-method file="SegmentationIncludesTest.xmf">
+        <parameter name="case" value="IncludesDeletePoche"/>
+
+        <parameter name="assertIncludes">
+            <![CDATA[
+<group name="Interdiction de supprimer la poche r&#233;f&#233;renc&#233;e par l&#39;alias">
+    <click name="ClassificationWindow" row="0" count="2"/>
+    <select name="axisTree" path="AXE1:AXE1-POCHE1"/>
+
+    <click name="editExpressionButton"/>
+    <assertFrame title="Param&#233;trage des expressions"/>
+    <assertEnabled name="editor.okButton" expected="false"/>
+
+    <setValue name="editor.expression" value="Valeur liquidative de r&#233;f&#233;rence &#062;&#061; 10000"/>
+
+    <assertEnabled name="editor.okButton" expected="true"/>
+    <click name="editor.okButton"/>
+    <assertFrame title="Confirmation"/>
+    <assertValue dialogTitle="Confirmation"
+                 expected="Cette poche est utilis&#233;e dans les poches :&#10;&#39;AXE2-POCHE1&#39; de l&#39;axe &#39;AXE2&#39;&#10;Etes-vous certain de vouloir la modifier ?"/>
+    <click label="Non"/>
+    <assertFrame title="Param&#233;trage des expressions"/>
+    <click name="editor.cancelButton"/>
+
+    <assertFrame title="Param&#233;trage des expressions" closed="true"/>
+    <click name="ButtonPanelGui.cancelButton"/>
+
+    <assertFrame title="Axes d&#39;analyse"/>
+
+    <click name="ClassificationWindow" row="0" count="2"/>
+    <select name="axisTree" path="AXE1:AXE1-POCHE1"/>
+    <click name="deleteNode"/>
+    <assertTree name="axisTree" path="Axes:AXE1:AXE1-POCHE1" exists="false"/>
+    <click name="ButtonPanelGui.okButton"/>
+    <assertFrame title="Erreur"/>
+    <assertValue name="errorMessage"
+                 expected="Vous ne pouvez pas supprimer la poche &#39;AXE1-POCHE1&#39; car elle est utilis&#233;e dans la poche &#39;AXE2-POCHE1&#39; de l&#39;axe &#39;AXE2&#39;."/>
+    <click label="OK"/>
+    <click name="ButtonPanelGui.cancelButton"/>
+</group>
+
+<group name="Interdiction de supprimer l&#39;axe dont une poche est r&#233;f&#233;renc&#233;e par un alias">
+    <select name="ClassificationWindow" row="0"/>
+    <click name="ClassificationWindow.DeleteAction"/>
+    <assertFrame title="Confirmation de suppression"/>
+    <click label="Oui"/>
+    <assertFrame title="Confirmation de suppression" closed="true"/>
+    <assertFrame title="Erreur"/>
+    <assertValue name="errorMessage"
+                 expected="Vous ne pouvez pas supprimer la poche &#39;AXE1-POCHE1&#39; car elle est utilis&#233;e dans la poche &#39;AXE2-POCHE1&#39; de l&#39;axe &#39;AXE2&#39;."/>
+    <click label="OK"/>
+    <assertListSize name="ClassificationWindow" expected="3"/>
+</group>
+
+<group name="Suppression de la poche contenat l&#39;alias">
+    <click name="ClassificationWindow" row="1" count="2"/>
+    <select name="axisTree" path="AXE2:AXE2-POCHE1"/>
+    <click name="deleteNode"/>
+    <assertTree name="axisTree" path="Axes:AXE2:AXE2-POCHE1" exists="false"/>
+    <click name="ButtonPanelGui.okButton"/>
+
+    <click name="ClassificationWindow" row="1" count="2"/>
+    <assertTree name="axisTree" path="AXE2:AXE2-POCHE1" exists="false"/>
+</group>
+            ]]>
+        </parameter>
+    </call-method>
+
+    <call-method file="SegmentationIncludesTest.xmf">
+        <parameter name="case" value="IncludesDeleteAxe"/>
+
+        <parameter name="assertIncludes">
+            <![CDATA[
+<group name="Suppression de l&#39;axe contenant la poche ayant l&#39;alias">
+    <select name="ClassificationWindow" row="1"/>
+    <click name="ClassificationWindow.DeleteAction"/>
+    <assertFrame title="Confirmation de suppression"/>
+    <click label="Oui"/>
+    <assertFrame title="Confirmation de suppression" closed="true"/>
+    <assertListSize name="ClassificationWindow" expected="2"/>
+    <assertTable name="ClassificationWindow" expected="AXE1" row="0" column="Nom"/>
+    <assertTable name="ClassificationWindow" expected="AXE3" row="1" column="Nom"/>
+</group>
+          ]]>
+        </parameter>
+    </call-method>
+
+    <call-method file="SegmentationIncludesTest.xmf">
+        <parameter name="case" value="IncludesRecursifDeletePoche"/>
+
+        <parameter name="assertIncludes">
+            <![CDATA[
+ <group name="Ajout d&#39;une inclusion pour poche ayant alias">
+    <click name="ClassificationWindow" row="2" count="2"/>
+
+    <select name="axisTree" path="AXE3:AXE3-POCHE1"/>
+    <click name="editExpressionButton"/>
+    <assertFrame title="Param&#233;trage des expressions"/>
+
+    <selectTab name="editor.helperTabs" tabIndex="3"/>
+
+    <setValue name="editor.expression" value=""/>
+    <select name="editor.sleeveTree" path="Axes:AXE2:AXE2-POCHE1"/>
+    <click name="editor.sleeveTree" count="2"/>
+
+    <assertValue name="editor.expression" expected=" AXE2$AXE2-POCHE1 "/>
+    <click name="editor.okButton"/>
+    <assertFrame title="Param&#233;trage des expressions" closed="true"/>
+    <click name="ButtonPanelGui.okButton"/>
+    <assertFrame title="Axe d&#39;analyse" closed="true"/>
+</group>
+
+<group name="Interdiction de supprimer la poche 1 de AXE1 r&#233;f&#233;renc&#233;e par l&#39;alias">
+    <click name="ClassificationWindow" row="0" count="2"/>
+    <select name="axisTree" path="AXE1:AXE1-POCHE1"/>
+    <click name="deleteNode"/>
+    <assertTree name="axisTree" path="Axes:AXE1:AXE1-POCHE1" exists="false"/>
+    <click name="ButtonPanelGui.okButton"/>
+    <assertFrame title="Erreur"/>
+    <assertValue name="errorMessage"
+                 expected="Vous ne pouvez pas supprimer la poche &#39;AXE1-POCHE1&#39; car elle est utilis&#233;e dans la poche &#39;AXE2-POCHE1&#39; de l&#39;axe &#39;AXE2&#39;."/>
+    <click label="OK"/>
+    <click name="ButtonPanelGui.cancelButton"/>
+</group>
+
+<group name="Interdiction de supprimer l&#39;axe AXE 1 dont une poche est r&#233;f&#233;renc&#233;e par un alias">
+    <select name="ClassificationWindow" row="0"/>
+    <click name="ClassificationWindow.DeleteAction"/>
+    <assertFrame title="Confirmation de suppression"/>
+    <click label="Oui"/>
+    <assertFrame title="Confirmation de suppression" closed="true"/>
+    <assertFrame title="Erreur"/>
+    <assertValue name="errorMessage"
+                 expected="Vous ne pouvez pas supprimer la poche &#39;AXE1-POCHE1&#39; car elle est utilis&#233;e dans la poche &#39;AXE2-POCHE1&#39; de l&#39;axe &#39;AXE2&#39;."/>
+    <click label="OK"/>
+    <assertListSize name="ClassificationWindow" expected="3"/>
+</group>
+
+<group name="Interdiction de supprimer la poche 1 de AXE2 r&#233;f&#233;renc&#233;e par l&#39;alias">
+    <click name="ClassificationWindow" row="1" count="2"/>
+    <select name="axisTree" path="AXE2:AXE2-POCHE1"/>
+    <click name="deleteNode"/>
+    <assertTree name="axisTree" path="Axes:AXE2:AXE2-POCHE1" exists="false"/>
+    <click name="ButtonPanelGui.okButton"/>
+    <assertFrame title="Erreur"/>
+    <assertValue name="errorMessage"
+                 expected="Vous ne pouvez pas supprimer la poche &#39;AXE2-POCHE1&#39; car elle est utilis&#233;e dans la poche &#39;AXE3-POCHE1&#39; de l&#39;axe &#39;AXE3&#39;."/>
+    <click label="OK"/>
+    <click name="ButtonPanelGui.cancelButton"/>
+</group>
+
+<group name="Interdiction de supprimer l&#39;axe AXE2  dont une poche est r&#233;f&#233;renc&#233;e par un alias">
+    <select name="ClassificationWindow" row="1"/>
+    <click name="ClassificationWindow.DeleteAction"/>
+    <assertFrame title="Confirmation de suppression"/>
+    <click label="Oui"/>
+    <assertFrame title="Confirmation de suppression" closed="true"/>
+    <assertFrame title="Erreur"/>
+    <assertValue name="errorMessage"
+                 expected="Vous ne pouvez pas supprimer la poche &#39;AXE2-POCHE1&#39; car elle est utilis&#233;e dans la poche &#39;AXE3-POCHE1&#39; de l&#39;axe &#39;AXE3&#39;."/>
+    <click label="OK"/>
+    <assertListSize name="ClassificationWindow" expected="3"/>
+</group>
+
+<group name="Suppression de la poche contenat l&#39;alias">
+    <click name="ClassificationWindow" row="2" count="2"/>
+    <select name="axisTree" path="AXE3:AXE3-POCHE1"/>
+    <click name="deleteNode"/>
+    <assertTree name="axisTree" path="Axes:AXE3:AXE3-POCHE1" exists="false"/>
+    <click name="ButtonPanelGui.okButton"/>
+
+    <click name="ClassificationWindow" row="2" count="2"/>
+    <assertTree name="axisTree" path="AXE3:AXE3-POCHE1" exists="false"/>
+</group>
+          ]]>
+        </parameter>
+    </call-method>
+
+    <call-method file="SegmentationIncludesTest.xmf">
+        <parameter name="case" value="IncludesRecursifDeleteAxe"/>
+
+        <parameter name="assertIncludes">
+            <![CDATA[
+<group name="Ajout d&#39;une inclusion pour poche ayant alias">
+    <click name="ClassificationWindow" row="2" count="2"/>
+
+    <select name="axisTree" path="AXE3:AXE3-POCHE1"/>
+    <click name="editExpressionButton"/>
+    <assertFrame title="Param&#233;trage des expressions"/>
+
+    <selectTab name="editor.helperTabs" tabIndex="3"/>
+
+    <setValue name="editor.expression" value=""/>
+    <select name="editor.sleeveTree" path="Axes:AXE2:AXE2-POCHE1"/>
+    <click name="editor.sleeveTree" count="2"/>
+
+    <assertValue name="editor.expression" expected=" AXE2$AXE2-POCHE1 "/>
+    <click name="editor.okButton"/>
+    <assertFrame title="Param&#233;trage des expressions" closed="true"/>
+    <click name="ButtonPanelGui.okButton"/>
+    <assertFrame title="Axe d&#39;analyse" closed="true"/>
+</group>
+
+<group name="Suppression de l&#39;axe contenant la poche ayant l&#39;alias">
+    <select name="ClassificationWindow" row="2"/>
+    <click name="ClassificationWindow.DeleteAction"/>
+    <assertFrame title="Confirmation de suppression"/>
+    <click label="Oui"/>
+    <assertFrame title="Confirmation de suppression" closed="true"/>
+    <assertListSize name="ClassificationWindow" expected="2"/>
+    <assertTable name="ClassificationWindow" expected="AXE1" row="0" column="Nom"/>
+    <assertTable name="ClassificationWindow" expected="AXE2" row="1" column="Nom"/>
+</group>
+          ]]>
+        </parameter>
+    </call-method>
+
+    <call-method file="SegmentationIncludesTest.xmf">
+        <parameter name="case" value="IncludesNonCyclique"/>
+
+        <parameter name="assertIncludes">
+            <![CDATA[
+ <group name="Ajout d&#39;une inclusion pour poche ayant alias">
+    <click name="ClassificationWindow" row="0" count="2"/>
+
+    <select name="axisTree" path="AXE1:AXE1-POCHE2"/>
+    <click name="editExpressionButton"/>
+    <assertFrame title="Param&#233;trage des expressions"/>
+
+    <selectTab name="editor.helperTabs" tabIndex="3"/>
+
+    <setValue name="editor.expression" value=""/>
+    <select name="editor.sleeveTree" path="Axes:AXE2:AXE2-POCHE1"/>
+    <click name="editor.sleeveTree" count="2"/>
+
+    <assertValue name="editor.expression" expected=" AXE2$AXE2-POCHE1 "/>
+    <click name="editor.okButton"/>
+    <assertFrame title="Confirmation"/>
+    <assertValue dialogTitle="Confirmation"
+                 expected="Cette poche est utilis&#233;e dans les poches :&#10;&#39;AXE2-POCHE2&#39; de l&#39;axe &#39;AXE2&#39;&#10;&#39;AXE3-POCHE1&#39; de l&#39;axe &#39;AXE3&#39;&#10;Etes-vous certain de vouloir la modifier ?"/>
+    <click label="Oui"/>
+    <assertFrame title="Param&#233;trage des expressions" closed="true"/>
+    <click name="ButtonPanelGui.okButton"/>
+    <assertFrame title="Axe d&#39;analyse" closed="true"/>
+</group>
+
+<group name="Interdiction de supprimer l&#39;axe AXE 1 dont une poche est r&#233;f&#233;renc&#233;e par un alias">
+    <select name="ClassificationWindow" row="0"/>
+    <click name="ClassificationWindow.DeleteAction"/>
+    <assertFrame title="Confirmation de suppression"/>
+    <click label="Oui"/>
+    <assertFrame title="Confirmation de suppression" closed="true"/>
+    <assertFrame title="Erreur"/>
+    <assertValue name="errorMessage"
+                 expected="Vous ne pouvez pas supprimer la poche &#39;AXE1-POCHE1&#39; car elle est utilis&#233;e dans la poche &#39;AXE2-POCHE1&#39; de l&#39;axe &#39;AXE2&#39;."/>
+    <click label="OK"/>
+    <assertListSize name="ClassificationWindow" expected="3"/>
+</group>
+
+<group name="Interdiction de supprimer l&#39;axe AXE2  dont une poche est r&#233;f&#233;renc&#233;e par un alias">
+    <select name="ClassificationWindow" row="1"/>
+    <click name="ClassificationWindow.DeleteAction"/>
+    <assertFrame title="Confirmation de suppression"/>
+    <click label="Oui"/>
+    <assertFrame title="Confirmation de suppression" closed="true"/>
+    <assertFrame title="Erreur"/>
+    <assertValue name="errorMessage"
+                 expected="Vous ne pouvez pas supprimer la poche &#39;AXE2-POCHE1&#39; car elle est utilis&#233;e dans la poche &#39;AXE1-POCHE2&#39; de l&#39;axe &#39;AXE1&#39;."/>
+    <click label="OK"/>
+    <assertListSize name="ClassificationWindow" expected="3"/>
+</group>
+          ]]>
+        </parameter>
+    </call-method>
+
+    <call-method file="SegmentationIncludesTest.xmf">
+        <parameter name="case" value="IncludesCyclique"/>
+
+        <parameter name="assertIncludes">
+            <![CDATA[
+<group name="Ajout d&#39;une inclusion cyclique">
+    <click name="ClassificationWindow" row="0" count="2"/>
+
+    <select name="axisTree" path="AXE1:AXE1-POCHE1"/>
+    <click name="editExpressionButton"/>
+    <assertFrame title="Param&#233;trage des expressions"/>
+
+    <selectTab name="editor.helperTabs" tabIndex="3"/>
+
+    <setValue name="editor.expression" value=""/>
+    <select name="editor.sleeveTree" path="Axes:AXE2:AXE2-POCHE1"/>
+    <click name="editor.sleeveTree" count="2"/>
+
+    <assertValue name="editor.expression" expected=" AXE2$AXE2-POCHE1 "/>
+    <click name="editor.okButton"/>
+    <assertFrame title="Erreur"/>
+    <assertValue dialogTitle="Erreur"
+                 expected="Vous venez de cr&#233;er une r&#233;f&#233;rence cyclique avec la poche &#39;AXE2-POCHE1&#39; de l&#39;axe &#39;AXE2&#39;."/>
+    <click label="OK"/>
+    <assertFrame title="Param&#233;trage des expressions"/>
+    <click name="editor.cancelButton"/>
+
+    <assertFrame title="Param&#233;trage des expressions" closed="true"/>
+
+    <click name="ButtonPanelGui.cancelButton"/>
+    <assertFrame title="Axe d&#39;analyse" closed="true"/>
+</group>
+          ]]>
+        </parameter>
+    </call-method>
+
+    <call-method file="SegmentationIncludesTest.xmf">
+        <parameter name="case" value="IncludesModifyPoche"/>
+
+        <parameter name="assertIncludes">
+            <![CDATA[
+<group name="Confirmation de modification de la poche r&#233;f&#233;renc&#233;e par l&#39;alias">
+    <click name="ClassificationWindow" row="0" count="2"/>
+    <select name="axisTree" path="AXE1:AXE1-POCHE1"/>
+    <click name="editExpressionButton"/>
+    <assertFrame title="Param&#233;trage des expressions"/>
+    <setValue name="editor.expression" value="Valeur liquidative de r&#233;f&#233;rence &#062;&#061; 10000"/>
+    <click name="editor.okButton"/>
+    <assertFrame title="Confirmation"/>
+    <assertValue dialogTitle="Confirmation"
+                 expected="Cette poche est utilis&#233;e dans les poches :&#10;&#39;AXE2-POCHE1&#39; de l&#39;axe &#39;AXE2&#39;&#10;Etes-vous certain de vouloir la modifier ?"/>
+    <click label="Oui"/>
+
+    <assertFrame title="Param&#233;trage des expressions" closed="true"/>
+    <click name="ButtonPanelGui.okButton"/>
+
+    <assertFrame title="Axes d&#39;analyse"/>
+</group>
+            ]]>
+        </parameter>
+    </call-method>
+
+</release-test>

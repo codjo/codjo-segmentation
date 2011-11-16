@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<family-list xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:noNamespaceSchemaLocation="http://family-list.xsd">
+
+    <!-- Une famille de la codification portefeuille -->
+    <family id="PortfolioSegmentation" root="AP_PORTFOLIO" destination="AP_DEST_PORTFOLIO">
+
+        <arguments>
+            <name>photo</name>
+            <name>segmentationId</name>
+        </arguments>
+
+        <functions>
+            <holder>net.codjo.segmentation.server.preference.family.FunctionHolderMock</holder>
+            <holder>net.codjo.segmentation.server.preference.family.DefaultFunctionHolder</holder>
+        </functions>
+
+        <delete-config>
+            <where-clause>PHOTO = '$photo$' and AXE_ID = $segmentationId$</where-clause>
+        </delete-config>
+
+        <select-config>
+            <where-clause>AP_PORTFOLIO.PHOTO='$photo$'</where-clause>
+
+            <join-key left="AP_ROOT" type="inner" right="AP_PORTFOLIO">
+                <part left="COL_R1" operator="=" right="COL_A1"/>
+            </join-key>
+        </select-config>
+
+        <gui>
+            <variables>
+                <variable name="PTF_CONSOLIDE" label="Portefeuille"
+                          comment="La var PTf de la table non nulle" sqlType="varchar"/>
+                <variable name="PHOTO_CONSOLIDE" label="Photo" sqlType="int"/>
+            </variables>
+
+            <filters>
+                <filter table="AP_TOTO" column="COL3"/>
+                <filter table="AP_TOTO" column="COL4"/>
+            </filters>
+        </gui>
+    </family>
+
+    <!-- Une famille de la codification portefeuille -->
+    <family id="SecuritySegmentation" root="AP_SECURITY" destination="AP_DEST_SECURITY">
+        <arguments/>
+        <functions/>
+        <delete-config/>
+        <select-config/>
+    </family>
+
+    <!-- Une famille de la codification portefeuille -->
+    <family id="OutstandSegmentation" root="AP_OUTSTAND" destination="AP_DEST_OUTSTAND">
+        <arguments/>
+        <functions/>
+        <delete-config/>
+        <select-config>
+            <where-clause>AP_OUTSTAND.PHOTO='$photo$'</where-clause>
+            <join-key left="AP_OUTSTAND" type="inner" right="AP_SECURITY">
+                <part left="PHOTO" operator="=" right="PHOTO"/>
+                <part left="SECURITY_ID" operator="=" right="SECURITY_ID"/>
+            </join-key>
+            <join-key left="AP_SECURITY" type="left" right="AP_SECURITY_INTERNAL_FUND">
+                <part left="PHOTO" operator="=" right="PHOTO"/>
+                <part left="SECURITY_ID" operator="=" right="SECURITY_ID"/>
+            </join-key>
+        </select-config>
+
+        <!--<select-filter class="net.codjo.segmentation.ejb.bean.DefaultFilter"/>-->
+        <result-config>
+            <where-clause>SEG_RESULT_EVENT.MY_KEY='$myKey$'
+            </where-clause>
+            <column label="Ma clé" value="MY_KEY" table="SEG_RESULT_EVENT"/>
+        </result-config>
+    </family>
+
+</family-list>

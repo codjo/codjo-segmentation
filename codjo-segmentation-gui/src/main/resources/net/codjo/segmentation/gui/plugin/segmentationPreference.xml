@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<preferenceList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:noNamespaceSchemaLocation="http://preference.xsd">
+    <preference id="ClassificationWindow" detailWindowClassName="net.codjo.segmentation.gui.settings.ClassificationStructureLogic">
+        <selectByPk>selectClassificationById</selectByPk>
+        <selectAll>selectAllClassification</selectAll>
+        <update>updateClassification</update>
+        <delete>deleteClassification</delete>
+        <insert>newClassification</insert>
+        
+        <column fieldName="classificationId" label="Id" preferredSize="20"/>
+        <column fieldName="classificationName" label="Nom" preferredSize="300"/>
+        <column fieldName="classificationType" label="Famille" preferredSize="200"/>
+    </preference>
+
+    <!-- Sélection des axes -->
+    <preference id="ClassificationWizardWindow">
+        <selectAll>selectAllClassification</selectAll>
+        <column fieldName="classificationName" label="Axe" minSize="200"/>
+    </preference>
+    <!-- Affichage des erreurs survenues lors de la segmentation -->
+    <preference id="ClassificationAnomalyWindow">
+        <selectAll>selectAllClassificationAnomaly</selectAll>
+        <column fieldName="classificationId" label="Id Axe" minSize="75"/>
+        <column fieldName="sleeveCode" label="Code Poche" minSize="75"/>
+        <column fieldName="anomaly" label="Nb anomalies" minSize="25" maxSize="100" sorter="Numeric"/>
+        <column fieldName="anomalyLog" label="Log Anomalie" minSize="75"/>
+    </preference>
+
+    <!-- Affichage des resultats de l'import de parametrage : Axes-->
+    <preference id="ImportClassificationParameters">
+        <column fieldName="classificationId" label="Id Axe" preferredSize="50"/>
+        <column fieldName="classificationName" label="Libellé Axe" preferredSize="180"/>
+        <column fieldName="classificationType" label="Famille" preferredSize="150"/>
+        <column fieldName="anomalyLog" label="Log" preferredSize="200"/>
+    </preference>
+
+    <!-- Affichage des resultats de l'import de parametrage : Poches -->
+    <preference id="ImportSleeveParameters">
+        <column fieldName="classificationId" label="Id Axe" preferredSize="75" sorter="Numeric"/>
+        <column fieldName="sleeveCode" label="Code Poche" preferredSize="120"/>
+        <column fieldName="sleeveName" label="Libellé Poche" preferredSize="150"/>
+        <column fieldName="sleeveDustbin" label="Poche fourre-tout" preferredSize="120" sorter="Boolean"/>
+        <column fieldName="terminalElement" label="Poche de terminaison" preferredSize="120" sorter="Boolean"/>
+        <column fieldName="formula" label="Formule" preferredSize="200"/>
+        <column fieldName="anomalyLog" label="Log" preferredSize="250"/>
+    </preference>
+</preferenceList>

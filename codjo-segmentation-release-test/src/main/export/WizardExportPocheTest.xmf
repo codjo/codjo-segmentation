@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<method
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="test-release.xsd">
+    <parameters>
+        <parameter name="case" required="true" comment="case"/>
+        <parameter name="file" required="true" comment="nom du fichier export"/>
+    </parameters>
+
+    <body>
+        <tokio-set-db id="tokio.setdb_@case@" refId="tokio.load" caseId="@case@"/>
+
+        <delete dir="${basedir}\target\release-test\tmp" failonerror="false"/>
+        <mkdir dir="${basedir}\target\release-test\tmp"/>
+
+        <gui-test>
+            <group name="Ouverture de l'écran d'export">
+                <click menu="Segmentation:Export de paramétrage"/>
+                <assertFrame title="Export de paramétrage"/>
+
+                <assertEnabled name="DirectoryPathField.directoryNameField" expected="true"/>
+                <assertValue name="DirectoryPathField.directoryNameField" expected=""/>
+
+                <assertEnabled name="exportButton" expected="false"/>
+                <assertEnabled name="cancelButton" expected="true"/>
+
+                <assertValue name="classificationRadio" expected="true"/>
+                <assertValue name="sleeveRadio" expected="false"/>
+
+                <click name="sleeveRadio"/>
+
+                <setValue name="DirectoryPathField.directoryNameField"
+                          value="${basedir}\target\release-test\tmp\@file@.txt"/>
+
+                <assertEnabled name="exportButton" expected="true"/>
+
+                <assertValue name="classificationRadio" expected="false"/>
+                <assertValue name="sleeveRadio" expected="true"/>
+
+                <click name="exportButton"/>
+            </group>
+        </gui-test>
+
+        <file-assert expected="@file@_etalon.txt" actual="@file@.txt"/>
+
+    </body>
+</method>

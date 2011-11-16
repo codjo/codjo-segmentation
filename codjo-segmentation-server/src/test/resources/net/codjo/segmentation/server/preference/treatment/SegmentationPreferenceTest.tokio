@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE Scenarii SYSTEM "http://scenarii.dtd">
+<Scenarii name="TestCaseName">
+    <Scenario id="StoryId">
+        <input/>
+        <etalon/>
+    </Scenario>
+</Scenarii>

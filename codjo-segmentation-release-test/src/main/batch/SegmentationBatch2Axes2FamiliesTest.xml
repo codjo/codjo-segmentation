@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<release-test name="SegmentationBatch2Axes2FamiliesTest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="http://test-release.xsd">
+
+    <tokio-load id="tokio.load" file="SegmentationBatch2Axes2FamiliesTest.tokio"/>
+    <tokio-set-db id="tokio.setdb" refId="tokio.load" scenario="SegmentationBatch2Axes2FamiliesTest"/>
+
+    <security-model user="${testEnvironment.user}" roles="admin"/>
+
+    <batch-segmentation initiator="admin" segmentations="3,4" date="2002-05-07">
+        <extraArg line="-argument &quot;myKey val4&quot;"/>
+    </batch-segmentation>
+
+    <tokio-assert refId="tokio.setdb" allTables="true"/>
+
+</release-test>

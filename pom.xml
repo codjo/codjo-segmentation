@@ -1,0 +1,120 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--
+     | POM Relationships
+     -->
+
+    <parent>
+        <groupId>net.codjo.pom</groupId>
+        <artifactId>codjo-pom-library</artifactId>
+        <version>SNAPSHOT</version>
+    </parent>
+    <groupId>net.codjo.segmentation</groupId>
+    <artifactId>codjo-segmentation</artifactId>
+    <version>1.73-SNAPSHOT</version>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>net.codjo.segmentation</groupId>
+                <artifactId>codjo-segmentation-batch</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.codjo.segmentation</groupId>
+                <artifactId>codjo-segmentation-gui</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.codjo.segmentation</groupId>
+                <artifactId>codjo-segmentation-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.codjo.segmentation</groupId>
+                <artifactId>codjo-segmentation-server</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.codjo.segmentation</groupId>
+                <artifactId>codjo-segmentation-datagen</artifactId>
+                <version>${project.version}</version>
+                <classifier>client</classifier>
+            </dependency>
+            <dependency>
+                <groupId>net.codjo.segmentation</groupId>
+                <artifactId>codjo-segmentation-datagen</artifactId>
+                <version>${project.version}</version>
+                <classifier>server</classifier>
+            </dependency>
+            <dependency>
+                <groupId>net.codjo.segmentation</groupId>
+                <artifactId>codjo-segmentation-datagen</artifactId>
+                <version>${project.version}</version>
+                <classifier>sql</classifier>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <!--
+     | Build Settings
+     -->
+
+    <packaging>pom</packaging>
+    <modules>
+        <module>codjo-segmentation-datagen</module>
+        <module>codjo-segmentation-sql</module>
+        <module>codjo-segmentation-common</module>
+        <module>codjo-segmentation-server</module>
+        <module>codjo-segmentation-batch</module>
+        <module>codjo-segmentation-gui</module>
+        <module>codjo-segmentation-release-test</module>
+    </modules>
+
+    <!--
+    | Project Information
+    -->
+
+    <name>Lib &gt; Segmentation</name>
+    <description>Librairie permettant de segmenter des donnees.</description>
+    <inceptionYear>2007</inceptionYear>
+
+    <!--
+    | Environment Information
+    -->
+
+    <scm>
+        <connection>scm:git:https://github.com/codjo/codjo-segmentation.git</connection>
+        <developerConnection>scm:git:https://github.com/codjo/codjo-segmentation.git</developerConnection>
+        <url>https://github.com/codjo/codjo-segmentation</url>
+    </scm>
+
+    <properties>
+        <!--
+           Les variables serverMainClass et batchMainClass sont utilises dans les scripts unix
+           et par le plugin test-release
+        -->
+        <serverMainClass>net.codjo.segmentation.releasetest.SegmentationServerTestMock</serverMainClass>
+        <clientMainClass>net.codjo.segmentation.releasetest.SegmentationGuiTestMock</clientMainClass>
+        <serverPort>35714</serverPort>
+        <serverHost>localhost</serverHost>
+        <serverHostDev>localhost</serverHostDev>
+        <serverHostInt>wd-roses</serverHostInt>
+        <serverHostRec>ar_roses</serverHostRec>
+
+        <databaseApplicationUser>${defaultDatabaseApplicationUser}</databaseApplicationUser>
+        <databaseApplicationPassword>${defaultDatabaseApplicationPassword}</databaseApplicationPassword>
+
+        <!--<databaseUser>user_dev</databaseUser>-->
+        <!--<databasePassword>samsung</databasePassword>-->
+
+        <batchMainClass>net.codjo.segmentation.releasetest.SegmentationBatchMock</batchMainClass>
+        <!--<batchUserLogin>user_tr</batchUserLogin>-->
+        <!--<batchUserPassword>samsung</batchUserPassword>-->
+
+        <!-- Definition des variables utilises dans les scripts unix import/export -->
+        <!--<applicationDirIn>$ROS_IN</applicationDirIn>-->
+        <!--<applicationDirOut>$ROS_OUT</applicationDirOut>-->
+        <!--<logDir>$ROS_LOG/java/</logDir>-->
+    </properties>
+</project>

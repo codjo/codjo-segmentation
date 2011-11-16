@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE Scenarii SYSTEM "http://scenarii.dtd">
+<Scenarii name="ClassificationStructureControlManagerTest">
+    <Scenario id="noOtherSleeveInDb">
+        <input>
+            <table name="PM_CLASSIFICATION">
+                <row>
+                    <field name="CLASSIFICATION_ID" value="1"/>
+                    <field name="CLASSIFICATION_NAME" value="Label 1"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+                <row>
+                    <field name="CLASSIFICATION_ID" value="2"/>
+                    <field name="CLASSIFICATION_NAME" value="Label 2"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+                <row>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="CLASSIFICATION_NAME" value="Label 3"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+            </table>
+            <table name="PM_CLASSIFICATION_STRUCTURE">
+                <row>
+                    <field name="SLEEVE_ID" value="11"/>
+                    <field name="SLEEVE_ROW_ID" value="11"/>
+                    <field name="CLASSIFICATION_ID" value="1"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="SLEEVE_NAME" value="Poche1"/>
+                </row>
+            </table>
+        </input>
+        <etalon/>
+    </Scenario>
+    <Scenario id="classificationExistsInDb">
+        <input>
+            <table name="PM_CLASSIFICATION">
+                <row>
+                    <field name="CLASSIFICATION_ID" value="1"/>
+                    <field name="CLASSIFICATION_NAME" value="Label 1"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+                <row>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="CLASSIFICATION_NAME" value="Label 3"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+            </table>
+        </input>
+        <etalon/>
+    </Scenario>
+    <Scenario id="flagOtherSleevesWhenAxeInError">
+        <input>
+            <table name="PM_CLASSIFICATION">
+                <row>
+                    <field name="CLASSIFICATION_ID" value="1"/>
+                    <field name="CLASSIFICATION_NAME" value="Label 1"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+                <row>
+                    <field name="CLASSIFICATION_ID" value="2"/>
+                    <field name="CLASSIFICATION_NAME" value="Label 2"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+            </table>
+        </input>
+        <etalon/>
+    </Scenario>
+</Scenarii>

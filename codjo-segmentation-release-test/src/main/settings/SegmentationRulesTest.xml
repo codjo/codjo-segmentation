@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<release-test name="SegmentationRulesTest">
+
+    <tokio-load id="tokio.load" file="SegmentationRulesTest.tokio"/>
+    <tokio-set-db id="tokio.setdb" refId="tokio.load" scenario="SegmentationRulesTest"/>
+
+    <security-model user="${testEnvironment.user}" roles="admin"/>
+
+    <gui-test>
+        <group name="Création d'un axe d'analyse avec réutilisation des règles">
+            <click menu="Segmentation:Axes d&apos;analyse"/>
+            <assertFrame title="Axes d'analyse"/>
+            <assertListSize name="ClassificationWindow" expected="1"/>
+            <assertTable name="ClassificationWindow" expected="Répartition par fourchettes de coûts"
+                         row="0" column="Nom"/>
+            <assertTable name="ClassificationWindow" expected="ACTION" row="0" column="Famille"/>
+
+            <click name="ClassificationWindow.AddAction"/>
+            <setValue name="classificationName" value="Répartition par tâches"/>
+            <setValue name="classificationType" value="ACTION"/>
+
+            <group name="menu contextuel : copier alias">
+
+                <select name="axisTree" path="Répartition par tâches"/>
+                <click name="addSleeveNode"/>
+                <select name="axisTree" path="Répartition par tâches:NOUVELLE POCHE"/>
+                <setValue name="sleeveName" value="ENTRE 200 ET 500 KEUR" mode="keyboard"/>
+                <click name="editExpressionButton"/>
+                <assertFrame title="Paramétrage des expressions"/>
+
+                <selectTab name="editor.helperTabs" tabIndex="3"/>
+                <select name="editor.sleeveTree"
+                        path="Axes:Répartition par fourchettes de coûts:ENTRE 100 ET 500 KEUR:ENTRE 200 ET 500 KEUR"/>
+
+                <clickRight name="editor.sleeveTree" mode="model"
+                            path="Axes:Répartition par fourchettes de coûts:ENTRE 100 ET 500 KEUR:ENTRE 200 ET 500 KEUR">
+                    <assertListSize expected="2"/>
+                    <assertList row="0" expected="Copier alias"/>
+                    <assertList row="1" expected="Copier formule"/>
+                    <select label="Copier alias"/>
+                </clickRight>
+
+                <assertValue name="editor.expression"
+                             expected=" Répartition par fourchettes de coûts$ENTRE 200 ET 500 KEUR "/>
+                <click name="editor.okButton"/>
+                <assertFrame title="Paramétrage des expressions" closed="true"/>
+
+            </group>
+
+            <group name="menu contextuel : copier formule">
+                <select name="axisTree" path="Répartition par tâches"/>
+                <click name="addSleeveNode"/>
+                <select name="axisTree"
+                        path="Répartition par tâches:NOUVELLE POCHE"/>
+                <setValue name="sleeveName" value="ENTRE 100 ET 200 KEUR" mode="keyboard"/>
+                <click name="editExpressionButton"/>
+                <assertFrame title="Paramétrage des expressions"/>
+
+                <selectTab name="editor.helperTabs" tabIndex="3"/>
+
+                <select name="editor.sleeveTree"
+                        path="Axes:Répartition par fourchettes de coûts:ENTRE 100 ET 500 KEUR:ENTRE 100 ET 200 KEUR"/>
+
+                <clickRight name="editor.sleeveTree" mode="model"
+                            path="Axes:Répartition par fourchettes de coûts:ENTRE 100 ET 500 KEUR:ENTRE 100 ET 200 KEUR">
+                    <assertListSize expected="2"/>
+                    <assertList row="0" expected="Copier alias"/>
+                    <assertList row="1" expected="Copier formule"/>
+                    <select label="Copier formule"/>
+                </clickRight>
+
+                <assertValue name="editor.expression"
+                             expected="Valeur liquidative de référence &#062;&#061; 100000 &amp;&amp; Valeur liquidative de référence &#060; 200000"/>
+                <click name="editor.okButton"/>
+                <assertFrame title="Paramétrage des expressions" closed="true"/>
+
+            </group>
+
+            <group name="double-clic : alias par défaut">
+                <select name="axisTree" path="Répartition par tâches"/>
+                <click name="addSleeveNode"/>
+                <select name="axisTree" path="Répartition par tâches:NOUVELLE POCHE"/>
+                <setValue name="sleeveName" value="MOINS DE 100 KEUR" mode="keyboard"/>
+                <click name="editExpressionButton"/>
+                <assertFrame title="Paramétrage des expressions"/>
+
+                <selectTab name="editor.helperTabs" tabIndex="3"/>
+
+                <select name="editor.sleeveTree"
+                        path="Axes:Répartition par fourchettes de coûts:MOINS DE 100 KEUR"/>
+
+                <click name="editor.sleeveTree" count="2"/>
+
+                <assertValue name="editor.expression"
+                             expected=" Répartition par fourchettes de coûts$MOINS DE 100 KEUR "/>
+                <click name="editor.okButton"/>
+                <assertFrame title="Paramétrage des expressions" closed="true"/>
+            </group>
+
+            <group name="création poche fourre-tout">
+                <select name="axisTree" path="Répartition par tâches"/>
+                <click name="addSleeveNode"/>
+                <select name="axisTree" path="Répartition par tâches:NOUVELLE POCHE"/>
+                <setValue name="sleeveName" value="AUTRE" mode="keyboard"/>
+                <setValue name="sleeveDustbin" value="true" mode="keyboard"/>
+                <assertValue name="sleeveDustbin" expected="true"/>
+                <click name="ButtonPanelGui.okButton"/>
+            </group>
+
+            <group name="Copier formule ayant un alias référencé">
+                <assertFrame title="Axes d'analyse"/>
+                <assertListSize name="ClassificationWindow" expected="2"/>
+
+                <assertTable name="ClassificationWindow" expected="Répartition par fourchettes de coûts"
+                             row="0" column="Nom"/>
+                <assertTable name="ClassificationWindow" expected="Répartition par tâches"
+                             row="1" column="Nom"/>
+
+                <click name="ClassificationWindow.AddAction"/>
+                <setValue name="classificationName" value="Répartition par actions"/>
+                <setValue name="classificationType" value="ACTION"/>
+
+                <select name="axisTree" path="Répartition par actions"/>
+                <click name="addSleeveNode"/>
+                <select name="axisTree" path="Répartition par actions:NOUVELLE POCHE"/>
+                <setValue name="sleeveName" value="ENTRE 50 ET 100 KEUR" mode="keyboard"/>
+                <click name="editExpressionButton"/>
+                <assertFrame title="Paramétrage des expressions"/>
+
+                <selectTab name="editor.helperTabs" tabIndex="3"/>
+
+                <select name="editor.sleeveTree" path="Axes:Répartition par tâches:MOINS DE 100 KEUR"/>
+
+                <clickRight name="editor.sleeveTree" mode="model"
+                            path="Axes:Répartition par tâches:MOINS DE 100 KEUR">
+                    <assertListSize expected="2"/>
+                    <assertList row="0" expected="Copier alias"/>
+                    <assertList row="1" expected="Copier formule"/>
+                    <select label="Copier formule"/>
+                </clickRight>
+
+                <assertValue name="editor.expression"
+                             expected=" Répartition par fourchettes de coûts$MOINS DE 100 KEUR "/>
+                <click name="editor.okButton"/>
+                <assertFrame title="Paramétrage des expressions" closed="true"/>
+
+                <group name="création poche fourre-tout">
+                    <select name="axisTree" path="Répartition par actions"/>
+                    <click name="addSleeveNode"/>
+                    <select name="axisTree" path="Répartition par actions:NOUVELLE POCHE"/>
+                    <setValue name="sleeveName" value="AUTRE" mode="keyboard"/>
+                    <setValue name="sleeveDustbin" value="true" mode="keyboard"/>
+                    <assertValue name="sleeveDustbin" expected="true"/>
+                    <click name="ButtonPanelGui.okButton"/>
+                    <assertFrame title="Axe d'analyse" closed="true"/>
+
+                </group>
+            </group>
+        </group>
+
+    </gui-test>
+
+    <tokio-assert refId="tokio.setdb" allTables="true"/>
+
+</release-test>

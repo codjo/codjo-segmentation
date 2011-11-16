@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<story id="replaceVariables" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="file:C:/dev/platform/cache/xsd/codjo-segmentation-story.xsd">
+
+    <input>
+        <PM_CLASSIFICATION_STRUCTURE>
+            <row autoComplete="true">
+                <SLEEVE_CODE value="1"/>
+                <SLEEVE_ID value="1"/>
+                <SLEEVE_NAME value="sleeve1"/>
+                <CLASSIFICATION_ID value="1"/>
+                <SLEEVE_ROW_ID value="1234"/>
+                <FORMULA value="tototo"/>
+            </row>
+            <row autoComplete="true">
+                <SLEEVE_CODE value="2"/>
+                <SLEEVE_ID value="2"/>
+                <SLEEVE_NAME value="sleeve2"/>
+                <CLASSIFICATION_ID value="1"/>
+                <SLEEVE_ROW_ID value="1111"/>
+                <FORMULA value="INC_$$1$1234"/>
+            </row>
+            <row autoComplete="true">
+                <SLEEVE_CODE value="3"/>
+                <SLEEVE_ID value="3"/>
+                <SLEEVE_NAME value="sleeve3"/>
+                <CLASSIFICATION_ID value="1"/>
+                <SLEEVE_ROW_ID value="2222"/>
+                <FORMULA value="INC_$$1$3333"/>
+            </row>
+            <row autoComplete="true">
+                <SLEEVE_CODE value="4"/>
+                <SLEEVE_ID value="4"/>
+                <SLEEVE_NAME value="sleeve4"/>
+                <CLASSIFICATION_ID value="1"/>
+                <SLEEVE_ROW_ID value="3333"/>
+                <FORMULA value="INC_$$1$2222"/>
+            </row>
+
+        </PM_CLASSIFICATION_STRUCTURE>
+    </input>
+</story>

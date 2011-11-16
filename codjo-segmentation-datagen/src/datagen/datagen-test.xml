@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<entities>
+    <entity name="net.codjo.segmentation.server.test.data.SegInputAction" table="SEG_INPUT_ACTION">
+        <description>table de test</description>
+        <feature>
+            <sql/>
+            <sql-constraint/>
+            <doc-structure/>
+            <generate-all/>
+        </feature>
+
+        <primary-key>
+            <field name="myKey"/>
+        </primary-key>
+
+        <properties>
+            <field name="myKey" type="string">
+                <description>ma clé</description>
+                <sql type="varchar" precision="10"/>
+            </field>
+            <field name="num" type="integer">
+                <description>mon num</description>
+                <sql type="numeric" precision="10"/>
+            </field>
+            <field name="referentialFundPrice" type="big-decimal">
+                <description>Valeur liquidative de référence</description>
+                <sql type="numeric" precision="22,2"/>
+            </field>
+        </properties>
+    </entity>
+    <entity name="net.codjo.segmentation.server.test.data.SegResultAction" table="SEG_RESULT_ACTION">
+        <description>table de test bis</description>
+        <feature>
+            <sql/>
+            <sql-constraint/>
+            <doc-structure/>
+            <generate-all/>
+            <handler-requetor id="allSegResultAction"/>
+        </feature>
+
+        <primary-key>
+            <field name="myKey"/>
+        </primary-key>
+
+        <properties>
+            <field name="myKey" type="string">
+                <description>ma clé</description>
+                <sql type="varchar" precision="10"/>
+            </field>
+            <field name="referentialFundPrice" type="big-decimal">
+                <description>Valeur liquidative de référence</description>
+                <sql type="numeric" precision="22,2"/>
+            </field>
+            <field name="sleeveCode" type="string">
+                <description>Code poche</description>
+                <sql type="varchar" precision="50" required="true"/>
+            </field>
+            <field name="classificationId" type="integer">
+                <description>Id de l'axe</description>
+                <sql type="integer" required="true"/>
+            </field>
+            <field name="anomaly" type="integer">
+                <description>anomaly</description>
+                <sql type="integer"/>
+            </field>
+            <field name="anomalyLog" type="string">
+                <description>anomalyLog</description>
+                <sql type="varchar" precision="255"/>
+            </field>
+        </properties>
+    </entity>
+
+    <entity name="net.codjo.segmentation.server.test.data.SegInputEvent" table="SEG_INPUT_EVENT">
+        <description>table de test ter</description>
+        <feature>
+            <sql/>
+            <sql-constraint/>
+            <doc-structure/>
+            <generate-all/>
+        </feature>
+
+        <primary-key>
+            <field name="myKey"/>
+        </primary-key>
+
+        <properties>
+            <field name="myKey" type="string">
+                <description>ma clé</description>
+                <sql type="varchar" precision="10"/>
+            </field>
+            <field name="num" type="integer">
+                <description>mon num</description>
+                <sql type="numeric" precision="10"/>
+            </field>
+            <field name="amfApprovalDate" type="integer">
+                <description>Date d'agrément</description>
+                <sql type="integer"/>
+            </field>
+        </properties>
+    </entity>
+    <entity name="net.codjo.segmentation.server.test.data.SegResultEvent" table="SEG_RESULT_EVENT">
+        <description>table de test 4</description>
+        <feature>
+            <sql/>
+            <sql-constraint/>
+            <doc-structure/>
+            <generate-all/>
+            <handler-requetor id="allSegResultEvent"/>
+        </feature>
+
+        <primary-key>
+            <field name="myKey"/>
+        </primary-key>
+
+        <properties>
+            <field name="myKey" type="string">
+                <description>ma clé</description>
+                <sql type="varchar" precision="10"/>
+            </field>
+            <field name="amfApprovalDate" type="integer">
+                <description>Date d'agrément</description>
+                <sql type="integer"/>
+            </field>
+            <field name="sleeveCode" type="string">
+                <description>Code poche</description>
+                <sql type="varchar" precision="50" required="true"/>
+            </field>
+            <field name="classificationId" type="integer">
+                <description>Id de l'axe</description>
+                <sql type="integer" required="true"/>
+            </field>
+            <field name="anomaly" type="integer">
+                <description>anomaly</description>
+                <sql type="integer"/>
+            </field>
+            <field name="anomalyLog" type="string">
+                <description>anomalyLog</description>
+                <sql type="varchar" precision="255"/>
+            </field>
+            <field name="creationDatetime" type="java.sql.Timestamp">
+                <description>Date de création</description>
+                <sql type="timestamp" default="getDate()"/>
+            </field>
+        </properties>
+    </entity>
+
+    <entity name="net.codjo.segmentation.server.test.data.SegInputRequetor" table="SEG_INPUT_REQUETOR">
+        <description>table de test ter</description>
+        <feature>
+            <sql/>
+            <sql-constraint/>
+            <doc-structure/>
+            <generate-all/>
+        </feature>
+
+        <primary-key>
+            <field name="myKey"/>
+        </primary-key>
+
+        <properties>
+            <field name="myKey" type="string">
+                <description>ma clé</description>
+                <sql type="varchar" precision="10"/>
+            </field>
+            <field name="num" type="integer">
+                <description>mon num</description>
+                <sql type="numeric" precision="10"/>
+            </field>
+            <field name="amfApprovalDate" type="integer">
+                <description>Date d'agrément</description>
+                <sql type="integer"/>
+            </field>
+        </properties>
+    </entity>
+    <entity name="net.codjo.segmentation.server.test.data.LinkedInputRequetor" table="LINKED_INPUT_REQUETOR">
+        <feature>
+            <sql/>
+            <sql-constraint/>
+            <doc-structure/>
+            <generate-all/>
+        </feature>
+        <primary-key>
+            <field name="myKey"/>
+        </primary-key>
+        <properties>
+            <field name="myKey" type="string">
+                <description>ma clé</description>
+                <sql type="varchar" precision="10"/>
+            </field>
+            <field name="label" type="string">
+                <description>label</description>
+                <sql type="varchar" precision="10"/>
+            </field>
+        </properties>
+    </entity>
+    <entity name="net.codjo.segmentation.server.test.data.SegResultRequetor" table="SEG_RESULT_REQUETOR">
+        <description>table de test 4</description>
+        <feature>
+            <sql/>
+            <sql-constraint/>
+            <doc-structure/>
+            <generate-all/>
+            <handler-requetor id="allSegResultRequetor">
+                <link to="PM_CLASSIFICATION">
+                    <key from="CLASSIFICATION_ID" to="CLASSIFICATION_ID"/>
+                </link>
+                 <link to="PM_CLASSIFICATION_STRUCTURE">
+                     <key from="CLASSIFICATION_ID" to="CLASSIFICATION_ID"/>
+                     <key from="SLEEVE_CODE" to="SLEEVE_CODE"/>
+                </link>
+            </handler-requetor>
+        </feature>
+
+        <primary-key>
+            <field name="myKey"/>
+        </primary-key>
+
+        <properties>
+            <field name="myKey" type="string">
+                <description>ma clé</description>
+                <sql type="varchar" precision="10"/>
+            </field>
+            <field name="amfApprovalDate" type="integer">
+                <description>Date d'agrément</description>
+                <sql type="integer"/>
+            </field>
+            <field name="sleeveCode" type="string">
+                <description>Code poche</description>
+                <sql type="varchar" precision="50" required="true"/>
+            </field>
+            <field name="classificationId" type="integer">
+                <description>Id de l'axe</description>
+                <sql type="integer" required="true"/>
+            </field>
+            <field name="anomaly" type="integer">
+                <description>anomaly</description>
+                <sql type="integer"/>
+            </field>
+            <field name="anomalyLog" type="string">
+                <description>anomalyLog</description>
+                <sql type="varchar" precision="255"/>
+            </field>
+            <field name="creationDatetime" type="java.sql.Timestamp">
+                <description>Date de création</description>
+                <sql type="timestamp" default="getDate()"/>
+            </field>
+        </properties>
+    </entity>
+</entities>

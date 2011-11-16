@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<cases xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="file:C:/dev/platform/cache/xsd/roses-cases.xsd">
+<case id="Common">
+    <input>
+        <table name="PM_SEGMENTATION"/>
+        <table name="PM_EXPRESSION"/>
+
+        <table name="PM_CLASSIFICATION">
+            <row id="axe1">
+                <field name="CLASSIFICATION_ID" value="1"/>
+                <field name="CLASSIFICATION_NAME" value="AXE1"/>
+                <field name="CLASSIFICATION_TYPE" value="ACTION"/>
+            </row>
+            <row id="axe2">
+                <field name="CLASSIFICATION_ID" value="2"/>
+                <field name="CLASSIFICATION_NAME" value="AXE2"/>
+                <field name="CLASSIFICATION_TYPE" value="ACTION"/>
+            </row>
+            <row id="axe3">
+                <field name="CLASSIFICATION_ID" value="3"/>
+                <field name="CLASSIFICATION_NAME" value="AXE3"/>
+                <field name="CLASSIFICATION_TYPE" value="ACTION"/>
+            </row>
+        </table>
+        <table name="PM_CLASSIFICATION_STRUCTURE">
+            <row id="AXE1-POCHE1">
+                <field name="CLASSIFICATION_ID" value="1"/>
+                <field name="SLEEVE_ROW_ID" value="000000000001"/>
+                <field name="SLEEVE_CODE" value="01-1"/>
+                <field name="SLEEVE_DUSTBIN" value="false"/>
+                <field name="SLEEVE_ID" value="1"/>
+                <field name="SLEEVE_NAME" value="AXE1-POCHE1"/>
+                <field name="FORMULA"
+                       value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE &#062;&#061; 200000"/>
+                <field name="TERMINAL_ELEMENT" value="true"/>
+            </row>
+            <row id="AXE1-POCHE2">
+                <field name="CLASSIFICATION_ID" value="1"/>
+                <field name="SLEEVE_ROW_ID" value="000000000002"/>
+                <field name="SLEEVE_CODE" value="01-2"/>
+                <field name="SLEEVE_DUSTBIN" value="false"/>
+                <field name="SLEEVE_ID" value="2"/>
+                <field name="SLEEVE_NAME" value="AXE1-POCHE2"/>
+                <field name="FORMULA"
+                       value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE &#062;&#061; 500000"/>
+                <field name="TERMINAL_ELEMENT" value="true"/>
+            </row>
+
+            <row id="AXE1-fourre-tout">
+                <field name="CLASSIFICATION_ID" value="1"/>
+                <field name="SLEEVE_ROW_ID" value="000000000003"/>
+                <field name="SLEEVE_CODE" value="01-3"/>
+                <field name="SLEEVE_DUSTBIN" value="true"/>
+                <field name="SLEEVE_ID" value="3"/>
+                <field name="SLEEVE_NAME" value="AXE1 - LE RESTE"/>
+                <field name="FORMULA" value=" "/>
+                <field name="TERMINAL_ELEMENT" value="true"/>
+            </row>
+
+            <row id="AXE2-POCHE1">
+                <field name="CLASSIFICATION_ID" value="2"/>
+                <field name="SLEEVE_ROW_ID" value="000000000004"/>
+                <field name="SLEEVE_CODE" value="01-1"/>
+                <field name="SLEEVE_DUSTBIN" value="false"/>
+                <field name="SLEEVE_ID" value="4"/>
+                <field name="SLEEVE_NAME" value="AXE2-POCHE1"/>
+                <field name="FORMULA"
+                       value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE &#062;&#061; 5000"/>
+                <field name="TERMINAL_ELEMENT" value="true"/>
+            </row>
+            <row id="AXE2-POCHE2">
+                <field name="CLASSIFICATION_ID" value="2"/>
+                <field name="SLEEVE_ROW_ID" value="000000000005"/>
+                <field name="SLEEVE_CODE" value="01-2"/>
+                <field name="SLEEVE_DUSTBIN" value="false"/>
+                <field name="SLEEVE_ID" value="5"/>
+                <field name="SLEEVE_NAME" value="AXE2-POCHE2"/>
+                <field name="FORMULA"
+                       value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE &#062;&#061; 100&amp;&amp; INC_$$1$000000000002 &amp;&amp; INC_$$1$000000000002 "/>
+                <field name="TERMINAL_ELEMENT" value="true"/>
+            </row>
+
+            <row id="AXE2-fourre-tout">
+                <field name="CLASSIFICATION_ID" value="2"/>
+                <field name="SLEEVE_ROW_ID" value="000000000006"/>
+                <field name="SLEEVE_CODE" value="01-3"/>
+                <field name="SLEEVE_DUSTBIN" value="true"/>
+                <field name="SLEEVE_ID" value="6"/>
+                <field name="SLEEVE_NAME" value="AXE2 - LE RESTE"/>
+                <field name="FORMULA" value=" "/>
+                <field name="TERMINAL_ELEMENT" value="true"/>
+            </row>
+
+            <row id="AXE3-POCHE1">
+                <field name="CLASSIFICATION_ID" value="3"/>
+                <field name="SLEEVE_ROW_ID" value="000000000007"/>
+                <field name="SLEEVE_CODE" value="01-1"/>
+                <field name="SLEEVE_DUSTBIN" value="false"/>
+                <field name="SLEEVE_ID" value="7"/>
+                <field name="SLEEVE_NAME" value="AXE3-POCHE1"/>
+                <field name="FORMULA"
+                       value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE &#062;&#061; 100 &amp;&amp; INC_$$1$000000000002"/>
+                <field name="TERMINAL_ELEMENT" value="true"/>
+            </row>
+            <row id="AXE3-POCHE2">
+                <field name="CLASSIFICATION_ID" value="3"/>
+                <field name="SLEEVE_ROW_ID" value="000000000008"/>
+                <field name="SLEEVE_CODE" value="01-2"/>
+                <field name="SLEEVE_DUSTBIN" value="false"/>
+                <field name="SLEEVE_ID" value="8"/>
+                <field name="SLEEVE_NAME" value="AXE3-POCHE2"/>
+                <field name="FORMULA"
+                       value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE &#062;&#061; 10"/>
+                <field name="TERMINAL_ELEMENT" value="true"/>
+            </row>
+
+            <row id="AXE3-fourre-tout">
+                <field name="CLASSIFICATION_ID" value="3"/>
+                <field name="SLEEVE_ROW_ID" value="000000000009"/>
+                <field name="SLEEVE_CODE" value="01-3"/>
+                <field name="SLEEVE_DUSTBIN" value="true"/>
+                <field name="SLEEVE_ID" value="9"/>
+                <field name="SLEEVE_NAME" value="AXE3 - LE RESTE"/>
+                <field name="FORMULA" value=" "/>
+                <field name="TERMINAL_ELEMENT" value="true"/>
+            </row>
+        </table>
+
+    </input>
+    <output/>
+</case>
+
+<case id="IncludesDeletePoche" inheritId="Common">
+    <input>
+    </input>
+    <output>
+        <table name="PM_CLASSIFICATION">
+            <copy row="axe1"/>
+            <copy row="axe2"/>
+            <copy row="axe3"/>
+        </table>
+        <table name="PM_CLASSIFICATION_STRUCTURE">
+            <copy row="AXE1-POCHE1"/>
+            <copy row="AXE1-POCHE2"/>
+            <copy row="AXE1-fourre-tout"/>
+            <copy row="AXE2-POCHE2">
+                <field name="SLEEVE_CODE" value="01-1"/>
+                <field name="FORMULA"
+                       value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE &#062;&#061; 100&amp;&amp; INC_$$1$000000000002 &amp;&amp; INC_$$1$000000000002 &amp;&amp; INC_$$1$000000000002 "/>
+            </copy>
+            <copy row="AXE2-fourre-tout">
+                <field name="SLEEVE_CODE" value="01-2"/>
+            </copy>
+            <copy row="AXE3-POCHE1"/>
+            <copy row="AXE3-POCHE2"/>
+            <copy row="AXE3-fourre-tout"/>
+        </table>
+        <PM_EXPRESSION orderClause="EXPRESSION_ID">
+            <row>
+                <EXPRESSION_ID value="1"/>
+                <DESTINATION_FIELD value="CLASSIFICATION_ID"/>
+                <EXPRESSION value="1"/>
+            </row>
+            <row>
+                <EXPRESSION_ID value="2"/>
+                <DESTINATION_FIELD value="SLEEVE_CODE"/>
+                <EXPRESSION value="01-3"/>
+            </row>
+            <row>
+                <EXPRESSION_ID value="3"/>
+                <DESTINATION_FIELD value="VAR_01_1"/>
+                <EXPRESSION value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE >= 200000"/>
+            </row>
+            <row>
+                <EXPRESSION_ID value="4"/>
+                <DESTINATION_FIELD value="MY_KEY"/>
+                <EXPRESSION value="SRC_SEG_INPUT_ACTION$MY_KEY"/>
+            </row>
+            <row>
+                <EXPRESSION_ID value="5"/>
+                <DESTINATION_FIELD value="REFERENTIAL_FUND_PRICE"/>
+                <EXPRESSION value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE"/>
+            </row>
+            <row>
+                <EXPRESSION_ID value="6"/>
+                <DESTINATION_FIELD value="VAR_01_2"/>
+                <EXPRESSION value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE >= 500000"/>
+            </row>
+            <row>
+                <EXPRESSION_ID value="7"/>
+                <DESTINATION_FIELD value="CLASSIFICATION_ID"/>
+                <EXPRESSION value="2"/>
+            </row>
+            <row>
+                <EXPRESSION_ID value="8"/>
+                <DESTINATION_FIELD value="SLEEVE_CODE"/>
+                <EXPRESSION value="01-2"/>
+            </row>
+            <row>
+                <EXPRESSION_ID value="10"/>
+                <DESTINATION_FIELD value="MY_KEY"/>
+                <EXPRESSION value="SRC_SEG_INPUT_ACTION$MY_KEY"/>
+            </row>
+            <row>
+                <EXPRESSION_ID value="11"/>
+                <DESTINATION_FIELD value="REFERENTIAL_FUND_PRICE"/>
+                <EXPRESSION value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE"/>
+            </row>
+            <row>
+                <EXPRESSION_ID value="12"/>
+                <DESTINATION_FIELD value="VAR_01_1"/>
+                <EXPRESSION
+                      value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE >= 100&amp;&amp; SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE >= 500000&amp;&amp; SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE >= 500000&amp;&amp; SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE >= 500000"/>
+            </row>
+            <row>
+                <EXPRESSION_ID value="13"/>
+                <DESTINATION_FIELD value="CLASSIFICATION_ID"/>
+                <EXPRESSION value="3"/>
+            </row>
+            <row>
+                <EXPRESSION_ID value="14"/>
+                <DESTINATION_FIELD value="SLEEVE_CODE"/>
+                <EXPRESSION value="01-3"/>
+            </row>
+            <row>
+                <EXPRESSION_ID value="15"/>
+                <DESTINATION_FIELD value="VAR_01_1"/>
+                <EXPRESSION
+                      value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE >= 100 &amp;&amp; SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE >= 500000"/>
+            </row>
+            <row>
+                <EXPRESSION_ID value="16"/>
+                <DESTINATION_FIELD value="MY_KEY"/>
+                <EXPRESSION value="SRC_SEG_INPUT_ACTION$MY_KEY"/>
+            </row>
+            <row>
+                <EXPRESSION_ID value="17"/>
+                <DESTINATION_FIELD value="REFERENTIAL_FUND_PRICE"/>
+                <EXPRESSION value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE"/>
+            </row>
+            <row>
+                <EXPRESSION_ID value="18"/>
+                <DESTINATION_FIELD value="VAR_01_2"/>
+                <EXPRESSION value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE >= 10"/>
+            </row>
+        </PM_EXPRESSION>
+    </output>
+</case>
+<case id="IncludesDeleteAxe" inheritId="Common">
+    <input>
+    </input>
+    <output>
+        <table name="PM_CLASSIFICATION">
+            <copy row="axe1"/>
+            <copy row="axe3"/>
+        </table>
+        <table name="PM_CLASSIFICATION_STRUCTURE">
+            <copy row="AXE1-POCHE1"/>
+            <copy row="AXE1-POCHE2"/>
+            <copy row="AXE1-fourre-tout"/>
+            <copy row="AXE3-POCHE1"/>
+            <copy row="AXE3-POCHE2"/>
+            <copy row="AXE3-fourre-tout"/>
+        </table>
+    </output>
+</case>
+<case id="IncludesCyclique" inheritId="Common">
+    <input>
+    </input>
+    <output>
+        <table name="PM_CLASSIFICATION">
+            <copy row="axe1"/>
+            <copy row="axe2"/>
+            <copy row="axe3"/>
+        </table>
+        <table name="PM_CLASSIFICATION_STRUCTURE">
+            <copy row="AXE1-POCHE1"/>
+            <copy row="AXE1-POCHE2"/>
+            <copy row="AXE1-fourre-tout"/>
+            <copy row="AXE2-POCHE1">
+                <field name="FORMULA" value=" INC_$$1$000000000001 "/>
+            </copy>
+            <copy row="AXE2-POCHE2">
+                <field name="FORMULA"
+                       value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE &#062;&#061; 100&amp;&amp; INC_$$1$000000000002 &amp;&amp; INC_$$1$000000000002 &amp;&amp; INC_$$1$000000000002 "/>
+            </copy>
+
+            <copy row="AXE2-fourre-tout"/>
+
+            <copy row="AXE3-POCHE1"/>
+            <copy row="AXE3-POCHE2"/>
+            <copy row="AXE3-fourre-tout"/>
+        </table>
+    </output>
+</case>
+
+<case id="IncludesRecursifDeletePoche" inheritId="Common">
+    <input>
+    </input>
+    <output>
+        <table name="PM_CLASSIFICATION">
+            <copy row="axe1"/>
+            <copy row="axe2"/>
+            <copy row="axe3"/>
+        </table>
+        <table name="PM_CLASSIFICATION_STRUCTURE">
+            <copy row="AXE1-POCHE1"/>
+            <copy row="AXE1-POCHE2"/>
+            <copy row="AXE1-fourre-tout"/>
+            <copy row="AXE2-POCHE1">
+                <field name="FORMULA" value=" INC_$$1$000000000001 "/>
+            </copy>
+            <copy row="AXE2-POCHE2">
+                <field name="FORMULA"
+                       value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE >= 100&amp;&amp; INC_$$1$000000000002 &amp;&amp; INC_$$1$000000000002 &amp;&amp; INC_$$1$000000000002 "/>
+            </copy>
+
+            <copy row="AXE2-fourre-tout"/>
+
+            <copy row="AXE3-POCHE2">
+                <field name="SLEEVE_CODE" value="01-1"/>
+            </copy>
+            <copy row="AXE3-fourre-tout">
+                <field name="SLEEVE_CODE" value="01-2"/>
+            </copy>
+        </table>
+    </output>
+</case>
+<case id="IncludesRecursifDeleteAxe" inheritId="Common">
+    <input>
+    </input>
+    <output>
+        <table name="PM_CLASSIFICATION">
+            <copy row="axe1"/>
+            <copy row="axe2"/>
+        </table>
+        <table name="PM_CLASSIFICATION_STRUCTURE">
+            <copy row="AXE1-POCHE1"/>
+            <copy row="AXE1-POCHE2"/>
+            <copy row="AXE1-fourre-tout"/>
+            <copy row="AXE2-POCHE1">
+                <field name="FORMULA" value=" INC_$$1$000000000001 "/>
+            </copy>
+            <copy row="AXE2-POCHE2">
+                <field name="FORMULA"
+                       value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE &#062;&#061; 100&amp;&amp; INC_$$1$000000000002 &amp;&amp; INC_$$1$000000000002 &amp;&amp; INC_$$1$000000000002 "/>
+            </copy>
+
+            <copy row="AXE2-fourre-tout"/>
+        </table>
+    </output>
+</case>
+<case id="IncludesNonCyclique" inheritId="Common">
+    <input>
+    </input>
+    <output>
+        <table name="PM_CLASSIFICATION">
+            <copy row="axe1"/>
+            <copy row="axe2"/>
+            <copy row="axe3"/>
+        </table>
+        <table name="PM_CLASSIFICATION_STRUCTURE">
+            <copy row="AXE1-POCHE1"/>
+            <copy row="AXE1-POCHE2">
+                <field name="FORMULA" value=" INC_$$2$000000000004 "/>
+            </copy>
+            <copy row="AXE1-fourre-tout"/>
+            <copy row="AXE2-POCHE1">
+                <field name="FORMULA" value=" INC_$$1$000000000001 "/>
+            </copy>
+            <copy row="AXE2-POCHE2">
+                <field name="FORMULA"
+                       value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE &#062;&#061; 100&amp;&amp; INC_$$1$000000000002 &amp;&amp; INC_$$1$000000000002 &amp;&amp; INC_$$1$000000000002 "/>
+            </copy>
+
+            <copy row="AXE2-fourre-tout"/>
+            <copy row="AXE3-POCHE1"/>
+            <copy row="AXE3-POCHE2"/>
+            <copy row="AXE3-fourre-tout"/>
+        </table>
+    </output>
+</case>
+
+<case id="IncludesModifyPoche" inheritId="Common">
+    <input>
+    </input>
+    <output>
+        <table name="PM_CLASSIFICATION">
+            <copy row="axe1"/>
+            <copy row="axe2"/>
+            <copy row="axe3"/>
+        </table>
+        <table name="PM_CLASSIFICATION_STRUCTURE" orderClause="SLEEVE_ID">
+            <copy row="AXE1-POCHE1">
+                <field name="FORMULA"
+                       value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE &#062;&#061; 10000"/>
+            </copy>
+            <copy row="AXE1-POCHE2"/>
+            <copy row="AXE1-fourre-tout"/>
+            <copy row="AXE2-POCHE1">
+                <field name="FORMULA" value=" INC_$$1$000000000001 "/>
+            </copy>
+            <copy row="AXE2-POCHE2">
+                <field name="FORMULA"
+                       value="SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE &#062;&#061; 100&amp;&amp; INC_$$1$000000000002 &amp;&amp; INC_$$1$000000000002 &amp;&amp; INC_$$1$000000000002 "/>
+            </copy>
+            <copy row="AXE2-fourre-tout"/>
+            <copy row="AXE3-POCHE1"/>
+            <copy row="AXE3-POCHE2"/>
+            <copy row="AXE3-fourre-tout"/>
+        </table>
+    </output>
+</case>
+
+</cases>

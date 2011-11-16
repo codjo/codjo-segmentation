@@ -1,0 +1,9 @@
+CLASSIFICATION_ID	CLASSIFICATION_NAME	CLASSIFICATION_TYPE	CUSTOM_FIELD
+2	Axe event 2	EVENT	Custom1
+3	Axe event 3	EVENT	Custom2
+1	Id existe deja	MYFAMILY	Yoyo
+4	Ceci est un libellé trop long, il ne peut pas dépasser 50 caractères	TAFAMILLE	Yuyu
+5	famille trop longue	FAMILLE_TROP_LONGUE	Yiyi
+6	Ceci est un libellé trop long, il ne peut pas dépasser 50 caractères et une famille trop longue	FAMILLE_TROP_LONGUE	Yaya
+7	Doublon Axe1	DOUBLON	Yoo
+7	Doublon Axe2	DOUBLON	Yuu

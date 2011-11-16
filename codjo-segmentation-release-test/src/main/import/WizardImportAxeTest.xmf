@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<method
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="test-release.xsd">
+    <parameters>
+        <parameter name="case" required="true" comment="case"/>
+        <parameter name="file" required="true" comment="nom du fichier importe"/>
+    </parameters>
+
+    <body>
+        <tokio-set-db id="tokio.setdb_@case@" refId="tokio.load" caseId="@case@"/>
+
+        <gui-test>
+            <group name="Ouverture de l'écran d'import">
+                <click menu="Segmentation:Import de paramétrage"/>
+                <assertFrame title="Import de paramétrage"/>
+
+                <assertEnabled name="AxeFileName.fileName" expected="true"/>
+                <assertValue name="AxeFileName.fileName" expected=""/>
+
+                <assertListSize name="ImportClassificationParameters" expected="0"/>
+
+                <assertEnabled name="ImportClassificationParameters.ExportAllPagesAction" expected="true"/>
+
+                <assertEnabled name="ImportClassificationParameters.clearLogAction" expected="false"/>
+
+                <assertEnabled name="importButton" expected="false"/>
+                <assertEnabled name="cancelButton" expected="true"/>
+
+                <setValue name="AxeFileName.fileName"
+                          value="${basedir}\target\test-classes\net\codjo\segmentation\releasetest\@file@"/>
+
+                <assertEnabled name="importButton" expected="true"/>
+
+                <assertValue name="classificationRadio" expected="true"/>
+                <assertValue name="sleeveRadio" expected="false"/>
+
+                <click name="importButton"/>
+
+                <assertListSize name="ImportClassificationParameters" expected="6"/>
+
+                <assertEnabled name="ImportClassificationParameters" row="0" column="Id Axe"
+                               expected="false"/>
+                <assertEnabled name="ImportClassificationParameters" row="0" column="Libellé Axe"
+                               expected="false"/>
+                <assertEnabled name="ImportClassificationParameters" row="0" column="Famille"
+                               expected="false"/>
+                <assertEnabled name="ImportClassificationParameters" row="0" column="Log" expected="false"/>
+
+                <assertTable name="ImportClassificationParameters" row="0" column="Id Axe" expected="1"/>
+                <assertTable name="ImportClassificationParameters" row="0" column="Libellé Axe"
+                             expected="Id existe deja"/>
+                <assertTable name="ImportClassificationParameters" row="0" column="Famille"
+                             expected="MYFAMILY"/>
+                <assertTable name="ImportClassificationParameters" row="0" column="Log"
+                             expected="L'id de l'axe existe déjà en base"/>
+
+                <assertTable name="ImportClassificationParameters" row="1" column="Id Axe" expected="4"/>
+                <assertTable name="ImportClassificationParameters" row="1" column="Libellé Axe"
+                             expected="Ceci est un libellé trop long, il ne peut pas dépasser 50 caractères"/>
+                <assertTable name="ImportClassificationParameters" row="1" column="Famille"
+                             expected="TAFAMILLE"/>
+                <assertTable name="ImportClassificationParameters" row="1" column="Log"
+                             expected="Le libellé de l'axe est trop long"/>
+
+                <assertTable name="ImportClassificationParameters" row="2" column="Id Axe" expected="5"/>
+                <assertTable name="ImportClassificationParameters" row="2" column="Libellé Axe"
+                             expected="famille trop longue"/>
+                <assertTable name="ImportClassificationParameters" row="2" column="Famille"
+                             expected="FAMILLE_TROP_LONGUE"/>
+                <assertTable name="ImportClassificationParameters" row="2" column="Log"
+                             expected="La famille est trop longue"/>
+
+                <assertTable name="ImportClassificationParameters" row="3" column="Id Axe" expected="6"/>
+                <assertTable name="ImportClassificationParameters" row="3" column="Libellé Axe"
+                             expected="Ceci est un libellé trop long, il ne peut pas dépasser 50 caractères et une famille trop longue"/>
+                <assertTable name="ImportClassificationParameters" row="3" column="Famille"
+                             expected="FAMILLE_TROP_LONGUE"/>
+                <assertTable name="ImportClassificationParameters" row="3" column="Log"
+                             expected="Le libellé de l'axe est trop long"/>
+
+                <assertTable name="ImportClassificationParameters" row="4" column="Id Axe" expected="7"/>
+                <assertTable name="ImportClassificationParameters" row="4" column="Libellé Axe"
+                             expected="Doublon Axe1"/>
+                <assertTable name="ImportClassificationParameters" row="4" column="Famille"
+                             expected="DOUBLON"/>
+                <assertTable name="ImportClassificationParameters" row="4" column="Log"
+                             expected="Doublon de l'id Axe dans le fichier"/>
+
+                <assertTable name="ImportClassificationParameters" row="5" column="Id Axe" expected="7"/>
+                <assertTable name="ImportClassificationParameters" row="5" column="Libellé Axe"
+                             expected="Doublon Axe2"/>
+                <assertTable name="ImportClassificationParameters" row="5" column="Famille"
+                             expected="DOUBLON"/>
+                <assertTable name="ImportClassificationParameters" row="5" column="Log"
+                             expected="Doublon de l'id Axe dans le fichier"/>
+
+                <assertEnabled name="ImportClassificationParameters.clearLogAction" expected="true"/>
+                <click name="ImportClassificationParameters.clearLogAction"/>
+
+                <assertListSize name="ImportClassificationParameters" expected="0"/>
+            </group>
+        </gui-test>
+
+        <tokio-assert refId="tokio.setdb_@case@" allTables="true"/>
+
+    </body>
+</method>

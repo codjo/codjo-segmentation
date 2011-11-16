@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<idea>
+    <execConfiguration>
+        <name>Serveur</name>
+        <description>Lance le serveur</description>
+        <execClass>${serverMainClass}</execClass>
+        <vmParameter>-Dlog4j.configuration="file:${user.home}/log4j.properties"</vmParameter>
+        <parameter>-configuration ${basedir}/codjo-segmentation-release-test/target/config/server-config.properties</parameter>
+        <workdir>${basedir}/codjo-segmentation-release-test</workdir>
+        <module>codjo-segmentation-release-test</module>
+    </execConfiguration>
+
+    <execConfiguration>
+        <name>Client</name>
+        <description>Lance le client</description>
+        <execClass>${clientMainClass}</execClass>
+        <vmParameter>-Dlog4j.configuration="file:${user.home}/log4j.properties"</vmParameter>
+        <parameter></parameter>
+        <workdir>${basedir}/codjo-segmentation-release-test</workdir>
+        <module>codjo-segmentation-release-test</module>
+    </execConfiguration>
+
+    <execConfiguration>
+        <name>Client 2</name>
+        <description>Lance le client</description>
+        <execClass>${clientMainClass}</execClass>
+        <vmParameter>-Dlog4j.configuration="file:${user.home}/log4j.properties"</vmParameter>
+        <parameter>-configuration ${basedir}/codjo-segmentation-server/target/config/server-config.properties</parameter>
+        <workdir>${basedir}/codjo-segmentation-release-test</workdir>
+        <module>codjo-segmentation-release-test</module>
+    </execConfiguration>
+
+    <execConfiguration>
+        <name>Event Recorder</name>
+        <description>Lance l'event recorder</description>
+        <execClass>recorder.gui.Starter</execClass>
+        <vmParameter>-Dlog4j.configuration="file:${user.home}/log4j.properties"</vmParameter>
+        <parameter>${clientMainClass} main ${defaultUser} ${defaultUserPassword} ${serverHost} ${serverPort}
+        </parameter>
+        <workdir>${basedir}/codjo-segmentation-gui</workdir>
+        <module>codjo-segmentation-gui</module>
+    </execConfiguration>
+
+</idea>

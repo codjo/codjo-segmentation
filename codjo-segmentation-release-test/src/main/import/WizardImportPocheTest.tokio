@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cases PUBLIC "-//AGF, Inc.//DTD cases 2.0//EN" "cases.dtd">
+
+<cases>
+    <case id="ImportStandard">
+        <input>
+            <table name="PM_EXPRESSION"/>
+            <table name="PM_SEGMENTATION"/>
+            <table name="PM_CLASSIFICATION">
+                <row id="Axe1">
+                    <field name="CLASSIFICATION_ID" value="1"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe1 event"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+                <row id="Axe2">
+                    <field name="CLASSIFICATION_ID" value="2"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe2 event"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+                <row id="Axe3">
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe3 event"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+                <row id="Axe4">
+                    <field name="CLASSIFICATION_ID" value="4"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe4 event"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+                <row id="Axe5">
+                    <field name="CLASSIFICATION_ID" value="5"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe5 event"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+                <row id="Axe6">
+                    <field name="CLASSIFICATION_ID" value="6"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe6 event"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+                <row id="Axe7">
+                    <field name="CLASSIFICATION_ID" value="7"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe7 event"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+                <row id="Axe8">
+                    <field name="CLASSIFICATION_ID" value="8"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe8 event"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+                <row id="Axe10">
+                    <field name="CLASSIFICATION_ID" value="10"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe10 event"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+                <row id="Axe11">
+                    <field name="CLASSIFICATION_ID" value="11"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe11 event"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+                <row id="Axe12">
+                    <field name="CLASSIFICATION_ID" value="12"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe12 event"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                </row>
+            </table>
+            <table name="PM_CLASSIFICATION_STRUCTURE">
+                <row id="poche41">
+                    <field name="SLEEVE_ID" value="41"/>
+                    <field name="SLEEVE_ROW_ID" value="123456789"/>
+                    <field name="CLASSIFICATION_ID" value="4"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="SLEEVE_NAME" value="Poche existante pour Axe4"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                    <field name="FORMULA"
+                           value="isNotNull(SRC_SEG_INPUT_EVENT$AMF_APPROVAL_DATE )&amp;&amp;SRC_SEG_INPUT_EVENT$AMF_APPROVAL_DATE&#060;&#061;200506"/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+            </table>
+        </input>
+        <output>
+            <table name="PM_CLASSIFICATION">
+                <copy row="Axe1"/>
+                <copy row="Axe2"/>
+                <copy row="Axe3"/>
+                <copy row="Axe4"/>
+                <copy row="Axe5"/>
+                <copy row="Axe6"/>
+                <copy row="Axe7"/>
+                <copy row="Axe8"/>
+                <copy row="Axe10"/>
+                <copy row="Axe11"/>
+                <copy row="Axe12"/>
+            </table>
+            <table name="PM_CLASSIFICATION_STRUCTURE" orderClause="CLASSIFICATION_ID, SLEEVE_CODE">
+                <copy row="poche41"/>
+                <row id="axe1poche01-1">
+                    <field name="CLASSIFICATION_ID" value="1"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="SLEEVE_NAME" value="Poche1 correcte"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="TERMINAL_ELEMENT" value="false"/>
+                    <field name="FORMULA"/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+                <row id="axe1poche01-1.1">
+                    <field name="CLASSIFICATION_ID" value="1"/>
+                    <field name="SLEEVE_CODE" value="02-1.1"/>
+                    <field name="SLEEVE_NAME" value="Fils Poche1 correcte"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                    <field name="FORMULA" value="in(manager, &#34;CJ&#34;,&#34;AM&#34;)"/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+                <row id="axe1poche01-2">
+                    <field name="CLASSIFICATION_ID" value="1"/>
+                    <field name="SLEEVE_CODE" value="01-2"/>
+                    <field name="SLEEVE_NAME" value="Poche1 fourretout"/>
+                    <field name="SLEEVE_DUSTBIN" value="true"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                    <field name="FORMULA"/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+            </table>
+            <table name="PM_EXPRESSION">
+                <row>
+                    <field name="EXPRESSION_ID" value="1"/>
+                    <field name="SEGMENTATION_ID" value="4"/>
+                    <field name="DESTINATION_FIELD" value="CLASSIFICATION_ID"/>
+                    <field name="EXPRESSION" value="4"/>
+                    <field name="PRIORITY" value="0"/>
+                    <field name="IS_VARIABLE" value="false"/>
+                    <field name="VARIABLE_TYPE"/>
+                </row>
+                <row>
+                    <field name="EXPRESSION_ID" value="2"/>
+                    <field name="SEGMENTATION_ID" value="4"/>
+                    <field name="DESTINATION_FIELD" value="SLEEVE_CODE"/>
+                    <field name="EXPRESSION" value=" "/>
+                    <field name="PRIORITY" value="999"/>
+                    <field name="IS_VARIABLE" value="false"/>
+                    <field name="VARIABLE_TYPE"/>
+                </row>
+                <row>
+                    <field name="EXPRESSION_ID" value="3"/>
+                    <field name="SEGMENTATION_ID" value="4"/>
+                    <field name="DESTINATION_FIELD" value="VAR_01_1"/>
+                    <field name="EXPRESSION"
+                           value="isNotNull(SRC_SEG_INPUT_EVENT$AMF_APPROVAL_DATE )&amp;&amp;SRC_SEG_INPUT_EVENT$AMF_APPROVAL_DATE&#060;&#061;200506"/>
+                    <field name="PRIORITY" value="101"/>
+                    <field name="IS_VARIABLE" value="true"/>
+                    <field name="VARIABLE_TYPE" value="-7"/>
+                </row>
+                <row>
+                    <field name="EXPRESSION_ID" value="4"/>
+                    <field name="SEGMENTATION_ID" value="4"/>
+                    <field name="DESTINATION_FIELD" value="MY_KEY"/>
+                    <field name="EXPRESSION" value="SRC_SEG_INPUT_EVENT$MY_KEY"/>
+                    <field name="PRIORITY" value="1"/>
+                    <field name="IS_VARIABLE" value="false"/>
+                    <field name="VARIABLE_TYPE"/>
+                </row>
+                <row>
+                    <field name="EXPRESSION_ID" value="5"/>
+                    <field name="SEGMENTATION_ID" value="4"/>
+                    <field name="DESTINATION_FIELD" value="AMF_APPROVAL_DATE"/>
+                    <field name="EXPRESSION" value="SRC_SEG_INPUT_EVENT$AMF_APPROVAL_DATE"/>
+                    <field name="PRIORITY" value="2"/>
+                    <field name="IS_VARIABLE" value="false"/>
+                    <field name="VARIABLE_TYPE"/>
+                </row>
+                <row>
+                    <field name="EXPRESSION_ID" value="6"/>
+                    <field name="SEGMENTATION_ID" value="1"/>
+                    <field name="DESTINATION_FIELD" value="CLASSIFICATION_ID"/>
+                    <field name="EXPRESSION" value="1"/>
+                    <field name="PRIORITY" value="0"/>
+                    <field name="IS_VARIABLE" value="false"/>
+                    <field name="VARIABLE_TYPE"/>
+                </row>
+                <row>
+                    <field name="EXPRESSION_ID" value="7"/>
+                    <field name="SEGMENTATION_ID" value="1"/>
+                    <field name="DESTINATION_FIELD" value="SLEEVE_CODE"/>
+                    <field name="EXPRESSION" value="01-2"/>
+                    <field name="PRIORITY" value="999"/>
+                    <field name="IS_VARIABLE" value="false"/>
+                    <field name="VARIABLE_TYPE"/>
+                </row>
+                <row>
+                    <field name="EXPRESSION_ID" value="8"/>
+                    <field name="SEGMENTATION_ID" value="1"/>
+                    <field name="DESTINATION_FIELD" value="MY_KEY"/>
+                    <field name="EXPRESSION" value="SRC_SEG_INPUT_EVENT$MY_KEY"/>
+                    <field name="PRIORITY" value="1"/>
+                    <field name="IS_VARIABLE" value="false"/>
+                    <field name="VARIABLE_TYPE"/>
+                </row>
+                <row>
+                    <field name="EXPRESSION_ID" value="9"/>
+                    <field name="SEGMENTATION_ID" value="1"/>
+                    <field name="DESTINATION_FIELD" value="AMF_APPROVAL_DATE"/>
+                    <field name="EXPRESSION" value="SRC_SEG_INPUT_EVENT$AMF_APPROVAL_DATE"/>
+                    <field name="PRIORITY" value="2"/>
+                    <field name="IS_VARIABLE" value="false"/>
+                    <field name="VARIABLE_TYPE"/>
+                </row>
+                <row>
+                    <field name="EXPRESSION_ID" value="10"/>
+                    <field name="SEGMENTATION_ID" value="1"/>
+                    <field name="DESTINATION_FIELD" value="VAR_02_1_1"/>
+                    <field name="EXPRESSION" value="in(manager, &#34;CJ&#34;,&#34;AM&#34;)"/>
+                    <field name="PRIORITY" value="101"/>
+                    <field name="IS_VARIABLE" value="true"/>
+                    <field name="VARIABLE_TYPE" value="-7"/>
+                </row>
+            </table>
+        </output>
+    </case>
+    <case id="ImportCustomise" inheritId="ImportStandard">
+        <input>
+            <table name="PM_CLASSIFICATION_STRUCTURE">
+                <replace row="poche41">
+                    <field name="CUSTOM_FIELD" value="Youpi"/>
+                </replace>
+            </table>
+        </input>
+
+        <output>
+            <table name="PM_CLASSIFICATION_STRUCTURE" orderClause="CLASSIFICATION_ID, SLEEVE_CODE">
+                <replace row="axe1poche01-1">
+                    <field name="CUSTOM_FIELD" value="A"/>
+                </replace>
+                <replace row="axe1poche01-1.1">
+                    <field name="CUSTOM_FIELD" value="A1"/>
+                </replace>
+                <replace row="axe1poche01-2">
+                    <field name="CUSTOM_FIELD" value="A"/>
+                </replace>
+            </table>
+        </output>
+    </case>
+
+</cases>

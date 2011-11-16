@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<menubar>
+
+    <menu>
+        <name>Segmentation</name>
+        <menu plugin="net.codjo.segmentation.gui.plugin.SegmentationGuiPlugin" actionId="ClassificationSettingsAction"/>
+        <menu plugin="net.codjo.segmentation.gui.plugin.SegmentationGuiPlugin" actionId="ClassificationWizardAction"/>
+        <menu plugin="net.codjo.segmentation.gui.plugin.SegmentationGuiPlugin" actionId="ClassificationResultsAction"/>
+        <menu separator="true"/>
+        <menu plugin="net.codjo.segmentation.gui.plugin.SegmentationGuiPlugin" actionId="ImportParametersAction"/>
+        <menu plugin="net.codjo.segmentation.gui.plugin.SegmentationGuiPlugin" actionId="ExportParametersAction"/>
+    </menu>
+
+
+</menubar>

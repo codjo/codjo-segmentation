@@ -1,0 +1,134 @@
+net.codjo.segmentation.server
+	-> net.codjo.agent
+	-> net.codjo.agent.protocol
+	-> net.codjo.sql.server
+
+net.codjo.segmentation.server.audit
+	-> net.codjo.segmentation.common.message
+	-> net.codjo.workflow.common.message
+	-> net.codjo.workflow.server.plugin
+
+
+net.codjo.segmentation.server.blackboard
+	-> net.codjo.agent
+	-> net.codjo.agent.protocol
+	-> net.codjo.segmentation.server.blackboard.message
+	-> net.codjo.sql.server
+
+net.codjo.segmentation.server.blackboard.message
+	-> net.codjo.agent
+	-> com.thoughtworks.xstream
+	-> com.thoughtworks.xstream.io.xml
+
+net.codjo.segmentation.server.paramExport.agent
+	-> net.codjo.agent
+	-> net.codjo.agent.protocol
+	-> net.codjo.segmentation.server
+	-> net.codjo.segmentation.server.paramExport
+
+net.codjo.segmentation.server.paramImport
+	-> net.codjo.segmentation.server
+	-> net.codjo.segmentation.server.util
+
+net.codjo.segmentation.server.paramImport.agent
+	-> net.codjo.agent
+	-> net.codjo.agent.protocol
+	-> net.codjo.mad.common
+	-> net.codjo.segmentation.server
+	-> net.codjo.segmentation.server.paramImport
+	-> net.codjo.segmentation.server.paramImport.factory
+
+net.codjo.segmentation.server.paramImport.classification
+	-> net.codjo.segmentation.server.paramImport
+
+net.codjo.segmentation.server.paramImport.classificationStructure
+	-> net.codjo.expression
+	-> net.codjo.segmentation.server.paramImport
+	-> net.codjo.segmentation.server.util
+
+net.codjo.segmentation.server.paramImport.factory
+	-> net.codjo.segmentation.server.paramImport
+	-> net.codjo.segmentation.server.paramImport.classification
+	-> net.codjo.segmentation.server.paramImport.classificationStructure
+
+net.codjo.segmentation.server.participant
+	-> net.codjo.agent
+	-> net.codjo.expression
+	-> net.codjo.segmentation.server.blackboard
+	-> net.codjo.segmentation.server.blackboard.message
+	-> net.codjo.segmentation.server.participant.common
+	-> net.codjo.segmentation.server.participant.context
+	-> net.codjo.segmentation.server.preference.family
+	-> net.codjo.segmentation.server.preference.treatment
+	-> net.codjo.segmentation.server.util
+	-> net.codjo.sql.builder
+	-> net.codjo.sql.server
+	-> net.codjo.variable
+	-> net.codjo.workflow.common.message
+
+net.codjo.segmentation.server.participant.common
+	-> net.codjo.expression
+	-> net.codjo.segmentation.server.preference.family
+	-> net.codjo.segmentation.server.preference.treatment
+
+net.codjo.segmentation.server.participant.context
+	-> net.codjo.expression
+	-> net.codjo.segmentation.server.blackboard.message
+	-> net.codjo.segmentation.server.participant.common
+	-> net.codjo.segmentation.server.preference.family
+	-> net.codjo.segmentation.server.preference.treatment
+
+net.codjo.segmentation.server.plugin
+	-> net.codjo.agent
+	-> net.codjo.aspect
+	-> net.codjo.aspect.util
+	-> net.codjo.expression
+	-> net.codjo.expression.help
+	-> net.codjo.mad.common.structure
+	-> net.codjo.mad.server.handler
+	-> net.codjo.mad.server.handler.sql
+	-> net.codjo.mad.server.plugin
+	-> net.codjo.database.api
+	-> net.codjo.plugin.server
+	-> net.codjo.plugin.common
+	-> net.codjo.segmentation.server.audit
+	-> net.codjo.segmentation.server.blackboard
+	-> net.codjo.segmentation.server.blackboard.message
+	-> net.codjo.segmentation.server.paramExport.agent
+	-> net.codjo.segmentation.server.paramImport.agent
+	-> net.codjo.segmentation.server.participant
+	-> net.codjo.segmentation.server.participant.context
+	-> net.codjo.segmentation.server.preference.family
+	-> net.codjo.segmentation.server.util
+	-> net.codjo.sql.builder
+	-> net.codjo.sql.server
+	-> net.codjo.variable
+	-> net.codjo.workflow.common.message
+	-> net.codjo.workflow.common.protocol
+	-> net.codjo.workflow.server.api
+	-> net.codjo.workflow.server.plugin
+	-> net.codjo.xml
+	-> net.codjo.xml.fast
+	-> org.w3c.dom
+	-> org.xml.sax
+
+net.codjo.segmentation.server.preference
+	-> net.codjo.mad.server.handler
+	-> net.codjo.mad.server.handler.sql
+	
+net.codjo.segmentation.server.preference.family
+	-> net.codjo.expression
+	-> net.codjo.segmentation.server.util
+	-> net.codjo.sql.builder
+	-> net.codjo.util.string
+	-> net.codjo.xml
+	-> net.codjo.xml.fast
+	-> org.xml.sax
+
+net.codjo.segmentation.server.util
+	-> net.codjo.sql.builder
+	-> net.codjo.util.string
+	-> net.codjo.variable
+
+net.codjo.segmentation.server.paramExport
+	-> net.codjo.util.file

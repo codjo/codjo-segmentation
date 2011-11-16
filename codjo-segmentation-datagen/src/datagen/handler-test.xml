@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://datagen.xsd">
+
+    <add-field to="net.codjo.segmentation.server.data.Classification">
+        <field name="customField" type="string">
+            <description>Champ customisé</description>
+            <sql type="varchar" precision="50" required="false"/>
+        </field>
+    </add-field>
+
+    <add-field to="net.codjo.segmentation.server.data.ClassificationStructure">
+        <field name="customField" type="string">
+            <description>Champ customisé</description>
+            <sql type="varchar" precision="50" required="false"/>
+        </field>
+    </add-field>
+
+    <add-handler-sql to="net.codjo.segmentation.server.data.ClassificationStructure">
+        <handler-sql id="updateClassificationStructure" transaction="true">
+            <attributes>
+                <name>rowCount</name>
+            </attributes>
+            <query><![CDATA[
+            update PM_CLASSIFICATION_STRUCTURE
+                set SLEEVE_ROW_ID = ?,
+                CLASSIFICATION_ID = ?,
+                SLEEVE_CODE = ?,
+                SLEEVE_NAME = ?,
+                SLEEVE_DUSTBIN = ?,
+                TERMINAL_ELEMENT = ?,
+                FORMULA = ?
+            where SLEEVE_ID = ?
+            select @@rowcount
+        ]]>
+            </query>
+            <arg>sleeveRowId</arg>
+            <arg>classificationId</arg>
+            <arg>sleeveCode</arg>
+            <arg>sleeveName</arg>
+            <arg>sleeveDustbin</arg>
+            <arg>terminalElement</arg>
+            <arg>formula</arg>
+            <arg>sleeveId</arg>
+        </handler-sql>
+    </add-handler-sql>
+
+    <add-handler-sql to="net.codjo.segmentation.server.data.ClassificationStructure">
+        <handler-sql id="selectAllClassificationAnomaly" return-pk="false">
+            <attributes>
+                <name>myKey</name>
+                <name>classificationId</name>
+                <name>sleeveCode</name>
+                <name>anomaly</name>
+                <name>anomalyLog</name>
+            </attributes>
+            <query factory="net.codjo.segmentation.releasetest.AnomalyQueryFactory"/>
+            <arg type="string">classificationList</arg>
+        </handler-sql>
+    </add-handler-sql>
+
+    <append-to-trigger-insert name="net.codjo.segmentation.server.data.ClassificationStructure">
+        <sql><![CDATA[
+       	if (@CREATE_VARIABLES = 1)
+       	begin
+
+       	    declare @CLASSIFICATION_TYPE varchar(250)
+
+       		select @CLASSIFICATION_TYPE = CLASSIFICATION_TYPE
+       		from PM_CLASSIFICATION
+       		where CLASSIFICATION_ID = @CLASSIFICATION_ID
+
+            /**************************************/
+            /*** Expressions spécifiques ACTION ***/
+            /**************************************/
+            if( @CLASSIFICATION_TYPE = 'ACTION' ) begin
+                /*** Insertion de l'expression pour MY_KEY ***/
+                insert into PM_EXPRESSION values (
+                     @MAX_EXPRESSION_ID + 1,
+                     @CLASSIFICATION_ID,
+                    'MY_KEY',
+                    'SRC_SEG_INPUT_ACTION$MY_KEY',
+                    @LAST_PRIORITY_ID + 1,
+                    0,
+                    NULL )
+
+                if (@@error > 0)
+                begin
+                    select @ERROR_MSG = "Erreur lors de l'insertion de l'expression pour MY_KEY."
+                    goto error
+                end
+
+                /*** Insertion de l'expression pour REFERENTIAL_FUND_PRICE ***/
+                insert into PM_EXPRESSION values (
+                    @MAX_EXPRESSION_ID + 2,
+                    @CLASSIFICATION_ID,
+                    'REFERENTIAL_FUND_PRICE',
+                    'SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE',
+                    @LAST_PRIORITY_ID + 2,
+                    0,
+                    NULL )
+
+                if (@@error > 0)
+                begin
+                    select @ERROR_MSG = "Erreur lors de l'insertion de l'expression pour REFERENTIAL_FUND_PRICE."
+                    goto error
+                end
+            end
+
+            /*************************************/
+            /*** Expressions spécifiques EVENT ***/
+            /*************************************/
+            if( @CLASSIFICATION_TYPE = 'EVENT' ) begin
+                /*** Insertion de l'expression pour MY_KEY ***/
+                insert into PM_EXPRESSION values (
+                     @MAX_EXPRESSION_ID + 1,
+                     @CLASSIFICATION_ID,
+                    'MY_KEY',
+                    'SRC_SEG_INPUT_EVENT$MY_KEY',
+                    @LAST_PRIORITY_ID + 1,
+                    0,
+                    NULL )
+
+                if (@@error > 0)
+                begin
+                    select @ERROR_MSG = "Erreur lors de l'insertion de l'expression pour MY_KEY."
+                    goto error
+                end
+
+                /*** Insertion de l'expression pour AMF_APPROVAL_DATE ***/
+                insert into PM_EXPRESSION values (
+                    @MAX_EXPRESSION_ID + 2,
+                    @CLASSIFICATION_ID,
+                    'AMF_APPROVAL_DATE',
+                    'SRC_SEG_INPUT_EVENT$AMF_APPROVAL_DATE',
+                    @LAST_PRIORITY_ID + 2,
+                    0,
+                    NULL )
+
+                if (@@error > 0)
+                begin
+                    select @ERROR_MSG = "Erreur lors de l'insertion de l'expression pour AMF_APPROVAL_DATE."
+                    goto error
+                end
+            end
+       	end
+     ]]></sql>
+    </append-to-trigger-insert>
+
+
+</data>

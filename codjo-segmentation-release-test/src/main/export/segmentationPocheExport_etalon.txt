@@ -1,0 +1,10 @@
+CLASSIFICATION_ID	SLEEVE_CODE	SLEEVE_NAME	SLEEVE_DUSTBIN	TERMINAL_ELEMENT	FORMULA	CUSTOM_FIELD
+1	01-1	Poche1 correcte	0	0		
+1	01-2	Poche1 fourretout	1	1		
+1	02-1.1	Fils Poche1 correcte	0	1	in(manager, "CJ","AM")	
+2	01-1	Poche2 correcte	0	0		
+2	01-2	Poche2 fourretout	1	1		
+2	02-1.1	Fils Poche2 tab	0	1	in(manager, "CJ","AM") && a==2	
+3	01-1	Poche3 correcte	0	0		
+3	01-2	Poche3 fourretout	1	1		
+3	02-1.1	Fils Poche3 retour chariot	0	1	in(manager, "CJ","AM") || b==4	

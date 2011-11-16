@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<method
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="test-release.xsd">
+    <parameters>
+        <parameter name="case" required="true" comment="case"/>
+        <parameter name="file" required="true" comment="nom du fichier importe"/>
+    </parameters>
+
+    <body>
+        <tokio-set-db id="tokio.setdb_@case@" refId="tokio.load" caseId="@case@"/>
+
+        <gui-test>
+            <group name="Ouverture de l'écran d'import">
+                <click menu="Segmentation:Import de paramétrage"/>
+                <assertFrame title="Import de paramétrage"/>
+
+                <assertEnabled name="AxeFileName.fileName" expected="true"/>
+                <assertValue name="AxeFileName.fileName" expected=""/>
+
+                <assertEnabled name="importButton" expected="false"/>
+                <assertEnabled name="cancelButton" expected="true"/>
+
+                <setValue name="AxeFileName.fileName"
+                          value="${basedir}\target\test-classes\net\codjo\segmentation\releasetest\@file@"/>
+
+                <assertEnabled name="importButton" expected="true"/>
+
+                <assertValue name="classificationRadio" expected="true"/>
+                <assertValue name="sleeveRadio" expected="false"/>
+
+                <click name="sleeveRadio"/>
+
+                <assertValue name="classificationRadio" expected="false"/>
+                <assertValue name="sleeveRadio" expected="true"/>
+
+                <assertListSize name="ImportSleeveParameters" expected="0"/>
+                <assertEnabled name="ImportSleeveParameters.clearLogAction" expected="false"/>
+                <assertEnabled name="ImportSleeveParameters.ExportAllPagesAction" expected="true"/>
+
+                <click name="importButton"/>
+
+                <assertListSize name="ImportSleeveParameters" expected="25"/>
+
+                <assertEnabled name="ImportSleeveParameters" row="0" column="Id Axe" expected="false"/>
+                <assertEnabled name="ImportSleeveParameters" row="0" column="Code Poche" expected="false"/>
+                <assertEnabled name="ImportSleeveParameters" row="0" column="Libellé Poche" expected="false"/>
+                <assertEnabled name="ImportSleeveParameters" row="0" column="Poche fourre-tout"
+                               expected="false"/>
+                <assertEnabled name="ImportSleeveParameters" row="0" column="Poche de terminaison"
+                               expected="false"/>
+                <assertEnabled name="ImportSleeveParameters" row="0" column="Formule" expected="false"/>
+                <assertEnabled name="ImportSleeveParameters" row="0" column="Log" expected="false"/>
+
+                <assertTable name="ImportSleeveParameters" row="0" column="Id Axe" expected="2"/>
+                <assertTable name="ImportSleeveParameters" row="0" column="Code Poche" expected="011-1"/>
+                <assertTable name="ImportSleeveParameters" row="0" column="Libellé Poche"
+                             expected="CodePoche2 incorrecte"/>
+                <assertTable name="ImportSleeveParameters" row="0" column="Poche fourre-tout"
+                             expected="false"/>
+                <assertTable name="ImportSleeveParameters" row="0" column="Poche de terminaison"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="0" column="Formule"
+                             expected="in(manager, &#34;CJ&#34;,&#34;AM&#34;, &#34;AG&#34;, &#34;FC&#34;, &#34;BD&#34;)"/>
+                <assertTable name="ImportSleeveParameters" row="0" column="Log"
+                             expected="Le code poche est incorrect"/>
+
+                <assertTable name="ImportSleeveParameters" row="1" column="Id Axe" expected="2"/>
+                <assertTable name="ImportSleeveParameters" row="1" column="Code Poche" expected="01-2"/>
+                <assertTable name="ImportSleeveParameters" row="1" column="Libellé Poche"
+                             expected="CodePoche2 correcte en erreur"/>
+                <assertTable name="ImportSleeveParameters" row="1" column="Poche fourre-tout"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="1" column="Poche de terminaison"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="1" column="Formule" expected=""/>
+                <assertTable name="ImportSleeveParameters" row="1" column="Log"
+                             expected="Cet axe comporte une autre poche en erreur"/>
+
+                <assertTable name="ImportSleeveParameters" row="2" column="Id Axe" expected="3"/>
+                <assertTable name="ImportSleeveParameters" row="2" column="Code Poche" expected="03-1.2"/>
+                <assertTable name="ImportSleeveParameters" row="2" column="Libellé Poche"
+                             expected="CodePoche3 incorrecte"/>
+                <assertTable name="ImportSleeveParameters" row="2" column="Poche fourre-tout"
+                             expected="false"/>
+                <assertTable name="ImportSleeveParameters" row="2" column="Poche de terminaison"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="2" column="Formule"
+                             expected="in(manager, &#34;CJ&#34;,&#34;AM&#34;)"/>
+                <assertTable name="ImportSleeveParameters" row="2" column="Log"
+                             expected="Le code poche est incorrect"/>
+
+                <assertTable name="ImportSleeveParameters" row="3" column="Id Axe" expected="3"/>
+                <assertTable name="ImportSleeveParameters" row="3" column="Code Poche" expected="01-1"/>
+                <assertTable name="ImportSleeveParameters" row="3" column="Libellé Poche"
+                             expected="CodePoche3 correcte en erreur"/>
+                <assertTable name="ImportSleeveParameters" row="3" column="Poche fourre-tout"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="3" column="Poche de terminaison"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="3" column="Formule" expected=""/>
+                <assertTable name="ImportSleeveParameters" row="3" column="Log"
+                             expected="Cet axe comporte une autre poche en erreur"/>
+
+                <assertTable name="ImportSleeveParameters" row="4" column="Id Axe" expected="4"/>
+                <assertTable name="ImportSleeveParameters" row="4" column="Code Poche" expected="01-2"/>
+                <assertTable name="ImportSleeveParameters" row="4" column="Libellé Poche"
+                             expected="Axe déja en base avec poche"/>
+                <assertTable name="ImportSleeveParameters" row="4" column="Poche fourre-tout"
+                             expected="false"/>
+                <assertTable name="ImportSleeveParameters" row="4" column="Poche de terminaison"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="4" column="Formule"
+                             expected="in(manager, &#34;CJ&#34;,&#34;AM&#34;, &#34;AG&#34;, &#34;FC&#34;, &#34;BD&#34;)"/>
+                <assertTable name="ImportSleeveParameters" row="4" column="Log"
+                             expected="Cet axe existe déjà en base avec des poches"/>
+
+                <assertTable name="ImportSleeveParameters" row="5" column="Id Axe" expected="5"/>
+                <assertTable name="ImportSleeveParameters" row="5" column="Code Poche" expected="01-1"/>
+                <assertTable name="ImportSleeveParameters" row="5" column="Libellé Poche"
+                             expected="Poche5 correcte"/>
+                <assertTable name="ImportSleeveParameters" row="5" column="Poche fourre-tout"
+                             expected="false"/>
+                <assertTable name="ImportSleeveParameters" row="5" column="Poche de terminaison"
+                             expected="false"/>
+                <assertTable name="ImportSleeveParameters" row="5" column="Formule" expected=""/>
+                <assertTable name="ImportSleeveParameters" row="5" column="Log"
+                             expected="Doublon de l'id Axe et du code Poche dans le fichier"/>
+
+                <assertTable name="ImportSleeveParameters" row="6" column="Id Axe" expected="5"/>
+                <assertTable name="ImportSleeveParameters" row="6" column="Code Poche" expected="01-1"/>
+                <assertTable name="ImportSleeveParameters" row="6" column="Libellé Poche"
+                             expected="Poche5 doublon"/>
+                <assertTable name="ImportSleeveParameters" row="6" column="Poche fourre-tout"
+                             expected="false"/>
+                <assertTable name="ImportSleeveParameters" row="6" column="Poche de terminaison"
+                             expected="false"/>
+                <assertTable name="ImportSleeveParameters" row="6" column="Formule" expected=""/>
+                <assertTable name="ImportSleeveParameters" row="6" column="Log"
+                             expected="Doublon de l'id Axe et du code Poche dans le fichier"/>
+
+                <assertTable name="ImportSleeveParameters" row="7" column="Id Axe" expected="5"/>
+                <assertTable name="ImportSleeveParameters" row="7" column="Code Poche" expected="02-1.1"/>
+                <assertTable name="ImportSleeveParameters" row="7" column="Libellé Poche"
+                             expected="Fils Poche5 correcte"/>
+                <assertTable name="ImportSleeveParameters" row="7" column="Poche fourre-tout"
+                             expected="false"/>
+                <assertTable name="ImportSleeveParameters" row="7" column="Poche de terminaison"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="7" column="Formule"
+                             expected="in(manager, &#34;CJ&#34;,&#34;AM&#34;)"/>
+                <assertTable name="ImportSleeveParameters" row="7" column="Log"
+                             expected="Doublon de l'id Axe et du code Poche dans le fichier"/>
+
+                <assertTable name="ImportSleeveParameters" row="8" column="Id Axe" expected="5"/>
+                <assertTable name="ImportSleeveParameters" row="8" column="Code Poche" expected="02-1.1"/>
+                <assertTable name="ImportSleeveParameters" row="8" column="Libellé Poche"
+                             expected="Fils Poche5 doublon"/>
+                <assertTable name="ImportSleeveParameters" row="8" column="Poche fourre-tout"
+                             expected="false"/>
+                <assertTable name="ImportSleeveParameters" row="8" column="Poche de terminaison"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="8" column="Formule"
+                             expected="in(manager, &#34;CJ&#34;,&#34;AM&#34;)"/>
+                <assertTable name="ImportSleeveParameters" row="8" column="Log"
+                             expected="Doublon de l'id Axe et du code Poche dans le fichier"/>
+
+                <assertTable name="ImportSleeveParameters" row="9" column="Id Axe" expected="5"/>
+                <assertTable name="ImportSleeveParameters" row="9" column="Code Poche" expected="01-2"/>
+                <assertTable name="ImportSleeveParameters" row="9" column="Libellé Poche"
+                             expected="Poche5 fourretout"/>
+                <assertTable name="ImportSleeveParameters" row="9" column="Poche fourre-tout"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="9" column="Poche de terminaison"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="9" column="Formule" expected=""/>
+                <assertTable name="ImportSleeveParameters" row="9" column="Log"
+                             expected="Doublon de l'id Axe et du code Poche dans le fichier"/>
+
+                <assertTable name="ImportSleeveParameters" row="10" column="Id Axe" expected="5"/>
+                <assertTable name="ImportSleeveParameters" row="10" column="Code Poche" expected="01-2"/>
+                <assertTable name="ImportSleeveParameters" row="10" column="Libellé Poche"
+                             expected="Poche5 fourretout doublon"/>
+                <assertTable name="ImportSleeveParameters" row="10" column="Poche fourre-tout"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="10" column="Poche de terminaison"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="10" column="Formule" expected=""/>
+                <assertTable name="ImportSleeveParameters" row="10" column="Log"
+                             expected="Doublon de l'id Axe et du code Poche dans le fichier"/>
+
+                <assertTable name="ImportSleeveParameters" row="11" column="Id Axe" expected="6"/>
+                <assertTable name="ImportSleeveParameters" row="11" column="Code Poche" expected="01-1"/>
+                <assertTable name="ImportSleeveParameters" row="11" column="Libellé Poche"
+                             expected="Libellé de la poche dépasse les 50 caractères : erreur"/>
+                <assertTable name="ImportSleeveParameters" row="11" column="Poche fourre-tout"
+                             expected="false"/>
+                <assertTable name="ImportSleeveParameters" row="11" column="Poche de terminaison"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="11" column="Formule"
+                             expected="in(manager, &#34;CJ&#34;,&#34;AM&#34;, &#34;AG&#34;, &#34;FC&#34;, &#34;BD&#34;)"/>
+                <assertTable name="ImportSleeveParameters" row="11" column="Log"
+                             expected="Le libellé de la poche est trop long"/>
+
+                <assertTable name="ImportSleeveParameters" row="12" column="Id Axe" expected="6"/>
+                <assertTable name="ImportSleeveParameters" row="12" column="Code Poche" expected="01-2"/>
+                <assertTable name="ImportSleeveParameters" row="12" column="Libellé Poche"
+                             expected="Poche6 fourretout"/>
+                <assertTable name="ImportSleeveParameters" row="12" column="Poche fourre-tout"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="12" column="Poche de terminaison"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="12" column="Formule" expected=""/>
+                <assertTable name="ImportSleeveParameters" row="12" column="Log"
+                             expected="Cet axe comporte une autre poche en erreur"/>
+
+                <assertTable name="ImportSleeveParameters" row="13" column="Id Axe" expected="7"/>
+                <assertTable name="ImportSleeveParameters" row="13" column="Code Poche" expected="01-1"/>
+                <assertTable name="ImportSleeveParameters" row="13" column="Libellé Poche"
+                             expected="Poche7 correcte"/>
+                <assertTable name="ImportSleeveParameters" row="13" column="Poche fourre-tout"
+                             expected="false"/>
+                <assertTable name="ImportSleeveParameters" row="13" column="Poche de terminaison"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="13" column="Formule"
+                             expected="in(manager, &#34;CJ&#34;,&#34;AM&#34;, &#34;AG&#34;, &#34;FC&#34;, &#34;BD&#34;)"/>
+                <assertTable name="ImportSleeveParameters" row="13" column="Log"
+                             expected="Cet axe ne comporte pas de poche fourre-tout"/>
+
+                <assertTable name="ImportSleeveParameters" row="14" column="Id Axe" expected="7"/>
+                <assertTable name="ImportSleeveParameters" row="14" column="Code Poche" expected="01-2"/>
+                <assertTable name="ImportSleeveParameters" row="14" column="Libellé Poche"
+                             expected="Poche7 correcte : pas de fourre-tout"/>
+                <assertTable name="ImportSleeveParameters" row="14" column="Poche fourre-tout"
+                             expected="false"/>
+                <assertTable name="ImportSleeveParameters" row="14" column="Poche de terminaison"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="14" column="Formule"
+                             expected="in(manager, &#34;AG&#34;, &#34;FC&#34;, &#34;BD&#34;)"/>
+                <assertTable name="ImportSleeveParameters" row="14" column="Log"
+                             expected="Cet axe ne comporte pas de poche fourre-tout"/>
+
+                <assertTable name="ImportSleeveParameters" row="15" column="Id Axe" expected="8"/>
+                <assertTable name="ImportSleeveParameters" row="15" column="Code Poche" expected="01-1"/>
+                <assertTable name="ImportSleeveParameters" row="15" column="Libellé Poche"
+                             expected="Poche8 sans formules"/>
+                <assertTable name="ImportSleeveParameters" row="15" column="Poche fourre-tout"
+                             expected="false"/>
+                <assertTable name="ImportSleeveParameters" row="15" column="Poche de terminaison"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="15" column="Formule" expected=""/>
+                <assertTable name="ImportSleeveParameters" row="15" column="Log"
+                             expected="Cette poche ne comporte pas de formules"/>
+
+                <assertTable name="ImportSleeveParameters" row="16" column="Id Axe" expected="8"/>
+                <assertTable name="ImportSleeveParameters" row="16" column="Code Poche" expected="01-2"/>
+                <assertTable name="ImportSleeveParameters" row="16" column="Libellé Poche"
+                             expected="Poche8 fourretout"/>
+                <assertTable name="ImportSleeveParameters" row="16" column="Poche fourre-tout"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="16" column="Poche de terminaison"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="16" column="Formule" expected=""/>
+                <assertTable name="ImportSleeveParameters" row="16" column="Log"
+                             expected="Cet axe comporte une autre poche en erreur"/>
+
+                <assertTable name="ImportSleeveParameters" row="17" column="Id Axe" expected="9"/>
+                <assertTable name="ImportSleeveParameters" row="17" column="Code Poche" expected="01-1"/>
+                <assertTable name="ImportSleeveParameters" row="17" column="Libellé Poche"
+                             expected="Axe n'existe pas en base"/>
+                <assertTable name="ImportSleeveParameters" row="17" column="Poche fourre-tout"
+                             expected="false"/>
+                <assertTable name="ImportSleeveParameters" row="17" column="Poche de terminaison"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="17" column="Formule"
+                             expected="in(manager, &#34;AG&#34;, &#34;FC&#34;, &#34;BD&#34;)"/>
+                <assertTable name="ImportSleeveParameters" row="17" column="Log"
+                             expected="Cet axe n'existe pas en base"/>
+
+                <assertTable name="ImportSleeveParameters" row="18" column="Id Axe" expected="10"/>
+                <assertTable name="ImportSleeveParameters" row="18" column="Code Poche" expected="01-1"/>
+                <assertTable name="ImportSleeveParameters" row="18" column="Libellé Poche"
+                             expected="Formule incorrecte"/>
+                <assertTable name="ImportSleeveParameters" row="18" column="Poche fourre-tout"
+                             expected="false"/>
+                <assertTable name="ImportSleeveParameters" row="18" column="Poche de terminaison"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="18" column="Formule" expected="in(manager"/>
+                <assertTable name="ImportSleeveParameters" row="18" column="Log"
+                             expected="La formule de la poche est incorrecte"/>
+
+                <assertTable name="ImportSleeveParameters" row="19" column="Id Axe" expected="10"/>
+                <assertTable name="ImportSleeveParameters" row="19" column="Code Poche" expected="01-2"/>
+                <assertTable name="ImportSleeveParameters" row="19" column="Libellé Poche"
+                             expected="Poche10 fourretout"/>
+                <assertTable name="ImportSleeveParameters" row="19" column="Poche fourre-tout"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="19" column="Poche de terminaison"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="19" column="Formule" expected=""/>
+                <assertTable name="ImportSleeveParameters" row="19" column="Log"
+                             expected="Cet axe comporte une autre poche en erreur"/>
+
+                <assertTable name="ImportSleeveParameters" row="20" column="Id Axe" expected="11"/>
+                <assertTable name="ImportSleeveParameters" row="20" column="Code Poche" expected="01-1"/>
+                <assertTable name="ImportSleeveParameters" row="20" column="Libellé Poche"
+                             expected="Noeud avec formule"/>
+                <assertTable name="ImportSleeveParameters" row="20" column="Poche fourre-tout"
+                             expected="false"/>
+                <assertTable name="ImportSleeveParameters" row="20" column="Poche de terminaison"
+                             expected="false"/>
+                <assertTable name="ImportSleeveParameters" row="20" column="Formule"
+                             expected="in(manager, &#34;AG&#34;, &#34;FC&#34;, &#34;BD&#34;)"/>
+                <assertTable name="ImportSleeveParameters" row="20" column="Log"
+                             expected="Un noeud ne peut pas avoir de formule"/>
+
+                <assertTable name="ImportSleeveParameters" row="21" column="Id Axe" expected="11"/>
+                <assertTable name="ImportSleeveParameters" row="21" column="Code Poche" expected="01-2"/>
+                <assertTable name="ImportSleeveParameters" row="21" column="Libellé Poche"
+                             expected="Poche11 fourretout"/>
+                <assertTable name="ImportSleeveParameters" row="21" column="Poche fourre-tout"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="21" column="Poche de terminaison"
+                             expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="21" column="Formule" expected=""/>
+                <assertTable name="ImportSleeveParameters" row="21" column="Log"
+                             expected="Cet axe comporte une autre poche en erreur"/>
+
+                <assertTable name="ImportSleeveParameters" row="22" column="Id Axe" expected="12"/>
+                <assertTable name="ImportSleeveParameters" row="22" column="Code Poche" expected="01-2"/>
+                <assertTable name="ImportSleeveParameters" row="22" column="Libellé Poche" expected="Poche12 fourretout avec formule"/>
+                <assertTable name="ImportSleeveParameters" row="22" column="Poche fourre-tout" expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="22" column="Poche de terminaison" expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="22" column="Formule" expected="in(manager, &#34;CJ&#34;,&#34;AM&#34;)"/>
+                <assertTable name="ImportSleeveParameters" row="22" column="Log" expected="La poche fourre-tout ne peut pas contenir de formules"/>
+
+                <assertTable name="ImportSleeveParameters" row="23" column="Id Axe" expected="12"/>
+                <assertTable name="ImportSleeveParameters" row="23" column="Code Poche" expected="01-1"/>
+                <assertTable name="ImportSleeveParameters" row="23" column="Libellé Poche" expected="Poche12 correcte"/>
+                <assertTable name="ImportSleeveParameters" row="23" column="Poche fourre-tout" expected="false"/>
+                <assertTable name="ImportSleeveParameters" row="23" column="Poche de terminaison" expected="false"/>
+                <assertTable name="ImportSleeveParameters" row="23" column="Formule" expected=""/>
+                <assertTable name="ImportSleeveParameters" row="23" column="Log" expected="Cet axe comporte une autre poche en erreur"/>
+
+                <assertTable name="ImportSleeveParameters" row="24" column="Id Axe" expected="12"/>
+                <assertTable name="ImportSleeveParameters" row="24" column="Code Poche" expected="02-1.1"/>
+                <assertTable name="ImportSleeveParameters" row="24" column="Libellé Poche" expected="Fils Poche12 correcte"/>
+                <assertTable name="ImportSleeveParameters" row="24" column="Poche fourre-tout" expected="false"/>
+                <assertTable name="ImportSleeveParameters" row="24" column="Poche de terminaison" expected="true"/>
+                <assertTable name="ImportSleeveParameters" row="24" column="Formule" expected="in(manager, &#34;CJ&#34;,&#34;AM&#34;)"/>
+                <assertTable name="ImportSleeveParameters" row="24" column="Log" expected="Cet axe comporte une autre poche en erreur"/>
+
+                <assertEnabled name="ImportSleeveParameters.clearLogAction" expected="true"/>
+                <click name="ImportSleeveParameters.clearLogAction"/>
+
+                <assertListSize name="ImportSleeveParameters" expected="0"/>
+
+            </group>
+        </gui-test>
+
+        <tokio-assert refId="tokio.setdb_@case@" allTables="true"/>
+
+    </body>
+</method>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<preferenceList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:noNamespaceSchemaLocation="http://preference.xsd">
+    <preference id="ClassificationList">
+        <selectAll>selectAllClassification</selectAll>
+        <column fieldName="classificationLabel" label="Axe" maxSize="200" minSize="150"/>
+    </preference>
+    <!-- Resultat de la classification : ecran general avec filtre cas ou la table destination est AP_SLEEVE_PORTFOLIO -->
+    <preference id="PortfolioClassificationResultWindow">
+        <column fieldName="period" label="Période" minSize="75" maxSize="150"/>
+        <column fieldName="portfolioCode" label="Code Portefeuille" minSize="75"
+                maxSize="150"/>
+        <column fieldName="portfolioLabel" label="Libellé Portefeuille" minSize="75"
+                maxSize="150"/>
+        <column fieldName="sleeveCode" label="Code Poche" minSize="75"
+                maxSize="150"/>
+        <column fieldName="sleeveName" label="Libellé Poche" minSize="75"
+                maxSize="150"/>
+        <column fieldName="anomaly" label="Code Anomalie" minSize="75" maxSize="150"
+                format="Numeric(#,##0)" sorter="Numeric"/>
+        <column fieldName="anomalyLog" label="Log Anomalie" minSize="75"/>
+    </preference>
+
+</preferenceList>

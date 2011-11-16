@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<preferenceList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:noNamespaceSchemaLocation="http://preference.xsd">
+    <preference id="MySpecialClassificationWindow"
+                detailWindowClassName="net.codjo.segmentation.gui.settings.ClassificationStructureLogic">
+        <selectAll>selectAllClassification</selectAll>
+        <column fieldName="classificationId" label="Id" preferredSize="20"/>
+    </preference>
+</preferenceList>

@@ -1,0 +1,29 @@
+CLASSIFICATION_ID	SLEEVE_CODE	SLEEVE_NAME	SLEEVE_DUSTBIN	TERMINAL_ELEMENT	FORMULA	CUSTOM_FIELD
+1	01-1	Poche1 correcte	0	0		A
+1	02-1.1	Fils Poche1 correcte	0	1	in(manager, "CJ","AM")	A1
+1	01-2	Poche1 fourretout	1	1		A
+2	011-1	CodePoche2 incorrecte	0	1	in(manager, "CJ","AM", "AG", "FC", "BD")	A
+2	01-2	CodePoche2 correcte en erreur	1	1		A
+3	03-1.2	CodePoche3 incorrecte	0	1	in(manager, "CJ","AM")	A
+3	01-1	CodePoche3 correcte en erreur	1	1		A
+4	01-2	Axe déja en base avec poche	0	1	in(manager, "CJ","AM", "AG", "FC", "BD")	A
+5	01-1	Poche5 correcte	0	0		A
+5	02-1.1	Fils Poche5 correcte	0	1	in(manager, "CJ","AM")	A
+5	01-2	Poche5 fourretout	1	1		A
+5	01-1	Poche5 doublon	0	0		A
+5	02-1.1	Fils Poche5 doublon	0	1	in(manager, "CJ","AM")	A
+5	01-2	Poche5 fourretout doublon	1	1		A
+6	01-1	Libellé de la poche dépasse les 50 caractères : erreur	0	1	in(manager, "CJ","AM", "AG", "FC", "BD")	A
+6	01-2	Poche6 fourretout	1	1		A
+7	01-1	Poche7 correcte	0	1	in(manager, "CJ","AM", "AG", "FC", "BD")	A
+7	01-2	Poche7 correcte : pas de fourre-tout	0	1	in(manager, "AG", "FC", "BD")	A
+8	01-1	Poche8 sans formules	0	1		A
+8	01-2	Poche8 fourretout	1	1		A
+9	01-1	Axe n'existe pas en base	0	1	in(manager, "AG", "FC", "BD")	A
+10	01-1	Formule incorrecte	0	1	in(manager	A
+10	01-2	Poche10 fourretout	1	1		A
+11	01-1	Noeud avec formule	0	0	in(manager, "AG", "FC", "BD")	A
+11	01-2	Poche11 fourretout	1	1		A
+12	01-1	Poche12 correcte	0	0			
+12	02-1.1	Fils Poche12 correcte	0	1	in(manager, "CJ","AM")	
+12	01-2	Poche12 fourretout avec formule	1	1	in(manager, "CJ","AM")	

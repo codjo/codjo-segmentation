@@ -1,0 +1,670 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE Scenarii SYSTEM "http://scenarii.dtd">
+<Scenarii name="AUTOMATIC">
+    <Scenario id="common">
+        <input>
+            <table name="PM_CLASSIFICATION">
+                <row>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="CLASSIFICATION_NAME"
+                           value="Répartition par fourchettes de coûts"/>
+                    <field name="CLASSIFICATION_TYPE" value="ACTION"/>
+                </row>
+                <row>
+                    <field name="CLASSIFICATION_ID" value="4"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe 2"/>
+                    <field name="CLASSIFICATION_TYPE" value="ACTION"/>
+                </row>
+            </table>
+        </input>
+        <etalon>
+        </etalon>
+    </Scenario>
+    <Scenario id="SUPPRESSION_PREMIERE_POCHE">
+        <input>
+            <table name="PM_CLASSIFICATION_STRUCTURE">
+                <row>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="0"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="SLEEVE_ID" value="110"/>
+                    <field name="SLEEVE_NAME" value="PLUS DE 100 KEUR"/>
+                    <field name="FORMULA"/>
+                    <field name="TERMINAL_ELEMENT" value="false"/>
+                </row>
+                <row>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="0"/>
+                    <field name="SLEEVE_CODE" value="01-1.1"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="SLEEVE_ID" value="111"/>
+                    <field name="SLEEVE_NAME" value="ENTRE 100 ET 200 KEUR"/>
+                    <field name="FORMULA" value="action.PREV_AMOUNT &gt; 100000"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+                <row>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="0"/>
+                    <field name="SLEEVE_CODE" value="01-1.2"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="SLEEVE_ID" value="112"/>
+                    <field name="SLEEVE_NAME" value="PLUS DE 200 KEUR"/>
+                    <field name="FORMULA" value="action.PREV_AMOUNT &gt; 200000"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+                <row>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="0"/>
+                    <field name="SLEEVE_CODE" value="01-2"/>
+                    <field name="SLEEVE_DUSTBIN" value="true"/>
+                    <field name="SLEEVE_ID" value="120"/>
+                    <field name="SLEEVE_NAME" value="MOINS DE 100 KEUR"/>
+                    <field name="FORMULA"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+            </table>
+        </input>
+        <etalon>
+            <table name="PM_EXPRESSION" orderClause="EXPRESSION_ID">
+                <row id="SEGMENTATION_ID_3">
+                    <field name="EXPRESSION_ID" value="1"/>
+                    <field name="SEGMENTATION_ID" value="3"/>
+                    <field name="DESTINATION_FIELD" value="CLASSIFICATION_ID"/>
+                    <field name="EXPRESSION" value="3"/>
+                    <field name="PRIORITY" value="0"/>
+                    <field name="IS_VARIABLE" value="false"/>
+                    <field name="VARIABLE_TYPE"/>
+                </row>
+                <row inheritId="SEGMENTATION_ID_3">
+                    <field name="EXPRESSION_ID" value="2"/>
+                    <field name="DESTINATION_FIELD" value="SLEEVE_CODE"/>
+                    <field name="EXPRESSION" value="01-2"/>
+                    <field name="PRIORITY" value="999"/>
+                </row>
+                <row inheritId="SEGMENTATION_ID_3">
+                    <field name="EXPRESSION_ID" value="6"/>
+                    <field name="DESTINATION_FIELD" value="VAR_01_1_2"/>
+                    <field name="EXPRESSION" value="action.PREV_AMOUNT &gt; 200000"/>
+                    <field name="PRIORITY" value="102"/>
+                    <field name="IS_VARIABLE" value="true"/>
+                    <field name="VARIABLE_TYPE" value="-7"/>
+                </row>
+                <row inheritId="SEGMENTATION_ID_3">
+                    <field name="EXPRESSION_ID" value="3"/>
+                    <field name="DESTINATION_FIELD" value="MY_KEY"/>
+                    <field name="EXPRESSION" value='SRC_SEG_INPUT_ACTION$MY_KEY'/>
+                    <field name="PRIORITY" value="1"/>
+                </row>
+                <row inheritId="SEGMENTATION_ID_3">
+                    <field name="EXPRESSION_ID" value="4"/>
+                    <field name="DESTINATION_FIELD" value="REFERENTIAL_FUND_PRICE"/>
+                    <field name="EXPRESSION" value='SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE'/>
+                    <field name="PRIORITY" value="2"/>
+                </row>
+            </table>
+        </etalon>
+    </Scenario>
+    <Scenario id="SUPPRESSION_DERNIERE_POCHE">
+        <input>
+            <table name="PM_CLASSIFICATION_STRUCTURE">
+                <row>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="0"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="SLEEVE_ID" value="110"/>
+                    <field name="SLEEVE_NAME" value="PLUS DE 100 KEUR"/>
+                    <field name="FORMULA"/>
+                    <field name="TERMINAL_ELEMENT" value="false"/>
+                </row>
+                <row>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="0"/>
+                    <field name="SLEEVE_CODE" value="01-1.1"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="SLEEVE_ID" value="111"/>
+                    <field name="SLEEVE_NAME" value="ENTRE 100 ET 200 KEUR"/>
+                    <field name="FORMULA" value="action.PREV_AMOUNT &gt; 100000"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+                <row>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="0"/>
+                    <field name="SLEEVE_CODE" value="01-1.2"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="SLEEVE_ID" value="112"/>
+                    <field name="SLEEVE_NAME" value="PLUS DE 200 KEUR"/>
+                    <field name="FORMULA" value="action.PREV_AMOUNT &gt; 200000"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+                <row>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="0"/>
+                    <field name="SLEEVE_CODE" value="01-2"/>
+                    <field name="SLEEVE_DUSTBIN" value="true"/>
+                    <field name="SLEEVE_ID" value="120"/>
+                    <field name="SLEEVE_NAME" value="MOINS DE 100 KEUR"/>
+                    <field name="FORMULA"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+            </table>
+        </input>
+        <etalon>
+            <table name="PM_EXPRESSION" orderClause="EXPRESSION_ID">
+                <row inheritId="SEGMENTATION_ID_3">
+                    <field name="EXPRESSION_ID" value="1"/>
+                    <field name="DESTINATION_FIELD" value="CLASSIFICATION_ID"/>
+                    <field name="EXPRESSION" value="3"/>
+                    <field name="PRIORITY" value="0"/>
+                </row>
+                <row inheritId="SEGMENTATION_ID_3">
+                    <field name="EXPRESSION_ID" value="2"/>
+                    <field name="DESTINATION_FIELD" value="SLEEVE_CODE"/>
+                    <field name="EXPRESSION" value="01-2"/>
+                    <field name="PRIORITY" value="999"/>
+                </row>
+                <row inheritId="SEGMENTATION_ID_3">
+                    <field name="EXPRESSION_ID" value="5"/>
+                    <field name="DESTINATION_FIELD" value="VAR_01_1_1"/>
+                    <field name="EXPRESSION" value="action.PREV_AMOUNT &gt; 100000"/>
+                    <field name="PRIORITY" value="101"/>
+                    <field name="IS_VARIABLE" value="true"/>
+                    <field name="VARIABLE_TYPE" value="-7"/>
+                </row>
+                <row inheritId="SEGMENTATION_ID_3">
+                    <field name="EXPRESSION_ID" value="3"/>
+                    <field name="DESTINATION_FIELD" value="MY_KEY"/>
+                    <field name="EXPRESSION" value='SRC_SEG_INPUT_ACTION$MY_KEY'/>
+                    <field name="PRIORITY" value="1"/>
+                </row>
+                <row inheritId="SEGMENTATION_ID_3">
+                    <field name="EXPRESSION_ID" value="4"/>
+                    <field name="DESTINATION_FIELD" value="REFERENTIAL_FUND_PRICE"/>
+                    <field name="EXPRESSION" value='SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE'/>
+                    <field name="PRIORITY" value="2"/>
+                </row>
+            </table>
+        </etalon>
+    </Scenario>
+    <Scenario id="SUPPRESSION_POCHE_FOURETOUT">
+        <input>
+            <table name="PM_CLASSIFICATION_STRUCTURE">
+                <row>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="0"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="SLEEVE_ID" value="110"/>
+                    <field name="SLEEVE_NAME" value="PLUS DE 100 KEUR"/>
+                    <field name="FORMULA"/>
+                    <field name="TERMINAL_ELEMENT" value="false"/>
+                </row>
+                <row>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="0"/>
+                    <field name="SLEEVE_CODE" value="01-1.1"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="SLEEVE_ID" value="111"/>
+                    <field name="SLEEVE_NAME" value="ENTRE 100 ET 200 KEUR"/>
+                    <field name="FORMULA" value="action.PREV_AMOUNT &gt; 100000"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+                <row>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="0"/>
+                    <field name="SLEEVE_CODE" value="01-1.2"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="SLEEVE_ID" value="112"/>
+                    <field name="SLEEVE_NAME" value="PLUS DE 200 KEUR"/>
+                    <field name="FORMULA" value="action.PREV_AMOUNT &gt; 200000"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+                <row>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="0"/>
+                    <field name="SLEEVE_CODE" value="01-2"/>
+                    <field name="SLEEVE_DUSTBIN" value="true"/>
+                    <field name="SLEEVE_ID" value="120"/>
+                    <field name="SLEEVE_NAME" value="MOINS DE 100 KEUR"/>
+                    <field name="FORMULA"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+            </table>
+        </input>
+        <etalon>
+            <table name="PM_EXPRESSION" orderClause="EXPRESSION_ID">
+                <row inheritId="SEGMENTATION_ID_3">
+                    <field name="EXPRESSION_ID" value="1"/>
+                    <field name="DESTINATION_FIELD" value="CLASSIFICATION_ID"/>
+                    <field name="EXPRESSION" value="3"/>
+                    <field name="PRIORITY" value="0"/>
+                </row>
+                <row inheritId="SEGMENTATION_ID_3">
+                    <field name="EXPRESSION_ID" value="2"/>
+                    <field name="DESTINATION_FIELD" value="SLEEVE_CODE"/>
+                    <field name="EXPRESSION" value=" "/>
+                    <field name="PRIORITY" value="999"/>
+                </row>
+                <row inheritId="SEGMENTATION_ID_3">
+                    <field name="EXPRESSION_ID" value="5"/>
+                    <field name="DESTINATION_FIELD" value="VAR_01_1_1"/>
+                    <field name="EXPRESSION" value="action.PREV_AMOUNT &gt; 100000"/>
+                    <field name="PRIORITY" value="101"/>
+                    <field name="IS_VARIABLE" value="true"/>
+                    <field name="VARIABLE_TYPE" value="-7"/>
+                </row>
+                <row inheritId="SEGMENTATION_ID_3">
+                    <field name="EXPRESSION_ID" value="6"/>
+                    <field name="DESTINATION_FIELD" value="VAR_01_1_2"/>
+                    <field name="EXPRESSION" value="action.PREV_AMOUNT &gt; 200000"/>
+                    <field name="PRIORITY" value="102"/>
+                    <field name="IS_VARIABLE" value="true"/>
+                    <field name="VARIABLE_TYPE" value="-7"/>
+                </row>
+                <row inheritId="SEGMENTATION_ID_3">
+                    <field name="EXPRESSION_ID" value="3"/>
+                    <field name="DESTINATION_FIELD" value="MY_KEY"/>
+                    <field name="EXPRESSION" value='SRC_SEG_INPUT_ACTION$MY_KEY'/>
+                    <field name="PRIORITY" value="1"/>
+                </row>
+                <row inheritId="SEGMENTATION_ID_3">
+                    <field name="EXPRESSION_ID" value="4"/>
+                    <field name="DESTINATION_FIELD" value="REFERENTIAL_FUND_PRICE"/>
+                    <field name="EXPRESSION" value='SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE'/>
+                    <field name="PRIORITY" value="2"/>
+                </row>
+            </table>
+        </etalon>
+    </Scenario>
+    <Scenario id="SUPPRESSION_NOEUD">
+        <input>
+            <table name="PM_CLASSIFICATION_STRUCTURE">
+                <row>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="0"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="SLEEVE_ID" value="110"/>
+                    <field name="SLEEVE_NAME" value="PLUS DE 100 KEUR"/>
+                    <field name="FORMULA"/>
+                    <field name="TERMINAL_ELEMENT" value="false"/>
+                </row>
+                <row>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="0"/>
+                    <field name="SLEEVE_CODE" value="01-1.1"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="SLEEVE_ID" value="111"/>
+                    <field name="SLEEVE_NAME" value="ENTRE 100 ET 200 KEUR"/>
+                    <field name="FORMULA" value="action.PREV_AMOUNT &gt; 100000"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+                <row>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="0"/>
+                    <field name="SLEEVE_CODE" value="01-1.2"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="SLEEVE_ID" value="112"/>
+                    <field name="SLEEVE_NAME" value="PLUS DE 200 KEUR"/>
+                    <field name="FORMULA" value="action.PREV_AMOUNT &gt; 200000"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+                <row>
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="0"/>
+                    <field name="SLEEVE_CODE" value="01-2"/>
+                    <field name="SLEEVE_DUSTBIN" value="true"/>
+                    <field name="SLEEVE_ID" value="120"/>
+                    <field name="SLEEVE_NAME" value="MOINS DE 100 KEUR"/>
+                    <field name="FORMULA"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+            </table>
+        </input>
+        <etalon>
+            <table name="PM_EXPRESSION" orderClause="EXPRESSION_ID">
+                <row inheritId="SEGMENTATION_ID_3">
+                    <field name="EXPRESSION_ID" value="1"/>
+                    <field name="DESTINATION_FIELD" value="CLASSIFICATION_ID"/>
+                    <field name="EXPRESSION" value="3"/>
+                    <field name="PRIORITY" value="0"/>
+                </row>
+                <row inheritId="SEGMENTATION_ID_3">
+                    <field name="EXPRESSION_ID" value="2"/>
+                    <field name="DESTINATION_FIELD" value="SLEEVE_CODE"/>
+                    <field name="EXPRESSION" value="01-2"/>
+                    <field name="PRIORITY" value="999"/>
+                </row>
+                <row inheritId="SEGMENTATION_ID_3">
+                    <field name="EXPRESSION_ID" value="5"/>
+                    <field name="DESTINATION_FIELD" value="VAR_01_1_1"/>
+                    <field name="EXPRESSION" value="action.PREV_AMOUNT &gt; 100000"/>
+                    <field name="PRIORITY" value="101"/>
+                    <field name="IS_VARIABLE" value="true"/>
+                    <field name="VARIABLE_TYPE" value="-7"/>
+                </row>
+                <row inheritId="SEGMENTATION_ID_3">
+                    <field name="EXPRESSION_ID" value="6"/>
+                    <field name="DESTINATION_FIELD" value="VAR_01_1_2"/>
+                    <field name="EXPRESSION" value="action.PREV_AMOUNT &gt; 200000"/>
+                    <field name="PRIORITY" value="102"/>
+                    <field name="IS_VARIABLE" value="true"/>
+                    <field name="VARIABLE_TYPE" value="-7"/>
+                </row>
+                <row inheritId="SEGMENTATION_ID_3">
+                    <field name="EXPRESSION_ID" value="3"/>
+                    <field name="DESTINATION_FIELD" value="MY_KEY"/>
+                    <field name="EXPRESSION" value='SRC_SEG_INPUT_ACTION$MY_KEY'/>
+                    <field name="PRIORITY" value="1"/>
+                </row>
+                <row inheritId="SEGMENTATION_ID_3">
+                    <field name="EXPRESSION_ID" value="4"/>
+                    <field name="DESTINATION_FIELD" value="REFERENTIAL_FUND_PRICE"/>
+                    <field name="EXPRESSION" value='SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE'/>
+                    <field name="PRIORITY" value="2"/>
+                </row>
+            </table>
+        </etalon>
+    </Scenario>
+    <Scenario id="SUPPRESSION_AVEC_INCLUDE">
+        <input>
+            <table name="PM_CLASSIFICATION_STRUCTURE">
+                <row id="axe4poche1">
+                    <field name="CLASSIFICATION_ID" value="4"/>
+                    <field name="SLEEVE_ROW_ID" value="123456"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="SLEEVE_ID" value="130"/>
+                    <field name="SLEEVE_NAME" value="PLUS DE 100 KEUR"/>
+                    <field name="FORMULA" value="1 == 2"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+                <row id="axe4poche2">
+                    <field name="CLASSIFICATION_ID" value="4"/>
+                    <field name="SLEEVE_ROW_ID" value="123457"/>
+                    <field name="SLEEVE_CODE" value="01-2"/>
+                    <field name="SLEEVE_DUSTBIN" value="true"/>
+                    <field name="SLEEVE_ID" value="140"/>
+                    <field name="SLEEVE_NAME" value="MOINS DE 100 KEUR"/>
+                    <field name="FORMULA"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+                <row id="axe3poche1">
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="0"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="SLEEVE_ID" value="110"/>
+                    <field name="SLEEVE_NAME" value="PLUS DE 100 KEUR"/>
+                    <field name="FORMULA" value="INC_$$4$123456"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+                <row id="axe3poche2">
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="2"/>
+                    <field name="SLEEVE_CODE" value="01-2"/>
+                    <field name="SLEEVE_DUSTBIN" value="true"/>
+                    <field name="SLEEVE_ID" value="120"/>
+                    <field name="SLEEVE_NAME" value="MOINS DE 100 KEUR"/>
+                    <field name="FORMULA"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+            </table>
+        </input>
+        <etalon>
+            <table name="PM_CLASSIFICATION_STRUCTURE" orderClause="SLEEVE_ID">
+                <row inheritId="axe3poche1"/>
+                <row inheritId="axe3poche2"/>
+                <row inheritId="axe4poche1"/>
+                <row inheritId="axe4poche2"/>
+            </table>
+            <table name="PM_EXPRESSION" orderClause="EXPRESSION_ID">
+                <row id="SEGMENTATION_4">
+                    <field name="EXPRESSION_ID" value="1"/>
+                    <field name="SEGMENTATION_ID" value="4"/>
+                    <field name="DESTINATION_FIELD" value="CLASSIFICATION_ID"/>
+                    <field name="EXPRESSION" value="4"/>
+                    <field name="PRIORITY" value="0"/>
+                    <field name="IS_VARIABLE" value="false"/>
+                    <field name="VARIABLE_TYPE"/>
+                </row>
+                <row inheritId="SEGMENTATION_4">
+                    <field name="EXPRESSION_ID" value="2"/>
+                    <field name="DESTINATION_FIELD" value="SLEEVE_CODE"/>
+                    <field name="EXPRESSION" value="01-2"/>
+                    <field name="PRIORITY" value="999"/>
+                </row>
+                <row inheritId="SEGMENTATION_4">
+                    <field name="EXPRESSION_ID" value="3"/>
+                    <field name="DESTINATION_FIELD" value="VAR_01_1"/>
+                    <field name="EXPRESSION" value="1 == 2"/>
+                    <field name="PRIORITY" value="101"/>
+                    <field name="IS_VARIABLE" value="true"/>
+                    <field name="VARIABLE_TYPE" value="-7"/>
+                </row>
+                <row inheritId="SEGMENTATION_4">
+                    <field name="EXPRESSION_ID" value="4"/>
+                    <field name="DESTINATION_FIELD" value="MY_KEY"/>
+                    <field name="EXPRESSION" value='SRC_SEG_INPUT_ACTION$MY_KEY'/>
+                    <field name="PRIORITY" value="1"/>
+                </row>
+                <row inheritId="SEGMENTATION_4">
+                    <field name="EXPRESSION_ID" value="5"/>
+                    <field name="DESTINATION_FIELD" value="REFERENTIAL_FUND_PRICE"/>
+                    <field name="EXPRESSION" value='SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE'/>
+                    <field name="PRIORITY" value="2"/>
+                </row>
+                <row id="SEGMENTATION_3">
+                    <field name="EXPRESSION_ID" value="6"/>
+                    <field name="SEGMENTATION_ID" value="3"/>
+                    <field name="DESTINATION_FIELD" value="CLASSIFICATION_ID"/>
+                    <field name="EXPRESSION" value="3"/>
+                    <field name="PRIORITY" value="0"/>
+                    <field name="IS_VARIABLE" value="false"/>
+                    <field name="VARIABLE_TYPE"/>
+                </row>
+                <row inheritId="SEGMENTATION_3">
+                    <field name="EXPRESSION_ID" value="7"/>
+                    <field name="DESTINATION_FIELD" value="SLEEVE_CODE"/>
+                    <field name="EXPRESSION" value="01-2"/>
+                    <field name="PRIORITY" value="999"/>
+                </row>
+                <row inheritId="SEGMENTATION_3">
+                    <field name="EXPRESSION_ID" value="8"/>
+                    <field name="DESTINATION_FIELD" value="VAR_01_1"/>
+                    <field name="EXPRESSION" value="1 == 2"/>
+                    <field name="PRIORITY" value="101"/>
+                    <field name="IS_VARIABLE" value="true"/>
+                    <field name="VARIABLE_TYPE" value="-7"/>
+                </row>
+                <row inheritId="SEGMENTATION_3">
+                    <field name="EXPRESSION_ID" value="9"/>
+                    <field name="DESTINATION_FIELD" value="MY_KEY"/>
+                    <field name="EXPRESSION" value='SRC_SEG_INPUT_ACTION$MY_KEY'/>
+                    <field name="PRIORITY" value="1"/>
+                </row>
+                <row inheritId="SEGMENTATION_3">
+                    <field name="EXPRESSION_ID" value="10"/>
+                    <field name="DESTINATION_FIELD" value="REFERENTIAL_FUND_PRICE"/>
+                    <field name="EXPRESSION" value='SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE'/>
+                    <field name="PRIORITY" value="2"/>
+                </row>
+            </table>
+        </etalon>
+    </Scenario>
+    <Scenario id="SUPPRESSION_AVEC_INCLUDE_RECURSIF">
+        <input>
+            <table name="PM_CLASSIFICATION">
+                <row>
+                    <field name="CLASSIFICATION_ID" value="5"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe 3"/>
+                    <field name="CLASSIFICATION_TYPE" value="ACTION"/>
+                </row>
+            </table>
+            <table name="PM_CLASSIFICATION_STRUCTURE">
+                <row inheritId="axe4poche1">
+                    <field name="CLASSIFICATION_ID" value="4"/>
+                    <field name="SLEEVE_ROW_ID" value="123456"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="SLEEVE_ID" value="130"/>
+                    <field name="SLEEVE_NAME" value="PLUS DE 100 KEUR"/>
+                    <field name="FORMULA" value="1 == 2"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+                <row inheritId="axe4poche2">
+                    <field name="CLASSIFICATION_ID" value="4"/>
+                    <field name="SLEEVE_ROW_ID" value="123457"/>
+                    <field name="SLEEVE_CODE" value="01-2"/>
+                    <field name="SLEEVE_DUSTBIN" value="true"/>
+                    <field name="SLEEVE_ID" value="140"/>
+                    <field name="SLEEVE_NAME" value="MOINS DE 100 KEUR"/>
+                    <field name="FORMULA"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+                <row inheritId="axe3poche1">
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="0"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="SLEEVE_ID" value="110"/>
+                    <field name="SLEEVE_NAME" value="PLUS DE 100 KEUR"/>
+                    <field name="FORMULA" value="INC_$$4$123456"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+                <row inheritId="axe3poche2">
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="2"/>
+                    <field name="SLEEVE_CODE" value="01-2"/>
+                    <field name="SLEEVE_DUSTBIN" value="true"/>
+                    <field name="SLEEVE_ID" value="120"/>
+                    <field name="SLEEVE_NAME" value="MOINS DE 100 KEUR"/>
+                    <field name="FORMULA"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+                <row id="axe5poche1">
+                    <field name="CLASSIFICATION_ID" value="5"/>
+                    <field name="SLEEVE_ROW_ID" value="56"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="SLEEVE_ID" value="150"/>
+                    <field name="SLEEVE_NAME" value="PLUS DE 100 KEUR"/>
+                    <field name="FORMULA" value="INC_$$3$0"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+                <row id="axe5poche2">
+                    <field name="CLASSIFICATION_ID" value="5"/>
+                    <field name="SLEEVE_ROW_ID" value="57"/>
+                    <field name="SLEEVE_CODE" value="01-2"/>
+                    <field name="SLEEVE_DUSTBIN" value="true"/>
+                    <field name="SLEEVE_ID" value="160"/>
+                    <field name="SLEEVE_NAME" value="MOINS DE 1000 KEUR"/>
+                    <field name="FORMULA"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+            </table>
+        </input>
+        <etalon>
+            <table name="PM_CLASSIFICATION_STRUCTURE" orderClause="SLEEVE_ID">
+                <row inheritId="axe3poche1"/>
+                <row inheritId="axe3poche2"/>
+                <row inheritId="axe4poche1"/>
+                <row inheritId="axe4poche2"/>
+                <row inheritId="axe5poche1"/>
+                <row inheritId="axe5poche2"/>
+            </table>
+            <table name="PM_EXPRESSION" orderClause="EXPRESSION_ID">
+                <row inheritId="SEGMENTATION_4"/>
+                <row inheritId="SEGMENTATION_4">
+                    <field name="EXPRESSION_ID" value="2"/>
+                    <field name="DESTINATION_FIELD" value="SLEEVE_CODE"/>
+                    <field name="EXPRESSION" value="01-2"/>
+                    <field name="PRIORITY" value="999"/>
+                </row>
+                <row inheritId="SEGMENTATION_4">
+                    <field name="EXPRESSION_ID" value="3"/>
+                    <field name="DESTINATION_FIELD" value="VAR_01_1"/>
+                    <field name="EXPRESSION" value="1 == 2"/>
+                    <field name="PRIORITY" value="101"/>
+                    <field name="IS_VARIABLE" value="true"/>
+                    <field name="VARIABLE_TYPE" value="-7"/>
+                </row>
+                <row inheritId="SEGMENTATION_4">
+                    <field name="EXPRESSION_ID" value="4"/>
+                    <field name="DESTINATION_FIELD" value="MY_KEY"/>
+                    <field name="EXPRESSION" value='SRC_SEG_INPUT_ACTION$MY_KEY'/>
+                    <field name="PRIORITY" value="1"/>
+                </row>
+                <row inheritId="SEGMENTATION_4">
+                    <field name="EXPRESSION_ID" value="5"/>
+                    <field name="DESTINATION_FIELD" value="REFERENTIAL_FUND_PRICE"/>
+                    <field name="EXPRESSION" value='SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE'/>
+                    <field name="PRIORITY" value="2"/>
+                </row>
+                <row inheritId="SEGMENTATION_3"/>
+                <row inheritId="SEGMENTATION_3">
+                    <field name="EXPRESSION_ID" value="7"/>
+                    <field name="DESTINATION_FIELD" value="SLEEVE_CODE"/>
+                    <field name="EXPRESSION" value="01-2"/>
+                    <field name="PRIORITY" value="999"/>
+                </row>
+                <row inheritId="SEGMENTATION_3">
+                    <field name="EXPRESSION_ID" value="8"/>
+                    <field name="DESTINATION_FIELD" value="VAR_01_1"/>
+                    <field name="EXPRESSION" value="1 == 2"/>
+                    <field name="PRIORITY" value="101"/>
+                    <field name="IS_VARIABLE" value="true"/>
+                    <field name="VARIABLE_TYPE" value="-7"/>
+                </row>
+                <row inheritId="SEGMENTATION_3">
+                    <field name="EXPRESSION_ID" value="9"/>
+                    <field name="DESTINATION_FIELD" value="MY_KEY"/>
+                    <field name="EXPRESSION" value='SRC_SEG_INPUT_ACTION$MY_KEY'/>
+                    <field name="PRIORITY" value="1"/>
+                </row>
+                <row inheritId="SEGMENTATION_3">
+                    <field name="EXPRESSION_ID" value="10"/>
+                    <field name="DESTINATION_FIELD" value="REFERENTIAL_FUND_PRICE"/>
+                    <field name="EXPRESSION" value='SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE'/>
+                    <field name="PRIORITY" value="2"/>
+                </row>
+                <row id="SEGMENTATION_5">
+                    <field name="EXPRESSION_ID" value="11"/>
+                    <field name="SEGMENTATION_ID" value="5"/>
+                    <field name="DESTINATION_FIELD" value="CLASSIFICATION_ID"/>
+                    <field name="EXPRESSION" value="5"/>
+                    <field name="PRIORITY" value="0"/>
+                    <field name="IS_VARIABLE" value="false"/>
+                    <field name="VARIABLE_TYPE"/>
+                </row>
+                <row inheritId="SEGMENTATION_5">
+                    <field name="EXPRESSION_ID" value="12"/>
+                    <field name="DESTINATION_FIELD" value="SLEEVE_CODE"/>
+                    <field name="EXPRESSION" value="01-2"/>
+                    <field name="PRIORITY" value="999"/>
+                </row>
+                <row inheritId="SEGMENTATION_5">
+                    <field name="EXPRESSION_ID" value="13"/>
+                    <field name="DESTINATION_FIELD" value="VAR_01_1"/>
+                    <field name="EXPRESSION" value="1 == 2"/>
+                    <field name="PRIORITY" value="101"/>
+                    <field name="IS_VARIABLE" value="true"/>
+                    <field name="VARIABLE_TYPE" value="-7"/>
+                </row>
+                <row inheritId="SEGMENTATION_5">
+                    <field name="EXPRESSION_ID" value="14"/>
+                    <field name="DESTINATION_FIELD" value="MY_KEY"/>
+                    <field name="EXPRESSION" value='SRC_SEG_INPUT_ACTION$MY_KEY'/>
+                    <field name="PRIORITY" value="1"/>
+                </row>
+                <row inheritId="SEGMENTATION_5">
+                    <field name="EXPRESSION_ID" value="15"/>
+                    <field name="DESTINATION_FIELD" value="REFERENTIAL_FUND_PRICE"/>
+                    <field name="EXPRESSION" value='SRC_SEG_INPUT_ACTION$REFERENTIAL_FUND_PRICE'/>
+                    <field name="PRIORITY" value="2"/>
+                </row>
+            </table>
+        </etalon>
+    </Scenario>
+</Scenarii>

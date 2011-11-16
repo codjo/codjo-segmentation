@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE Scenarii SYSTEM "http://scenarii.dtd">
+<Scenarii name="AUTOMATIC">
+    <Scenario id="OneSegmentation">
+        <input>
+            <table name="PM_SEGMENTATION">
+                <row>
+                    <field name="SEGMENTATION_ID" value="1"/>
+                    <field name="SEGMENTATION_NAME" value="TEST"/>
+                    <field name="FAMILY" value="ACTION"/>
+                </row>
+            </table>
+            <table name="PM_EXPRESSION">
+                <row>
+                    <field name="EXPRESSION_ID" value="1"/>
+                    <field name="SEGMENTATION_ID" value="1"/>
+                    <field name="DESTINATION_FIELD" value="MY_KEY"/>
+                    <field name="EXPRESSION" value="SRC_SEG_INPUT$MY_KEY"/>
+                    <field name="PRIORITY" value="1"/>
+                    <field name="IS_VARIABLE" value="false"/>
+                </row>
+                <row>
+                    <field name="EXPRESSION_ID" value="2"/>
+                    <field name="SEGMENTATION_ID" value="1"/>
+                    <field name="DESTINATION_FIELD" value="VAR_1"/>
+                    <field name="EXPRESSION" value="SRC_SEG_INPUT$NUM*2"/>
+                    <field name="PRIORITY" value="2"/>
+                    <field name="IS_VARIABLE" value="true"/>
+                    <field name="VARIABLE_TYPE" value="2"/>
+                </row>
+                <row>
+                    <field name="EXPRESSION_ID" value="3"/>
+                    <field name="SEGMENTATION_ID" value="1"/>
+                    <field name="DESTINATION_FIELD" value="RESULT"/>
+                    <field name="EXPRESSION" value="VAR_1"/>
+                    <field name="PRIORITY" value="3"/>
+                    <field name="IS_VARIABLE" value="false"/>
+                </row>
+                <row>
+                    <field name="EXPRESSION_ID" value="4"/>
+                    <field name="SEGMENTATION_ID" value="1"/>
+                    <field name="DESTINATION_FIELD" value="AXE"/>
+                    <field name="EXPRESSION" value="1"/>
+                    <field name="PRIORITY" value="4"/>
+                    <field name="IS_VARIABLE" value="false"/>
+                </row>
+            </table>
+            <table name="SEG_INPUT">
+                <row>
+                    <field name="MY_KEY" value="val1"/>
+                    <field name="NUM" value="1"/>
+                </row>
+            </table>
+            <table name="SEG_RESULT">
+                <row>
+                    <field name="MY_KEY" value="val1"/>
+                    <field name="AXE" value="1"/>
+                    <field name="RESULT" value="3"/>
+                    <field name="ANOMALY" value="0"/>
+                    <field name="ANOMALY_LOG"/>
+                </row>
+                <row>
+                    <field name="MY_KEY" value="val2"/>
+                    <field name="AXE" value="1"/>
+                    <field name="RESULT" value="4"/>
+                    <field name="ANOMALY" value="0"/>
+                    <field name="ANOMALY_LOG"/>
+                </row>
+                <row id="AXE_parasite">
+                    <field name="MY_KEY" value="val1"/>
+                    <field name="AXE" value="2"/>
+                    <field name="RESULT" value="5"/>
+                    <field name="ANOMALY" value="0"/>
+                    <field name="ANOMALY_LOG"/>
+                </row>
+            </table>
+        </input>
+        <etalon>
+            <table name="SEG_RESULT" orderClause="AXE">
+                <row>
+                    <field name="MY_KEY" value="val1"/>
+                    <field name="AXE" value="1"/>
+                    <field name="RESULT" value="2"/>
+                    <field name="ANOMALY" value="0"/>
+                    <field name="ANOMALY_LOG"/>
+                </row>
+                <row inheritId="AXE_parasite"/>
+            </table>
+        </etalon>
+    </Scenario>
+</Scenarii>

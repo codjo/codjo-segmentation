@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE Scenarii SYSTEM "http://scenarii.dtd">
+<Scenarii name="TestCaseName">
+    <Scenario id="dispatch">
+        <input/>
+        <etalon>
+            <table name="PM_MY_CLASSIFICATION">
+                <row>
+                    <field name="CLASSIFICATION_ID" value="0"/>
+                    <field name="CLASSIFICATION_NAME" value="Label 1"/>
+                    <field name="CLASSIFICATION_TYPE" value="Type 1"/>
+                </row>
+                <row>
+                    <field name="CLASSIFICATION_ID" value="2"/>
+                    <field name="CLASSIFICATION_NAME" value="Label 2"/>
+                    <field name="CLASSIFICATION_TYPE" value="Type 2"/>
+                </row>
+            </table>
+        </etalon>
+    </Scenario>
+</Scenarii>

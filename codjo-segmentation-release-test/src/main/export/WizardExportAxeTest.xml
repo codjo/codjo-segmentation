@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<release-test name="WizardExportAxeTest"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="http://test-release.xsd">
+    <description>Export d'axes.
+        On teste aussi qu'il est possible de customiser l'Export en simulant l'jout d'un champ dans PM_CLASSIFICATION.
+    </description>
+
+    <tokio-load id="tokio.load" file="WizardExportAxeTest.tokio"/>
+
+    <security-model user="${testEnvironment.user}" roles="admin"/>
+
+    <call-method file="WizardExportAxeTest.xmf">
+        <parameter name="case" value="ExportStandard"/>
+        <parameter name="file" value="segmentationAxeExport"/>
+    </call-method>
+    
+    <call-method file="WizardExportAxeTest.xmf">
+        <parameter name="case" value="ExportCustomise"/>
+        <parameter name="file" value="segmentationAxeExportCustom"/>
+    </call-method>
+
+</release-test>

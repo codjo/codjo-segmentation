@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE Scenarii SYSTEM "http://scenarii.dtd">
+<Scenarii name="AUTOMATIC">
+    <Scenario id="SegmentationDistinctValuesTest">
+        <input>
+            <table name="PM_SEGMENTATION"/>
+            <table name="PM_EXPRESSION"/>
+
+
+             <table name="SEG_INPUT_ACTION">
+                <row>
+                    <field name="MY_KEY" value="val4"/>
+                    <field name="NUM" value="1"/>
+                    <field name="REFERENTIAL_FUND_PRICE" value="200504"/>
+                </row>
+                <row>
+                    <field name="MY_KEY" value="val5"/>
+                    <field name="NUM" value="2"/>
+                    <field name="REFERENTIAL_FUND_PRICE" value="200506"/>
+                </row>
+                <row>
+                    <field name="MY_KEY" value="val6"/>
+                    <field name="NUM" value="3"/>
+                    <field name="REFERENTIAL_FUND_PRICE"/>
+                </row>
+            </table>
+
+            <table name="PM_CLASSIFICATION">
+                <row >
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="CLASSIFICATION_NAME" value="Répartition par fourchettes de coûts"/>
+                    <field name="CLASSIFICATION_TYPE" value="ACTION"/>
+                </row>
+            </table>
+            <table name="PM_CLASSIFICATION_STRUCTURE">
+                <row >
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="0002"/>
+                    <field name="SLEEVE_CODE" value="01-1"/>
+                    <field name="SLEEVE_DUSTBIN" value="false"/>
+                    <field name="SLEEVE_ID" value="34"/>
+                    <field name="SLEEVE_NAME" value="MOINS DE 100 KEUR"/>
+                    <field name="FORMULA" value="SRC_AP_SECURITY$REFERENTIAL_FUND_PRICE &#060; 100000"/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+                <row >
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="SLEEVE_ROW_ID" value="0003"/>
+                    <field name="SLEEVE_CODE" value="01-2"/>
+                    <field name="SLEEVE_DUSTBIN" value="true"/>
+                    <field name="SLEEVE_ID" value="35"/>
+                    <field name="SLEEVE_NAME" value="LE RESTE"/>
+                    <field name="FORMULA" value=""/>
+                    <field name="TERMINAL_ELEMENT" value="true"/>
+                </row>
+
+            </table>
+
+        </input>
+        <etalon>           
+        </etalon>
+    </Scenario>
+</Scenarii>

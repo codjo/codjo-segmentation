@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<preferenceList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://preference.xsd">
+
+    <preference id="TestClassificationAnomalyWindow">
+        <selectAll>selectAllClassificationAnomaly</selectAll>
+        <column fieldName="myKey" label="Ma clé" minSize="75"/>
+        <column fieldName="classificationId" label="Id Axe" minSize="75"/>
+        <column fieldName="sleeveCode" label="Code Poche" minSize="75"/>
+        <column fieldName="anomaly" label="Nb anomalies" minSize="25" maxSize="100" sorter="Numeric"/>
+        <column fieldName="anomalyLog" label="Log Anomalie" minSize="75"/>
+    </preference>
+
+</preferenceList>

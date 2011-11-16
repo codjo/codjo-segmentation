@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<story id="DuplicateAxisCommandTest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="file:C:/dev/platform/cache/xsd/codjo-segmentation-story.xsd">
+
+    <input>
+        <PM_CLASSIFICATION identityInsert="true">
+            <row id="ligne1">
+                <CLASSIFICATION_ID value="1"/>
+                <CLASSIFICATION_NAME value="classifDeBase"/>
+                <CLASSIFICATION_TYPE value="TOTO"/>
+                <CUSTOM_FIELD value="myField"/>
+            </row>
+        </PM_CLASSIFICATION>
+
+        <PM_CLASSIFICATION_STRUCTURE>
+            <row id="node1" autoComplete="true">
+                <CLASSIFICATION_ID value="1"/>
+                <SLEEVE_ROW_ID value="111"/>
+                <SLEEVE_ID value="111"/>
+                <SLEEVE_CODE value="01-1"/>
+                <SLEEVE_NAME value="1.PTX"/>
+                <SLEEVE_DUSTBIN value="0"/>
+                <TERMINAL_ELEMENT value="0"/>
+            </row>
+            <row id="node2" autoComplete="true">
+                <CLASSIFICATION_ID value="1"/>
+                <SLEEVE_ROW_ID value="222"/>
+                <SLEEVE_ID value="222"/>
+                <SLEEVE_CODE value="01-2"/>
+                <SLEEVE_NAME value="2.ACTIONS"/>
+                <SLEEVE_DUSTBIN value="0"/>
+                <TERMINAL_ELEMENT value="0"/>
+            </row>
+            <row id="node3" autoComplete="true">
+                <CLASSIFICATION_ID value="1"/>
+                <SLEEVE_ROW_ID value="333"/>
+                <SLEEVE_ID value="333"/>
+                <SLEEVE_CODE value="01-3"/>
+                <SLEEVE_NAME value="3.PABSOLUE"/>
+                <SLEEVE_DUSTBIN value="0"/>
+                <TERMINAL_ELEMENT value="0"/>
+            </row>
+            <row id="node4" autoComplete="true">
+                <CLASSIFICATION_ID value="1"/>
+                <SLEEVE_ROW_ID value="444"/>
+                <SLEEVE_ID value="444"/>
+                <SLEEVE_CODE value="01-4"/>
+                <SLEEVE_NAME value="4.MONETAIRE"/>
+                <SLEEVE_DUSTBIN value="0"/>
+                <TERMINAL_ELEMENT value="1"/>
+                <FORMULA value="RC_T_SEGMENTATION$INST_TYP==451 || SRC_T_SEGMENTATION$INST_TYP==452 || SRC_T_SEGMENTATION$INST_TYP==453"/>
+            </row>
+            <row id="node5" autoComplete="true">
+                <CLASSIFICATION_ID value="1"/>
+                <SLEEVE_ROW_ID value="555"/>
+                <SLEEVE_ID value="555"/>
+                <SLEEVE_CODE value="01-5"/>
+                <SLEEVE_NAME value="5.AUTRES"/>
+                <SLEEVE_DUSTBIN value="0"/>
+                <TERMINAL_ELEMENT value="1"/>
+                <FORMULA value='SRC_T_SEGMENTATION$FRR_AN=="AUTRES"'/>
+            </row>
+            <row id="node6" autoComplete="true">
+                <CLASSIFICATION_ID value="1"/>
+                <SLEEVE_ROW_ID value="666"/>
+                <SLEEVE_ID value="666"/>
+                <SLEEVE_CODE value="01-6"/>
+                <SLEEVE_NAME value="6.FOURRE_TOUT"/>
+                <SLEEVE_DUSTBIN value="1"/>
+                <TERMINAL_ELEMENT value="1"/>
+            </row>
+            <row id="node7" autoComplete="true">
+                <CLASSIFICATION_ID value="1"/>
+                <SLEEVE_ROW_ID value="777"/>
+                <SLEEVE_ID value="777"/>
+                <SLEEVE_CODE value="01-7"/>
+                <SLEEVE_NAME value="11000 PTXEUR"/>
+                <SLEEVE_DUSTBIN value="0"/>
+                <TERMINAL_ELEMENT value="0"/>
+            </row>
+            <row id="node8" autoComplete="true">
+                <CLASSIFICATION_ID value="1"/>
+                <SLEEVE_ROW_ID value="888"/>
+                <SLEEVE_ID value="888"/>
+                <SLEEVE_CODE value="01-8"/>
+                <SLEEVE_NAME value="12000 PTX US"/>
+                <SLEEVE_DUSTBIN value="0"/>
+                <TERMINAL_ELEMENT value="0"/>
+            </row>
+            <row id="node9" autoComplete="true">
+                <CLASSIFICATION_ID value="1"/>
+                <SLEEVE_ROW_ID value="999"/>
+                <SLEEVE_ID value="999"/>
+                <SLEEVE_CODE value="01-9"/>
+                <SLEEVE_NAME value="13000 PTX JP"/>
+                <SLEEVE_DUSTBIN value="0"/>
+                <TERMINAL_ELEMENT value="0"/>
+            </row>
+        </PM_CLASSIFICATION_STRUCTURE>
+    </input>
+
+    <output>
+        <PM_CLASSIFICATION orderClause="CLASSIFICATION_ID asc">
+            <copy row="ligne1"/>
+            <row>
+                <CLASSIFICATION_ID value="2"/>
+                <CLASSIFICATION_NAME value="Copie (2) de classifDeBase"/>
+                <CLASSIFICATION_TYPE value="TOTO"/>
+                <!--<CUSTOM_FIELD value="myField"/>-->
+                <CUSTOM_FIELD/>
+            </row>
+        </PM_CLASSIFICATION>
+
+        <PM_CLASSIFICATION_STRUCTURE orderClause="CLASSIFICATION_ID asc, SLEEVE_CODE asc">
+            <copy row="node1"/>
+            <copy row="node2"/>
+            <copy row="node3"/>
+            <copy row="node4"/>
+            <copy row="node5"/>
+            <copy row="node6"/>
+            <copy row="node7"/>
+            <copy row="node8"/>
+            <copy row="node9"/>
+
+            <copy row="node1" autoComplete="true">
+                <CLASSIFICATION_ID value="2"/>
+                <SLEEVE_ID value="1000"/>
+                <CUSTOM_FIELD/>
+            </copy>
+            <copy row="node2" autoComplete="true">
+                <CLASSIFICATION_ID value="2"/>
+                <SLEEVE_ID value="1001"/>
+                <CUSTOM_FIELD/>
+            </copy>
+            <copy row="node3" autoComplete="true">
+                <CLASSIFICATION_ID value="2"/>
+                <SLEEVE_ID value="1002"/>
+                <CUSTOM_FIELD/>
+            </copy>
+            <copy row="node4" autoComplete="true">
+                <CLASSIFICATION_ID value="2"/>
+                <SLEEVE_ID value="1003"/>
+                <CUSTOM_FIELD/>
+            </copy>
+            <copy row="node5" autoComplete="true">
+                <CLASSIFICATION_ID value="2"/>
+                <SLEEVE_ID value="1004"/>
+                <CUSTOM_FIELD/>
+            </copy>
+            <copy row="node6" autoComplete="true">
+                <CLASSIFICATION_ID value="2"/>
+                <SLEEVE_ID value="1005"/>
+                <CUSTOM_FIELD/>
+            </copy>
+            <copy row="node7" autoComplete="true">
+                <CLASSIFICATION_ID value="2"/>
+                <SLEEVE_ID value="1006"/>
+                <CUSTOM_FIELD/>
+            </copy>
+            <copy row="node8" autoComplete="true">
+                <CLASSIFICATION_ID value="2"/>
+                <SLEEVE_ID value="1007"/>
+                <CUSTOM_FIELD/>
+            </copy>
+            <copy row="node9" autoComplete="true">
+                <CLASSIFICATION_ID value="2"/>
+                <SLEEVE_ID value="1008"/>
+                <CUSTOM_FIELD/>
+            </copy>
+        </PM_CLASSIFICATION_STRUCTURE>
+    </output>
+</story>

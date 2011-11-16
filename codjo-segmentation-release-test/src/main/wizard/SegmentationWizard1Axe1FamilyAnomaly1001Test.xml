@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<release-test name="SegmentationWizardTestAnomaly">
+
+    <tokio-load id="tokio.load" file="SegmentationWizard1Axe1FamilyAnomaly1001Test.tokio"/>
+    <tokio-set-db id="tokio.setdb" refId="tokio.load" scenario="SegmentationWizard1Axe1FamilyAnomaly1001Test"/>
+
+    <security-model user="${testEnvironment.user}" roles="admin"/>
+
+    <gui-test>
+        <group name="Ouverture de la liste des axes d'analyse">
+            <click menu="Segmentation:Assistant segmentation"/>
+            <assertFrame title="Assistant segmentation"/>
+            <assertListSize name="ClassificationWizardWindow" expected="1"/>
+            <select name="ClassificationWizardWindow" row="0"/>
+            <click name="WizardPanel.applyButton"/>
+            <assertValue name="statusField" expected="1001 anomalies ! Merci de consulter le log audit"/>
+            <assertEnabled name="displayAnomaly" expected="true"/>
+            <click label="Anomalies segmentation"/>
+            <assertFrame title="Anomalies de segmentation"/>
+            <assertListSize name="TestClassificationAnomalyWindow" expected="1000"/>
+            <assertTable name="TestClassificationAnomalyWindow" row="0" column="0" expected="val1"/>
+            <assertTable name="TestClassificationAnomalyWindow" row="1" column="0" expected="val2"/>
+            <assertTable name="TestClassificationAnomalyWindow" row="999" column="0" expected="val1000"/>
+            <click name="TestClassificationAnomalyWindow.NextPageAction"/>
+             <assertListSize name="TestClassificationAnomalyWindow" expected="1"/>
+            <assertTable name="TestClassificationAnomalyWindow" row="0" column="0" expected="val1001"/>
+
+         </group>
+    </gui-test>
+
+    <!-- Vérification des données résultat en base -->
+    <tokio-assert refId="tokio.setdb" allTables="true"/>
+
+</release-test>

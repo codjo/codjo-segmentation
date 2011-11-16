@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE cases PUBLIC "-//AGF, Inc.//DTD cases 2.0//EN" "cases.dtd">
+
+<cases>
+    <case id="ExportStandard">
+
+        <input>
+            <table name="PM_CLASSIFICATION">
+                <row id="axe1">
+                    <field name="CLASSIFICATION_ID" value="1"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe &#9; event"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+                    <row id="axe2">
+                    <field name="CLASSIFICATION_ID" value="2"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe event 2"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+                <row id="axe3">
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="CLASSIFICATION_NAME" value="Axe event 3"/>
+                    <field name="CLASSIFICATION_TYPE" value="EVENT"/>
+                    <field name="CUSTOM_FIELD"/>
+                </row>
+            </table>
+        </input>
+
+        <output/>
+    </case>
+
+    <case id="ExportCustomise" inheritId="ExportStandard">
+        <input>
+            <table name="PM_CLASSIFICATION">
+                <replace row="axe1">
+                    <field name="CUSTOM_FIELD" value="Youpi"/>
+                </replace>
+                 <replace row="axe2">
+                     <field name="CUSTOM_FIELD" value="Custom1"/>
+                 </replace>
+                <replace row="axe3">
+                     <field name="CUSTOM_FIELD" value="Custom2"/>
+                 </replace>
+              </table>
+
+        </input>
+
+        <output/>           
+    </case>
+
+</cases>

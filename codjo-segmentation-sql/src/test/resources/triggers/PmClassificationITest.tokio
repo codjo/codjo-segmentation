@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE Scenarii SYSTEM "http://scenarii.dtd">
+<Scenarii name="AUTOMATIC">
+    <Scenario id="insert">
+        <input>
+            <table name="PM_CLASSIFICATION">
+                <row id="classification">
+                    <field name="CLASSIFICATION_ID" value="3"/>
+                    <field name="CLASSIFICATION_NAME" value="Répartition par fourchettes de coûts"/>
+                    <field name="CLASSIFICATION_TYPE" value="ACTION"/>
+                </row>
+            </table>
+        </input>
+        <etalon>
+            <table name="PM_CLASSIFICATION">
+                <row inheritId="classification"/>
+            </table>
+            <table name="PM_SEGMENTATION">
+                <row>
+                    <field name="SEGMENTATION_ID" value="3"/>
+                    <field name="SEGMENTATION_NAME" value="Répartition par fourchettes de coûts"/>
+                    <field name="FAMILY" value="ACTION"/>
+                </row>
+            </table>
+        </etalon>
+    </Scenario>
+
+
+</Scenarii>

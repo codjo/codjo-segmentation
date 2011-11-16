@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<release-test name="SegmentationSettingsTest">
+
+    <tokio-load id="tokio.load" file="SegmentationSettingsTest.tokio"/>
+    <tokio-set-db id="tokio.setdb" refId="tokio.load" scenario="SegmentationSettingsTest"/>
+
+    <security-model user="${testEnvironment.user}" roles="admin"/>
+
+    <gui-test>
+        <group name="Ouverture de la liste des axes d'analyse">
+            <click menu="Segmentation:Axes d&apos;analyse"/>
+            <assertFrame title="Axes d'analyse"/>
+            <assertListSize name="ClassificationWindow" expected="2"/>
+            <assertTable name="ClassificationWindow" expected="Répartition par fourchettes de coûts"
+                         row="0" column="Nom"/>
+            <assertTable name="ClassificationWindow" expected="ACTION" row="0" column="Famille"/>
+            <assertTable name="ClassificationWindow" expected="Répartition par manager" row="1"
+                         column="Nom"/>
+        </group>
+
+        <group name="Modification d'un axe d'analyse">
+            <select name="ClassificationWindow" row="0"/>
+            <click name="ClassificationWindow.EditAction"/>
+
+            <assertFrame title="Axes d'analyse"/>
+            <assertValue name="classificationName" expected="Répartition par fourchettes de coûts"/>
+            <assertValue name="classificationType" expected="ACTION"/>
+
+            <assertEnabled name="addFolderNode" expected="false"/>
+            <assertEnabled name="addSleeveNode" expected="false"/>
+            <assertEnabled name="deleteNode" expected="false"/>
+
+            <assertTree name="axisTree" path="Répartition par fourchettes de coûts"
+                        exists="true"/>
+            <assertTree name="axisTree"
+                        path="Répartition par fourchettes de coûts:ENTRE 100 ET 500 KEUR" exists="true"/>
+            <assertTree name="axisTree"
+                        path="Répartition par fourchettes de coûts:ENTRE 100 ET 500 KEUR:ENTRE 200 ET 500 KEUR"
+                        exists="true"/>
+            <assertTree name="axisTree"
+                        path="Répartition par fourchettes de coûts:ENTRE 100 ET 500 KEUR:ENTRE 100 ET 200 KEUR"
+                        exists="true"/>
+            <assertTree name="axisTree"
+                        path="Répartition par fourchettes de coûts:MOINS DE 100 KEUR" exists="true"/>
+            <assertTree name="axisTree"
+                        path="Répartition par fourchettes de coûts:LE RESTE" exists="true"/>
+
+            <select name="axisTree"
+                    path="Répartition par fourchettes de coûts:ENTRE 100 ET 500 KEUR"/>
+            <assertEnabled name="addFolderNode" expected="true"/>
+            <assertEnabled name="addSleeveNode" expected="true"/>
+            <assertEnabled name="deleteNode" expected="true"/>
+            <assertValue name="sleeveName" expected="ENTRE 100 ET 500 KEUR"/>
+            <assertValue name="sleeveDustbin" expected="false"/>
+
+            <click name="deleteNode"/>
+            <assertTree name="axisTree"
+                        path="Répartition par fourchettes de coûts:ENTRE 100 ET 500 KEUR" exists="false"/>
+            <assertTree name="axisTree"
+                        path="Répartition par fourchettes de coûts:ENTRE 100 ET 500 KEUR:ENTRE 200 ET 500 KEUR"
+                        exists="false"/>
+            <assertTree name="axisTree"
+                        path="Répartition par fourchettes de coûts:ENTRE 100 ET 500 KEUR:ENTRE 100 ET 200 KEUR"
+                        exists="false"/>
+
+            <select name="axisTree"
+                    path="Répartition par fourchettes de coûts:MOINS DE 100 KEUR"/>
+            <assertEnabled name="addFolderNode" expected="false"/>
+            <assertEnabled name="addSleeveNode" expected="false"/>
+            <assertEnabled name="deleteNode" expected="true"/>
+
+            <click name="deleteNode"/>
+            <assertTree name="axisTree"
+                        path="Répartition par fourchettes de coûts:MOINS DE 100 KEUR" exists="false"/>
+
+            <select name="axisTree" path="Répartition par fourchettes de coûts"/>
+            <setValue name="classificationName" value="Répartition par coûts"/>
+            <click name="addFolderNode"/>
+            <select name="axisTree" path="Répartition par coûts:NOUVEAU NOEUD"/>
+            <setValue name="sleeveName" value="MOINS DE 100 KEUR" mode="keyboard"/>
+
+            <click name="addSleeveNode"/>
+            <select name="axisTree"
+                    path="Répartition par coûts:MOINS DE 100 KEUR:NOUVELLE POCHE"/>
+            <setValue name="sleeveName" value="ENTRE 50 ET 100 KEUR" mode="keyboard"/>
+            <click name="editExpressionButton"/>
+            <assertFrame title="Paramétrage des expressions"/>
+            <setValue name="editor.expression"
+                      value="Valeur liquidative de référence &gt;= 50000 &amp;&amp; Valeur liquidative de référence &lt; 100000"/>
+            <click name="editor.okButton"/>
+            <assertFrame title="Paramétrage des expressions" closed="true"/>
+
+            <select name="axisTree" path="Répartition par coûts:MOINS DE 100 KEUR"/>
+            <click name="addSleeveNode"/>
+            <select name="axisTree"
+                    path="Répartition par coûts:MOINS DE 100 KEUR:NOUVELLE POCHE"/>
+            <setValue name="sleeveName" value="MOINS DE 50 KEUR" mode="keyboard"/>
+            <click name="editExpressionButton"/>
+            <setValue name="editor.expression" value="Valeur liquidative de référence &lt; 50000"/>
+            <click name="editor.okButton"/>
+            <assertFrame title="Paramétrage des expressions" closed="true"/>
+
+            <select name="axisTree" path="Répartition par coûts:LE RESTE"/>
+            <setValue name="sleeveName" value="AUTRE" mode="keyboard"/>
+            <assertValue name="sleeveDustbin" expected="true"/>
+
+            <click name="ButtonPanelGui.okButton"/>
+            <assertFrame title="Axe d'analyse" closed="true"/>
+
+        </group>
+
+        <group name="Suppression d'un axe d'analyse">
+            <select name="ClassificationWindow" row="1"/>
+            <click name="ClassificationWindow.DeleteAction"/>
+            <assertFrame title="Confirmation de suppression"/>
+            <click label="Oui"/>
+            <assertFrame title="Confirmation de suppression" closed="true"/>
+            <assertFrame title="Axes d'analyse"/>
+            <assertListSize name="ClassificationWindow" expected="1"/>
+            <assertTable name="ClassificationWindow" expected="Répartition par coûts" row="0"
+                         column="Nom"/>
+        </group>
+
+        <group name="Ajout d'un axe d'analyse">
+            <click name="ClassificationWindow.AddAction"/>
+            <setValue name="classificationName" value="Répartition par semestre"/>
+            <setValue name="classificationType" value="EVENT"/>
+            <select name="axisTree" path="Répartition par semestre"/>
+            <click name="addSleeveNode"/>
+            <select name="axisTree" path="Répartition par semestre:NOUVELLE POCHE"/>
+            <setValue name="sleeveName" value="S1" mode="keyboard"/>
+            <click name="editExpressionButton"/>
+
+            <select name="editor.functionList" label="isNotNull"/>
+            <!--<assertValue name="editor.usage" expected="Usage : isNotNull(variable)"/>-->
+            <setValue name="editor.expression"
+                      value="isNotNull(Date d'agrément ) &amp;&amp; Date d'agrément  &#060;&#061; 200506"/>
+            <click name="editor.okButton"/>
+            <assertValue name="formula"
+                         expected="isNotNull(SRC_SEG_INPUT_EVENT$AMF_APPROVAL_DATE ) &amp;&amp; SRC_SEG_INPUT_EVENT$AMF_APPROVAL_DATE  &lt;= 200506"/>
+            <assertFrame title="Paramétrage des expressions" closed="true"/>
+
+            <click name="ButtonPanelGui.okButton"/>
+            <assertFrame title="Erreur"/>
+            <assertValue name="errorMessage" expected="Il faut une poche fourre-tout."/>
+            <click label="OK"/>
+
+            <select name="axisTree" path="Répartition par semestre"/>
+            <click name="addSleeveNode"/>
+            <select name="axisTree" path="Répartition par semestre:NOUVELLE POCHE"/>
+            <setValue name="sleeveName" value="S2" mode="keyboard"/>
+            <setValue name="sleeveDustbin" value="true"/>
+
+            <click name="ButtonPanelGui.okButton"/>
+            <assertFrame title="Axe d'analyse" closed="true"/>
+
+            <assertListSize name="ClassificationWindow" expected="2"/>
+            <assertTable name="ClassificationWindow" expected="Répartition par coûts" row="0"
+                         column="Nom"/>
+            <assertTable name="ClassificationWindow" expected="Répartition par semestre" row="1"
+                         column="Nom"/>
+        </group>
+
+    </gui-test>
+
+    <!-- Vérification des données résultat en base -->
+    <tokio-assert refId="tokio.setdb" allTables="true"/>
+
+</release-test>

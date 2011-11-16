@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<release-test name="SegmentationWizard2Axes1FamilyTest">
+
+    <tokio-load id="tokio.load" file="SegmentationWizard2Axes1FamilyTest.tokio"/>
+    <tokio-set-db id="tokio.setdb" refId="tokio.load" scenario="SegmentationWizard2Axes1FamilyTest"/>
+
+    <security-model user="${testEnvironment.user}" roles="admin"/>
+
+    <gui-test>
+        <group name="Ouverture de la liste des axes d'analyse">
+            <click menu="Segmentation:Assistant segmentation"/>
+            <assertFrame title="Assistant segmentation"/>
+            <assertListSize name="ClassificationWizardWindow" expected="2"/>
+            <select name="ClassificationWizardWindow" row="0"/>
+            <select name="ClassificationWizardWindow" multiple="true" row="1"/>
+            <click name="WizardPanel.applyButton"/>
+            <assertValue name="statusField" expected="Le traitement de segmentation est terminé : OK"/>
+            <assertEnabled name="displayAnomaly" expected="false"/>
+        </group>
+    </gui-test>
+
+    <!-- Vérification des données résultat en base -->
+    <tokio-assert refId="tokio.setdb" allTables="true"/>
+
+</release-test>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<release-test name="SegmentationFunctionsOperatorsTest">
+
+    <tokio-load id="tokio.load" file="SegmentationDistinctValuesTest.tokio"/>
+    <tokio-set-db id="tokio.setdb" refId="tokio.load" scenario="SegmentationDistinctValuesTest"/>
+
+    <security-model user="${testEnvironment.user}" roles="admin"/>
+
+    <gui-test>
+
+        <group name="Aide et description des fonctions et opérateurs">
+            <click menu="Segmentation:Axes d&apos;analyse"/>
+            <assertFrame title="Axes d'analyse"/>
+            <assertListSize name="ClassificationWindow" expected="1"/>
+            <select name="ClassificationWindow" row="0"/>
+            <click name="ClassificationWindow.EditAction"/>
+
+            <assertFrame title="Axes d'analyse"/>
+            <assertValue name="classificationName" expected="Répartition par fourchettes de coûts"/>
+            <assertValue name="classificationType" expected="ACTION"/>
+
+            <assertTree name="axisTree"
+                        path="Répartition par fourchettes de coûts:MOINS DE 100 KEUR" exists="true"/>
+
+            <select name="axisTree"
+                    path="Répartition par fourchettes de coûts:MOINS DE 100 KEUR"/>
+
+            <click name="editExpressionButton"/>
+            <assertFrame title="Paramétrage des expressions"/>
+
+            <selectTab name="editor.helperTabs" tabIndex="0"/>
+
+            <select name="editor.functionList" label="in"/>
+            <assertValue name="editor.usage"
+                         expected="Description : renvoie vrai si la colonne passée en premier paramètre contient une des valeurs passées dans les paramètres suivants&#10;Usage : in(colonne, valeur1, valeur2, ...)&#10;Exemple : in(Pays, &#34;FRA&#34;, &#34;DEU&#34;, &#34;USA&#34;, &#34;JPN&#34;)"/>
+
+            <select name="editor.functionList" label="notIn"/>
+            <assertValue name="editor.usage"
+                         expected="Description : renvoie vrai si la colonne passée en premier paramètre ne contient aucune des valeurs passées dans les paramètres suivants&#10;Usage : notIn(colonne, valeur1, valeur2, ...)&#10;Exemple : notIn(Pays, &#34;FRA&#34;, &#34;DEU&#34;, &#34;USA&#34;, &#34;JPN&#34;)"/>
+
+            <select name="editor.functionList" label="Math.abs"/>
+            <assertValue name="editor.usage"
+                         expected="Description : renvoie la valeur absolue du nombre passé en paramètre&#10;Usage : Math.abs(colonne)&#10;N.B. ne s'applique qu'aux colonnes numériques&#10;Exemple : Math.abs(Montant)"/>
+
+            <select name="editor.functionList" label="iif"/>
+            <assertValue name="editor.usage"
+                         expected="Description : renvoie Valeur si vraie si Condition est remplie et Valeur si fausse dans le cas contraire&#10;Usage : iif(Condition, Valeur si vraie, Valeur si fausse)&#10;Exemple : iif(in(Véhicule, &#34;Camion&#34;, &#34;Voiture&#34;, &#34;Moto&#34;), &#34;Véhicule motorisé&#34;, &#34;Véhicule non motorisé&#34;)"/>
+
+            <select name="editor.functionList" label="Math.max"/>
+            <assertValue name="editor.usage"
+                         expected="Description : renvoie la plus élevée des deux données passées en paramètres&#10;Usage : Math.max(donnée1, donnée2)&#10;Exemple : Math.max(Cours d'ouverture, Cours de clôture)"/>
+
+            <select name="editor.functionList" label="Math.min"/>
+            <assertValue name="editor.usage"
+                         expected="Description : renvoie la plus faible des deux données passées en paramètres&#10;Usage : Math.min(donnée1, donnée2)&#10;Exemple : Math.min(Cours d'ouverture, Cours de clôture)"/>
+
+            <select name="editor.functionList" label="isNull"/>
+            <assertValue name="editor.usage"
+                         expected="Description : renvoie vrai si la donnée passée en paramètre est vide, faux dans le cas contraire&#10;Usage : isNull(donnée)&#10;Exemple : isNull(Devise)"/>
+
+            <select name="editor.functionList" label="isNotNull"/>
+            <assertValue name="editor.usage"
+                         expected="Description : renvoie vrai si la donnée passée en paramètre n'est pas vide, faux dans le cas contraire&#10;Usage : isNotNull(donnée)&#10;Exemple : isNotNull(Devise)"/>
+
+            <selectTab name="editor.helperTabs" tabIndex="1"/>
+
+            <select name="editor.operationList" label="+"/>
+            <assertValue name="editor.usage"
+                         expected="Description : plus&#10;Exemple : (Cours d'ouverture + Cours de clôture) / 2"/>
+
+            <select name="editor.operationList" label="-"/>
+            <assertValue name="editor.usage"
+                         expected="Description : moins&#10;Exemple : (Cours de clôture - Cours d'ouverture) / Cours d'ouverture"/>
+
+            <select name="editor.operationList" label="/"/>
+            <assertValue name="editor.usage"
+                         expected="Description : diviser&#10;Exemple : (Cours d'ouverture + Cours de clôture) / 2"/>
+
+            <select name="editor.operationList" label="*"/>
+            <assertValue name="editor.usage"
+                         expected="Description : multiplier&#10;Exemple : (Cours de clôture - Cours d'ouverture) * (1 / Cours d'ouverture)"/>
+
+            <select name="editor.operationList" label="||"/>
+            <assertValue name="editor.usage"
+                         expected="Description : ou&#10;Exemple : Pays ==&#34;FRA&#34; || Pays ==&#34;ESP&#34;"/>
+
+            <select name="editor.operationList" label="&amp;&amp;"/>
+            <assertValue name="editor.usage"
+                         expected="Description : et&#10;Exemple : Pays ==&#34;FRA&#34; &amp;&amp; Devise ==&#34;EUR&#34;"/>
+
+            <select name="editor.operationList" label="=="/>
+            <assertValue name="editor.usage"
+                         expected="Description : égal&#10;Exemple : Pays ==&#34;FRA&#34;"/>
+
+            <select name="editor.operationList" label="!="/>
+            <assertValue name="editor.usage"
+                         expected="Description : différent&#10;Exemple : Pays !=&#34;FRA&#34;"/>
+
+            <select name="editor.operationList" label="&#62;"/>
+            <assertValue name="editor.usage"
+                         expected="Description : strictement supérieur&#10;Exemple : Cours de clôture &#62; Cours d'ouverture"/>
+
+            <select name="editor.operationList" label="&#60;"/>
+            <assertValue name="editor.usage"
+                         expected="Description : strictement inférieur&#10;Exemple : Cours d'ouverture &#60; Cours de clôture"/>
+
+            <select name="editor.operationList" label="&#62;="/>
+            <assertValue name="editor.usage"
+                         expected="Description : supérieur ou égal&#10;Exemple : Cours de clôture &#62;= Cours d'ouverture"/>
+
+            <select name="editor.operationList" label="&#60;="/>
+            <assertValue name="editor.usage"
+                         expected="Description : inférieur ou égal&#10;Exemple : Cours d'ouverture &#60;= Cours de clôture"/>
+
+            <select name="editor.operationList" label="("/>
+            <assertValue name="editor.usage"
+                         expected="Description : ouverture d'un bloc d'opérations arithmétiques ou logiques&#10;Exemple : (Pays ==&#34;FRA&#34; || Pays == &#34;ESP&#34;) &amp;&amp; Devise ==&#34;EUR&#34;"/>
+
+            <select name="editor.operationList" label=")"/>
+            <assertValue name="editor.usage"
+                         expected="Description : fermeture d'un bloc d'opérations arithmétiques ou logiques&#10;Exemple : (Cours d'ouverture + Cours de clôture) / 2"/>
+
+            <select name="editor.operationList" label="."/>
+            <assertValue name="editor.usage"
+                         expected="Description : séparateur de décimales&#10;Exemple : Cours d'ouverture &#60;= 15.24"/>
+
+            <select name="editor.operationList" label=","/>
+            <assertValue name="editor.usage"
+                         expected="Description : séparateur de paramètres lors de l'utilisation de fonctions&#10;Exemple : Math.min(Cours d'ouverture, Cours de clôture)"/>
+
+        </group>
+
+    </gui-test>
+
+</release-test>
