@@ -90,7 +90,7 @@ public abstract class SegmentationParticipantTestCase<T extends JdbcBlackboardPa
         private final LogString logString;
 
         SegmentationResultMock(LogString logString) throws SQLException {
-            super(new ConnectionMock(), new XmlFamilyPreferenceMock());
+            super(new ConnectionMock().getStub(), new XmlFamilyPreferenceMock());
             this.logString = logString;
         }
 

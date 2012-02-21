@@ -22,13 +22,13 @@ public class JdbcBlackboardParticipantTest extends TestCase {
                   @Override
                   protected void handleTodo(Todo todo, Level fromLevel, Connection connection) {
                       log.call("handleTodo", fromLevel.getName(), todo.getId(),
-                               connection.getClass().getSimpleName());
+                               (connection ==null ? "Null connection" : "good connection"));
                   }
               };
 
         //noinspection unchecked
         participant.handleTodo(new Todo(1), new Level("level"));
 
-        log.assertContent("getConnectionPool(null, message:null), handleTodo(level, 1, ConnectionMock)");
+        log.assertContent("getConnectionPool(null, message:null), handleTodo(level, 1, good connection)");
     }
 }
