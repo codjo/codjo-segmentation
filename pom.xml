@@ -76,7 +76,7 @@
     -->
 
     <name>Lib &gt; Segmentation</name>
-    <description>Librairie permettant de segmenter des donnees.</description>
+    <description>Library for data segmentation.</description>
     <inceptionYear>2007</inceptionYear>
 
     <!--
