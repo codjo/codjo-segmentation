@@ -83,8 +83,9 @@
         </dependency>
         <dependency>
             <groupId>net.codjo.database</groupId>
-            <artifactId>codjo-database-main</artifactId>
-            <scope>test</scope>
+            <artifactId>codjo-database-${databaseType}</artifactId>
+            <optional>true</optional>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>net.codjo.tokio</groupId>
