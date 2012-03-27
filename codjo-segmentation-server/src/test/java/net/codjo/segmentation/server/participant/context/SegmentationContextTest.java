@@ -1,4 +1,5 @@
 package net.codjo.segmentation.server.participant.context;
+import junit.framework.TestCase;
 import net.codjo.database.common.api.JdbcFixture;
 import net.codjo.database.common.api.structure.SqlTable;
 import net.codjo.segmentation.server.participant.common.Page;
@@ -6,7 +7,6 @@ import net.codjo.segmentation.server.participant.common.SegmentationResult;
 import net.codjo.segmentation.server.preference.family.Row;
 import net.codjo.segmentation.server.preference.family.TableMetaData;
 import net.codjo.segmentation.server.preference.family.XmlFamilyPreference;
-import junit.framework.TestCase;
 public class SegmentationContextTest extends TestCase {
     private JdbcFixture jdbc = JdbcFixture.newFixture();
 
@@ -40,7 +40,7 @@ public class SegmentationContextTest extends TestCase {
         assertNotNull(segmentationResult);
         segmentationResult.add(new Row(new String[]{"COL_STR"}, new Object[]{"valeur"}));
 
-        jdbc.assertContent(SqlTable.table("#RESULT"), new String[][]{{"valeur"}});
+        jdbc.assertContent(SqlTable.table("#RESULT"), new String[][]{{"valeur", "0", null}});
     }
 
 
