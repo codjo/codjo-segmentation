@@ -46,7 +46,7 @@ net.codjo.segmentation.gui.plugin
 	-> net.codjo.segmentation.gui
 	-> net.codjo.workflow.gui.plugin
 	-> org.mockito
-	-> org.mockito.internal.progress
+	-> org.mockito.stubbing
 	-> org.picocontainer
 
 net.codjo.segmentation.gui.preference
@@ -72,6 +72,6 @@ net.codjo.segmentation.gui.wizard
 	-> net.codjo.mad.gui.framework
 	-> net.codjo.mad.gui.request
 	-> org.mockito
-	-> org.mockito.internal.progress
+	-> org.mockito.stubbing
 	-> org.xml.sax
 	
