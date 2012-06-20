@@ -51,8 +51,7 @@ public class SegmentationGuiTestMock {
         guiCore.addPlugin(SegmentationGuiPlugin.class);
         guiCore.addPlugin(SegmentationGuiTestPlugin.class);
 
-        InputStream properties = SegmentationGuiTestMock.class.getResourceAsStream(
-              "/conf/application.properties");
+        InputStream properties = SegmentationGuiTestMock.class.getResourceAsStream("/conf/application.properties");
         ApplicationData applicationData = new ApplicationData(properties);
 
         arguments = new String[]{applicationData.getDefaultLogin(),
