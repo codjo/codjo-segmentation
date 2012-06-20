@@ -1,4 +1,11 @@
 package net.codjo.segmentation.releasetest;
+import java.awt.Dimension;
+import java.io.InputStream;
+import java.util.Map;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableCellRenderer;
+import net.codjo.i18n.gui.plugin.InternationalizationGuiPlugin;
 import net.codjo.mad.client.plugin.MadConnectionPlugin;
 import net.codjo.mad.client.request.RequestException;
 import net.codjo.mad.client.request.Row;
@@ -22,12 +29,6 @@ import net.codjo.segmentation.gui.wizard.ClassificationWizardWindow;
 import net.codjo.segmentation.gui.wizard.LogWindowLogic;
 import net.codjo.segmentation.gui.wizard.SegmentationWizardCustomizer;
 import net.codjo.workflow.gui.plugin.WorkflowGuiPlugin;
-import java.awt.Dimension;
-import java.io.InputStream;
-import java.util.Map;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
-import javax.swing.table.DefaultTableCellRenderer;
 /**
  */
 public class SegmentationGuiTestMock {
@@ -41,6 +42,7 @@ public class SegmentationGuiTestMock {
 
         guiCore.getConfiguration().setMainWindowSize(new Dimension(1100, 900));
 
+        guiCore.addPlugin(InternationalizationGuiPlugin.class);
         guiCore.addPlugin(SecurityClientPlugin.class);
         guiCore.addPlugin(MadConnectionPlugin.class);
         guiCore.addPlugin(MadGuiPlugin.class);
