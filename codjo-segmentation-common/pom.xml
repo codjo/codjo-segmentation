@@ -11,7 +11,7 @@
     <parent>
         <groupId>net.codjo.segmentation</groupId>
         <artifactId>codjo-segmentation</artifactId>
-        <version>1.75-SNAPSHOT</version>
+        <version>1.75</version>
     </parent>
     <dependencies>
         <dependency>
