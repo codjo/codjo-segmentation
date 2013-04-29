@@ -4,6 +4,18 @@
  * Common Apache License 2.0
  */
 package net.codjo.segmentation.server.participant;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import net.codjo.expression.FindUses;
 import net.codjo.expression.InvalidExpressionException;
 import net.codjo.segmentation.common.MidAuditKey;
@@ -22,25 +34,14 @@ import net.codjo.segmentation.server.preference.family.RowFilter;
 import net.codjo.segmentation.server.preference.family.XmlFamilyPreference;
 import net.codjo.segmentation.server.preference.treatment.Expression;
 import net.codjo.segmentation.server.util.SegmentationUtil;
-import static net.codjo.segmentation.server.util.SegmentationUtil.determineFullColumnName;
 import net.codjo.sql.builder.DefaultFieldInfoList;
 import net.codjo.sql.builder.FieldInfo;
 import net.codjo.sql.builder.QueryBuilder;
 import net.codjo.sql.builder.QueryBuilderFactory;
 import net.codjo.variable.UnknownVariableException;
 import net.codjo.workflow.common.message.Arguments;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+
+import static net.codjo.segmentation.server.util.SegmentationUtil.determineFullColumnName;
 /**
  *
  */
@@ -115,24 +116,29 @@ public class PaginatorParticipant extends SegmentationParticipant<TodoContent> {
               throws SQLException, UnknownVariableException {
             Statement statement = connection.createStatement();
             try {
+                int pageId = 1;
+                Page page = new Page();
+
                 ResultSet resultSet = statement.executeQuery(buildSelectQuery(familyContext));
 
-                PageStructure pageStructure = createPageStructure(resultSet.getMetaData());
-                for (SegmentationContext context : familyContext.getSegmentationContexts()) {
-                    context.setPageStructure(pageStructure);
-                }
-
-                int pageId = 1;
-
-                Page page = new Page();
-                hasNext = resultSet.next();
-                while (hasNext) {
-                    if (page.isFull()) {
-                        send(createComputeTodos(pageId++, page));
-                        page = new Page();
+                try {
+                    PageStructure pageStructure = createPageStructure(resultSet.getMetaData());
+                    for (SegmentationContext context : familyContext.getSegmentationContexts()) {
+                        context.setPageStructure(pageStructure);
                     }
-                    page.addRow(extractRow(resultSet));
+
                     hasNext = resultSet.next();
+                    while (hasNext) {
+                        if (page.isFull()) {
+                            send(createComputeTodos(pageId++, page));
+                            page = new Page();
+                        }
+                        page.addRow(extractRow(resultSet));
+                        hasNext = resultSet.next();
+                    }
+                }
+                finally {
+                    resultSet.close();
                 }
 
                 if (page.getRowCount() > 0) {
