@@ -98,6 +98,7 @@ public class PaginatorParticipant extends SegmentationParticipant<TodoContent> {
             initialize(todo, fromLevel);
 
             pagineData(connection);
+            logger.info("Nombre de pages : " + pageToBeComputedCount);
         }
 
 
@@ -119,7 +120,9 @@ public class PaginatorParticipant extends SegmentationParticipant<TodoContent> {
                 int pageId = 1;
                 Page page = new Page();
 
-                ResultSet resultSet = statement.executeQuery(buildSelectQuery(familyContext));
+                String selectQuery = buildSelectQuery(familyContext);
+                logger.info("selectQuery=" + selectQuery);
+                ResultSet resultSet = statement.executeQuery(selectQuery);
 
                 try {
                     PageStructure pageStructure = createPageStructure(resultSet.getMetaData());

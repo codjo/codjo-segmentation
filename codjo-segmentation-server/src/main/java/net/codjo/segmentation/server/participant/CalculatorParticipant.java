@@ -35,7 +35,7 @@ public class CalculatorParticipant extends SegmentationParticipant<TodoContent> 
     @Override
     protected void handleTodo(Todo<TodoContent> todo, Level fromLevel, Connection connection) {
         try {
-            logger.debug("Calcul de : " + todo.getContent());
+            logger.info("Début du calcul de : " + todo.getContent());
 
             SegmentationContext context = contextManager.getSegmentationContext(todo);
             XmlFamilyPreference familyPreference = context.getFamilyPreference();
@@ -44,10 +44,14 @@ public class CalculatorParticipant extends SegmentationParticipant<TodoContent> 
             SegmentationResult segmentationResult = context.createSegmentationResult(connection);
 
             try {
-                Page page = context.removePage(todo.getContent().getPageId());
+                final int pageId = todo.getContent().getPageId();
+                final Page page = context.removePage(pageId);
+                final int nbRows = page.getRowCount();
+                int nbComputeErrors = 0;
                 int filterIndex = -1;
 
-                for (int i = 0; i < page.getRowCount(); i++) {
+                logger.info("Calcul de la page " + pageId);
+                for (int i = 0; i < nbRows; i++) {
                     Row row = page.getRow(i);
                     try {
                         filterIndex = determineFilterIndex(filterIndex, familyPreference, row);
@@ -58,12 +62,16 @@ public class CalculatorParticipant extends SegmentationParticipant<TodoContent> 
                         }
                     }
                     catch (ComputeException e) {
+                        nbComputeErrors++;
                         if (logger.isDebugEnabled()) {
                             logComputeError(todo, e, row);
                         }
                         segmentationResult.addError(e);
                     }
                 }
+                logger.info("Résultat du calcul de la page " + pageId + " : " + nbComputeErrors + "/"
+                            + nbRows
+                            + " lignes ont une erreur de calcul (voir les détails dans la base de données)");
             }
             finally {
                 segmentationResult.close();
@@ -72,6 +80,7 @@ public class CalculatorParticipant extends SegmentationParticipant<TodoContent> 
             send(write(createTodoAudit(fromLevel, familyPreference), SegmentationLevels.INFORMATION)
                        .then()
                        .erase(todo, fromLevel));
+            logger.info("Fin du calcul de " + todo.getContent());
         }
         catch (Exception error) {
             logger.fatal("Calcul en erreur de " + todo.getContent(), error);

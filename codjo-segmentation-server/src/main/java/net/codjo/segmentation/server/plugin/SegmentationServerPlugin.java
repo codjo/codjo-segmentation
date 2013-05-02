@@ -1,4 +1,7 @@
 package net.codjo.segmentation.server.plugin;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import net.codjo.agent.Agent;
 import net.codjo.agent.AgentContainer;
 import net.codjo.agent.ContainerFailureException;
@@ -23,12 +26,12 @@ import net.codjo.sql.server.JdbcServiceUtil;
 import net.codjo.workflow.server.api.JobAgent.MODE;
 import net.codjo.workflow.server.plugin.WorkflowServerPlugin;
 import net.codjo.xml.XmlException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import org.apache.log4j.Logger;
 import org.xml.sax.InputSource;
 
 public class SegmentationServerPlugin extends AbstractServerPlugin {
+    private static final Logger LOG = Logger.getLogger(SegmentationServerPlugin.class);
+
     public static final String JOB_TYPE = SegmentationJobRequest.SEGMENTATION_REQUEST_TYPE;
     private final SegmentationServerPluginConfigurationImpl configuration
           = new SegmentationServerPluginConfigurationImpl();
@@ -73,6 +76,7 @@ public class SegmentationServerPlugin extends AbstractServerPlugin {
         madServerPlugin.getConfiguration().addHandlerCommand(ExpressionCompilerCommand.class);
         madServerPlugin.getConfiguration().addHandlerCommand(DuplicateAxisCommand.class);
 
+        LOG.info("Starting segmentation with configuration " + configuration);
         for (int i = 0; i < configuration.getMaxSegmentationJobAgents(); i++) {
             container.acceptNewAgent(String.format("segmentation-job-agent-%s", i),
                                      createSegmentationAgent(MODE.NOT_DELEGATE))
@@ -217,6 +221,20 @@ public class SegmentationServerPlugin extends AbstractServerPlugin {
 
         public void setConfigurationFileUrl(URL url) {
             configurationUrl = url;
+        }
+
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder();
+            sb.append("SegmentationServerPluginConfigurationImpl");
+            sb.append("{maxAnalyzerAgents=").append(maxAnalyzerAgents);
+            sb.append(", maxDeleteAgents=").append(maxDeleteAgents);
+            sb.append(", maxPaginatorAgents=").append(maxPaginatorAgents);
+            sb.append(", maxCalculatorAgents=").append(maxCalculatorAgents);
+            sb.append(", maxSegmentationJobAgents=").append(maxSegmentationJobAgents);
+            sb.append('}');
+            return sb.toString();
         }
     }
 
