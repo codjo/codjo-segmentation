@@ -4,6 +4,9 @@
  * Common Apache License 2.0
  */
 package net.codjo.segmentation.server.participant;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.sql.Connection;
 import net.codjo.expression.ExpressionException;
 import net.codjo.segmentation.common.MidAuditKey;
 import net.codjo.segmentation.server.blackboard.message.Level;
@@ -19,9 +22,6 @@ import net.codjo.segmentation.server.preference.family.Row;
 import net.codjo.segmentation.server.preference.family.RowFilter;
 import net.codjo.segmentation.server.preference.family.XmlFamilyPreference;
 import net.codjo.workflow.common.message.Arguments;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.sql.Connection;
 /**
  *
  */
@@ -35,7 +35,7 @@ public class CalculatorParticipant extends SegmentationParticipant<TodoContent> 
     @Override
     protected void handleTodo(Todo<TodoContent> todo, Level fromLevel, Connection connection) {
         try {
-            logger.debug("Calcul de : " + todo.getContent());
+            logger.info("Début du calcul de : " + todo.getContent());
 
             SegmentationContext context = contextManager.getSegmentationContext(todo);
             XmlFamilyPreference familyPreference = context.getFamilyPreference();
@@ -43,31 +43,44 @@ public class CalculatorParticipant extends SegmentationParticipant<TodoContent> 
             ExpressionsEvaluator expressionsEvaluator = context.createExpressionsEvaluator();
             SegmentationResult segmentationResult = context.createSegmentationResult(connection);
 
-            Page page = context.removePage(todo.getContent().getPageId());
-            int filterIndex = -1;
+            try {
+                final int pageId = todo.getContent().getPageId();
+                final Page page = context.removePage(pageId);
+                final int nbRows = page.getRowCount();
+                int nbComputeErrors = 0;
+                int filterIndex = -1;
 
-            for (int i = 0; i < page.getRowCount(); i++) {
-                Row row = page.getRow(i);
-                try {
-                    filterIndex = determineFilterIndex(filterIndex, familyPreference, row);
+                logger.info("Calcul de la page " + pageId);
+                for (int i = 0; i < nbRows; i++) {
+                    Row row = page.getRow(i);
+                    try {
+                        filterIndex = determineFilterIndex(filterIndex, familyPreference, row);
 
-                    if (!isFiltered(familyPreference, context, row, filterIndex)) {
-                        Row resultRow = expressionsEvaluator.compute(row);
-                        segmentationResult.add(resultRow);
+                        if (!isFiltered(familyPreference, context, row, filterIndex)) {
+                            Row resultRow = expressionsEvaluator.compute(row);
+                            segmentationResult.add(resultRow);
+                        }
+                    }
+                    catch (ComputeException e) {
+                        nbComputeErrors++;
+                        if (logger.isDebugEnabled()) {
+                            logComputeError(todo, e, row);
+                        }
+                        segmentationResult.addError(e);
                     }
                 }
-                catch (ComputeException e) {
-                    if (logger.isDebugEnabled()) {
-                        logComputeError(todo, e, row);
-                    }
-                    segmentationResult.addError(e);
-                }
+                logger.info("Résultat du calcul de la page " + pageId + " : " + nbComputeErrors + "/"
+                            + nbRows
+                            + " lignes ont une erreur de calcul (voir les détails dans la base de données)");
             }
-            segmentationResult.close();
+            finally {
+                segmentationResult.close();
+            }
 
             send(write(createTodoAudit(fromLevel, familyPreference), SegmentationLevels.INFORMATION)
-                  .then()
-                  .erase(todo, fromLevel));
+                       .then()
+                       .erase(todo, fromLevel));
+            logger.info("Fin du calcul de " + todo.getContent());
         }
         catch (Exception error) {
             logger.fatal("Calcul en erreur de " + todo.getContent(), error);
