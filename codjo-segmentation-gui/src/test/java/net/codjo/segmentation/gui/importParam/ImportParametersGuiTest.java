@@ -1,11 +1,10 @@
 package net.codjo.segmentation.gui.importParam;
+import java.io.StringReader;
 import net.codjo.mad.gui.request.Preference;
-import static net.codjo.mad.gui.request.PreferenceFactory.addMapping;
-import static net.codjo.mad.gui.request.PreferenceFactory.getPreference;
-import static net.codjo.mad.gui.request.PreferenceFactory.loadMapping;
+import net.codjo.mad.gui.request.PreferenceFactory;
 import net.codjo.security.common.api.UserMock;
 import net.codjo.segmentation.gui.SegmentationGuiContext;
-import java.io.StringReader;
+import org.apache.log4j.Logger;
 import org.uispec4j.Button;
 import org.uispec4j.RadioButton;
 import org.uispec4j.Table;
@@ -17,7 +16,12 @@ import org.uispec4j.interception.WindowHandler;
 import org.uispec4j.interception.WindowInterceptor;
 import org.xml.sax.InputSource;
 
+import static net.codjo.mad.gui.request.PreferenceFactory.addMapping;
+import static net.codjo.mad.gui.request.PreferenceFactory.getPreference;
+import static net.codjo.mad.gui.request.PreferenceFactory.loadMapping;
+
 public class ImportParametersGuiTest extends UISpecTestCase {
+    private static Logger LOG = Logger.getLogger(ImportParametersGuiTest.class);
     private TextBox axeFileTextBox;
     private Table classificationTable;
     private Table sleeveTable;
@@ -56,12 +60,6 @@ public class ImportParametersGuiTest extends UISpecTestCase {
           + "        </hidden>                                                                "
           + "    </preference>                                                                "
           + "</preferenceList>                                                                ";
-
-
-    static {
-        loadMapping(new InputSource(new StringReader(CLASSIFICATION_PREFERENCE)));
-        addMapping(new InputSource(new StringReader(CLASSIFICATION_STRUCTURE_PREFERENCE)));
-    }
 
 
     public void test_init() throws Exception {
@@ -228,6 +226,10 @@ public class ImportParametersGuiTest extends UISpecTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+
+        loadMapping(new InputSource(new StringReader(CLASSIFICATION_PREFERENCE)));
+        addMapping(new InputSource(new StringReader(CLASSIFICATION_STRUCTURE_PREFERENCE)));
+
         Preference classificationPreference = getPreference("ImportClassificationParameters");
         Preference sleevePreference = getPreference("ImportSleeveParameters");
 
@@ -243,5 +245,12 @@ public class ImportParametersGuiTest extends UISpecTestCase {
         closeButton = window.getButton("cancelButton");
         classificationRadio = window.getRadioButton("classificationRadio");
         sleeveRadio = window.getRadioButton("sleeveRadio");
+    }
+
+
+    @Override
+    protected void tearDown() throws Exception {
+        PreferenceFactory.clearPreferences();
+        super.tearDown();
     }
 }

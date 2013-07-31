@@ -48,7 +48,8 @@ net.codjo.segmentation.gui.plugin
 	-> org.mockito
 	-> org.mockito.stubbing
 	-> org.picocontainer
-
+	-> org.xml.sax
+	
 net.codjo.segmentation.gui.preference
 	-> net.codjo.expression
 	-> net.codjo.expression.help

@@ -1,4 +1,7 @@
 package net.codjo.segmentation.gui.plugin;
+import java.io.StringReader;
+import java.rmi.RemoteException;
+import junit.framework.TestCase;
 import net.codjo.mad.client.plugin.MadConnectionPluginMock;
 import net.codjo.mad.client.request.RequestIdManager;
 import net.codjo.mad.client.request.util.ServerWrapper;
@@ -11,16 +14,45 @@ import net.codjo.mad.gui.request.Preference;
 import net.codjo.mad.gui.request.PreferenceFactory;
 import net.codjo.plugin.common.ApplicationCore;
 import net.codjo.security.common.api.User;
-import net.codjo.workflow.gui.plugin.WorkflowGuiPlugin;
 import net.codjo.segmentation.gui.SegmentationGuiContext;
-import java.rmi.RemoteException;
-import junit.framework.TestCase;
+import net.codjo.workflow.gui.plugin.WorkflowGuiPlugin;
 import org.mockito.Mockito;
 import org.picocontainer.MutablePicoContainer;
+import org.xml.sax.InputSource;
+
+import static net.codjo.mad.gui.request.PreferenceFactory.getPreference;
 /**
  *
  */
 public class SegmentationGuiPluginTest extends TestCase {
+    static final String PREFERENCE = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n"
+                                     + "<preferenceList xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+                                     + "                xsi:noNamespaceSchemaLocation=\"http://preference.xsd\">\n"
+                                     + "    <preference id=\"ClassificationWindow\"\n"
+                                     + "                detailWindowClassName=\"net.codjo.segmentation.gui.settings.ClassificationStructureLogic\">\n"
+                                     + "        <selectAll>selectAllClassification</selectAll>\n"
+                                     + "        <column fieldName=\"id\" label=\"Secret Id\" preferredSize=\"20\"/>\n"
+                                     + "        <hidden>\n"
+                                     + "            <column fieldName=\"hiddenColumn\" label=\"Hidden Column\" preferredSize=\"2000\"/>\n"
+                                     + "        </hidden>\n"
+                                     + "    </preference>\n"
+                                     + "    <preference id=\"ClassificationWizardWindow\"\n"
+                                     + "                detailWindowClassName=\"net.codjo.segmentation.gui.settings.ClassificationStructureLogic\">\n"
+                                     + "        <selectAll>selectAllClassification</selectAll>\n"
+                                     + "        <column fieldName=\"id\" label=\"Secret Id\" preferredSize=\"20\"/>\n"
+                                     + "        <hidden>\n"
+                                     + "            <column fieldName=\"hiddenColumn\" label=\"Hidden Column\" preferredSize=\"2000\"/>\n"
+                                     + "        </hidden>\n"
+                                     + "    </preference>\n"
+                                     + "    <preference id=\"ClassificationStructureWindow\"\n"
+                                     + "                detailWindowClassName=\"net.codjo.segmentation.gui.settings.ClassificationStructureLogic\">\n"
+                                     + "        <selectAll>selectAllClassification</selectAll>\n"
+                                     + "        <column fieldName=\"id\" label=\"Secret Id\" preferredSize=\"20\"/>\n"
+                                     + "        <hidden>\n"
+                                     + "            <column fieldName=\"hiddenColumn\" label=\"Hidden Column\" preferredSize=\"2000\"/>\n"
+                                     + "        </hidden>\n"
+                                     + "    </preference>\n"
+                                     + "</preferenceList>";
     private MadGuiPlugin madGuiPlugin;
     private GuiConfiguration guiConfiguration;
     private SegmentationGuiContext guiContext;
@@ -31,6 +63,8 @@ public class SegmentationGuiPluginTest extends TestCase {
     public void setUp() throws Exception {
         RequestIdManager.getInstance().reset();
         PreferenceFactory.initFactory();
+        PreferenceFactory.loadMapping(new InputSource(new StringReader(PREFERENCE)));
+
         initServerWrapperMock();
         initGuiContextMock();
         initGuiConfigurationMock();
@@ -44,6 +78,7 @@ public class SegmentationGuiPluginTest extends TestCase {
     @Override
     public void tearDown() {
         RequestIdManager.getInstance().reset();
+        PreferenceFactory.clearPreferences();
     }
 
 
