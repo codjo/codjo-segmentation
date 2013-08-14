@@ -15,17 +15,6 @@
         <description>Lance le client</description>
         <execClass>${clientMainClass}</execClass>
         <vmParameter>-Dlog4j.configuration="file:${user.home}/log4j.properties"</vmParameter>
-        <parameter></parameter>
-        <workdir>${basedir}/codjo-segmentation-release-test</workdir>
-        <module>codjo-segmentation-release-test</module>
-    </execConfiguration>
-
-    <execConfiguration>
-        <name>Client 2</name>
-        <description>Lance le client</description>
-        <execClass>${clientMainClass}</execClass>
-        <vmParameter>-Dlog4j.configuration="file:${user.home}/log4j.properties"</vmParameter>
-        <parameter>-configuration ${basedir}/codjo-segmentation-server/target/config/server-config.properties</parameter>
         <workdir>${basedir}/codjo-segmentation-release-test</workdir>
         <module>codjo-segmentation-release-test</module>
     </execConfiguration>

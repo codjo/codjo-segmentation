@@ -13,7 +13,6 @@ import org.xml.sax.InputSource;
  */
 public class ClassificationWizardWindowTest extends TestCase {
     public void testGetter() throws IOException {
-
         PreferenceFactory.initFactory();
         InputStream stream = ClassificationWizardWindowTest.class.getResourceAsStream("preference.xml");
         PreferenceFactory.addMapping(new InputSource(stream));
@@ -35,5 +34,12 @@ public class ClassificationWizardWindowTest extends TestCase {
         assertNotNull(window.getMainPanel());
         assertNotNull(window.getClassificationTable());
         assertEquals(window.getClassificationTable().getPreference().getId(), "MySpecialClassificationWindow");
+    }
+
+
+    @Override
+    protected void tearDown() throws Exception {
+        PreferenceFactory.clearPreferences();
+        super.tearDown();
     }
 }
