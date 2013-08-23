@@ -77,6 +77,9 @@ net.codjo.segmentation.server.participant.context
 	-> net.codjo.segmentation.server.participant.common
 	-> net.codjo.segmentation.server.preference.family
 	-> net.codjo.segmentation.server.preference.treatment
+	-> net.codjo.util.time
+	-> org.apache.commons.lang.mutable
+	-> org.joda.time
 
 net.codjo.segmentation.server.plugin
 	-> net.codjo.agent

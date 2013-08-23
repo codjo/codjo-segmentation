@@ -28,6 +28,8 @@ import net.codjo.segmentation.server.participant.common.PageStructure;
 import net.codjo.segmentation.server.participant.context.ContextManager;
 import net.codjo.segmentation.server.participant.context.FamilyContext;
 import net.codjo.segmentation.server.participant.context.SegmentationContext;
+import net.codjo.segmentation.server.participant.context.SegmentationReport;
+import net.codjo.segmentation.server.participant.context.SegmentationReport.Task;
 import net.codjo.segmentation.server.participant.context.TodoContent;
 import net.codjo.segmentation.server.preference.family.Row;
 import net.codjo.segmentation.server.preference.family.RowFilter;
@@ -95,9 +97,18 @@ public class PaginatorParticipant extends SegmentationParticipant<TodoContent> {
 
         public void run(Todo<TodoContent> todo, Level fromLevel, Connection connection)
               throws SQLException, UnknownVariableException, InvalidExpressionException {
-            initialize(todo, fromLevel);
+            SegmentationReport report = getReport(todo);
+            Task task = report.createTask(getName());
 
-            pagineData(connection);
+            try {
+                initialize(todo, fromLevel);
+
+                pagineData(connection, task);
+            }
+            finally {
+                task.close();
+            }
+
             logger.info("Nombre de pages : " + pageToBeComputedCount);
         }
 
@@ -113,7 +124,7 @@ public class PaginatorParticipant extends SegmentationParticipant<TodoContent> {
         }
 
 
-        private void pagineData(Connection connection)
+        private void pagineData(Connection connection, Task task)
               throws SQLException, UnknownVariableException {
             Statement statement = connection.createStatement();
             try {
@@ -122,7 +133,15 @@ public class PaginatorParticipant extends SegmentationParticipant<TodoContent> {
 
                 String selectQuery = buildSelectQuery(familyContext);
                 logger.info("selectQuery=" + selectQuery);
-                ResultSet resultSet = statement.executeQuery(selectQuery);
+
+                final ResultSet resultSet;
+                Task selectTask = task.createTask("select");
+                try {
+                    resultSet = statement.executeQuery(selectQuery);
+                }
+                finally {
+                    selectTask.close();
+                }
 
                 try {
                     PageStructure pageStructure = createPageStructure(resultSet.getMetaData());
@@ -132,12 +151,19 @@ public class PaginatorParticipant extends SegmentationParticipant<TodoContent> {
 
                     hasNext = resultSet.next();
                     while (hasNext) {
-                        if (page.isFull()) {
-                            send(createComputeTodos(pageId++, page));
-                            page = new Page();
+                        Task rowTask = task.createTask("processRow");
+
+                        try {
+                            if (page.isFull()) {
+                                send(createComputeTodos(pageId++, page));
+                                page = new Page();
+                            }
+                            page.addRow(extractRow(resultSet));
+                            hasNext = resultSet.next();
                         }
-                        page.addRow(extractRow(resultSet));
-                        hasNext = resultSet.next();
+                        finally {
+                            rowTask.close();
+                        }
                     }
                 }
                 finally {
