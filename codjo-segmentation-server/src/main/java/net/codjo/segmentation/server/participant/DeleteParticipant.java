@@ -1,12 +1,18 @@
 package net.codjo.segmentation.server.participant;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Collection;
+import java.util.Map;
+import java.util.TreeSet;
 import net.codjo.segmentation.common.MidAuditKey;
 import net.codjo.segmentation.server.blackboard.message.Level;
 import net.codjo.segmentation.server.blackboard.message.Todo;
-import static net.codjo.segmentation.server.participant.SegmentationLevels.INFORMATION;
-import static net.codjo.segmentation.server.participant.SegmentationLevels.TO_DELETE;
 import net.codjo.segmentation.server.participant.context.ContextManager;
 import net.codjo.segmentation.server.participant.context.FamilyContext;
 import net.codjo.segmentation.server.participant.context.SegmentationContext;
+import net.codjo.segmentation.server.participant.context.SegmentationReport;
+import net.codjo.segmentation.server.participant.context.SegmentationReport.Task;
 import net.codjo.segmentation.server.participant.context.TodoContent;
 import net.codjo.segmentation.server.preference.family.XmlFamilyPreference;
 import net.codjo.sql.builder.JoinKey;
@@ -16,12 +22,9 @@ import net.codjo.sql.builder.QueryConfig;
 import net.codjo.variable.TemplateInterpreter;
 import net.codjo.variable.UnknownVariableException;
 import net.codjo.workflow.common.message.Arguments;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Collection;
-import java.util.Map;
-import java.util.TreeSet;
+
+import static net.codjo.segmentation.server.participant.SegmentationLevels.INFORMATION;
+import static net.codjo.segmentation.server.participant.SegmentationLevels.TO_DELETE;
 
 public class DeleteParticipant extends SegmentationParticipant<TodoContent> {
 
@@ -32,6 +35,9 @@ public class DeleteParticipant extends SegmentationParticipant<TodoContent> {
 
     @Override
     protected void handleTodo(Todo<TodoContent> todo, Level fromLevel, Connection connection) {
+        SegmentationReport report = getReport(todo);
+        Task task = report.createTask(getName());
+
         try {
             logger.info("Suppression des tables de résultat : " + todo.getContent());
 
@@ -40,18 +46,27 @@ public class DeleteParticipant extends SegmentationParticipant<TodoContent> {
             send(write(createAudit(fromLevel, false, familyContext.getFamilyPreference()), INFORMATION));
 
             for (SegmentationContext context : familyContext.getSegmentationContexts()) {
-                deletePreviousResults(context, connection);
+                Task segmentTask = task.createTask("segment");
+                try {
+                    deletePreviousResults(context, connection);
+                }
+                finally {
+                    segmentTask.close();
+                }
             }
 
             send(write(createAudit(fromLevel, true, familyContext.getFamilyPreference()), INFORMATION)
-                  .then()
-                  .write(todo, nextLevel(fromLevel))
-                  .then()
-                  .erase(todo, fromLevel));
+                       .then()
+                       .write(todo, nextLevel(fromLevel))
+                       .then()
+                       .erase(todo, fromLevel));
         }
         catch (Exception e) {
             logger.fatal("Suppression en erreur : " + todo.getContent(), e);
             send(informOfFailure(todo, fromLevel).dueTo(e));
+        }
+        finally {
+            task.close();
         }
     }
 
@@ -81,14 +96,14 @@ public class DeleteParticipant extends SegmentationParticipant<TodoContent> {
             buffer.append("delete ").append(queryConfig.getRootTableName());
             buffer.append(" from ").append(queryConfig.getRootTableName());
 
-            Map<String,JoinKey> joinKeys = queryConfig.getJoinKeyMap();
+            Map<String, JoinKey> joinKeys = queryConfig.getJoinKeyMap();
             Collection<String> jointed = new TreeSet<String>();
             for (JoinKey joinKey : joinKeys.values()) {
                 String leftTable = joinKey.getLeftTableName();
                 String rightTable = joinKey.getRightTableName();
 
-                if (!jointed.contains(leftTable+rightTable)) {
-                    jointed.add(leftTable+rightTable);
+                if (!jointed.contains(leftTable + rightTable)) {
+                    jointed.add(leftTable + rightTable);
 
                     if (Type.LEFT == joinKey.getJoinType()) {
                         buffer.append(" left join ");

@@ -1,8 +1,8 @@
 package net.codjo.segmentation.server.participant.context;
+import junit.framework.TestCase;
 import net.codjo.segmentation.server.blackboard.message.Todo;
 import net.codjo.segmentation.server.preference.family.XmlFamilyPreference;
 import net.codjo.segmentation.server.preference.family.XmlPreferenceLoader;
-import junit.framework.TestCase;
 /**
  *
  */
@@ -19,7 +19,7 @@ public class ContextManagerTest extends TestCase {
 
 
     public void test_sessionContext() throws Exception {
-        SessionContext context = new SessionContext();
+        SessionContext context = new SessionContext(null);
 
         contextManager.put("jobRequestId", context);
 
@@ -39,7 +39,7 @@ public class ContextManagerTest extends TestCase {
         FamilyContext familyContext = new FamilyContext(null, null);
         familyContext.putSegmentationContext(segmentationContext);
 
-        SessionContext sessionContext = new SessionContext();
+        SessionContext sessionContext = new SessionContext(null);
         sessionContext.put("family-id", familyContext);
         contextManager.put("jobId", sessionContext);
 

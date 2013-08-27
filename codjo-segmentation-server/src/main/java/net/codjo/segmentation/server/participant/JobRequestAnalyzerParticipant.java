@@ -4,6 +4,12 @@
  * Common Apache License 2.0
  */
 package net.codjo.segmentation.server.participant;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import net.codjo.segmentation.common.MidAuditKey;
 import net.codjo.segmentation.common.message.SegmentationJobRequest;
 import net.codjo.segmentation.server.blackboard.message.BlackboardAction;
@@ -12,6 +18,8 @@ import net.codjo.segmentation.server.blackboard.message.Todo;
 import net.codjo.segmentation.server.participant.context.ContextManager;
 import net.codjo.segmentation.server.participant.context.FamilyContext;
 import net.codjo.segmentation.server.participant.context.SegmentationContext;
+import net.codjo.segmentation.server.participant.context.SegmentationReport;
+import net.codjo.segmentation.server.participant.context.SegmentationReport.Task;
 import net.codjo.segmentation.server.participant.context.SessionContext;
 import net.codjo.segmentation.server.participant.context.TodoContent;
 import net.codjo.segmentation.server.preference.family.TableMetaData;
@@ -21,13 +29,6 @@ import net.codjo.segmentation.server.preference.treatment.SegmentationPreference
 import net.codjo.segmentation.server.util.SegmentationUtil;
 import net.codjo.workflow.common.message.Arguments;
 import net.codjo.workflow.common.message.JobRequest;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 /**
  * Decoupe la JobRequest en todos par famille
  */
@@ -43,34 +44,43 @@ public class JobRequestAnalyzerParticipant extends SegmentationParticipant<JobRe
 
     @Override
     protected void handleTodo(Todo<JobRequest> todo, Level fromLevel, Connection connection) {
+        SegmentationReport report = createReport();
+        Task task = report.createTask(getName());
+
         try {
             logger.info("Analyse de la requete : " + todo.getContent());
-            SessionContext sessionContext = new SessionContext();
+            SessionContext sessionContext = new SessionContext(report);
             contextManager.put(todo.getContent().getId(), sessionContext);
 
             Arguments arguments = todo.getContent().getArguments();
             String[] segmentationIds = extractSegmentationId(arguments);
 
             for (String segmentationId : segmentationIds) {
-                Map<String, String> parameters = new TreeMap<String, String>();
-                parameters.putAll(arguments.toMap());
-                parameters.put(SEGMENTATION_ID, segmentationId);
-                parameters.remove(SEGMENTATIONS);
+                Task segmentTask = task.createTask("segment");
+                try {
+                    Map<String, String> parameters = new TreeMap<String, String>();
+                    parameters.putAll(arguments.toMap());
+                    parameters.put(SEGMENTATION_ID, segmentationId);
+                    parameters.remove(SEGMENTATIONS);
 
-                SegmentationPreference segmentationPreference =
-                      SegmentationPreference.createPreference(connection, Integer.parseInt(segmentationId),
-                                                              parameters);
+                    SegmentationPreference segmentationPreference =
+                          SegmentationPreference.createPreference(connection, Integer.parseInt(segmentationId),
+                                                                  parameters);
 
-                FamilyContext familyContext = getFamilyContext(connection, segmentationPreference, todo);
+                    FamilyContext familyContext = getFamilyContext(connection, segmentationPreference, todo);
 
-                SegmentationUtil.checkParameters(familyContext.getFamilyPreference().getArgumentNameList(),
-                                                 arguments.toMap());
+                    SegmentationUtil.checkParameters(familyContext.getFamilyPreference().getArgumentNameList(),
+                                                     arguments.toMap());
 
-                familyContext.putSegmentationContext(new SegmentationContext(
-                      segmentationPreference.getSegmentationId(),
-                      familyContext.getFamilyPreference(),
-                      segmentationPreference,
-                      parameters));
+                    familyContext.putSegmentationContext(new SegmentationContext(
+                          segmentationPreference.getSegmentationId(),
+                          familyContext.getFamilyPreference(),
+                          segmentationPreference,
+                          parameters));
+                }
+                finally {
+                    segmentTask.close();
+                }
             }
 
             Level nextLevel = nextLevel(fromLevel);
@@ -91,6 +101,10 @@ public class JobRequestAnalyzerParticipant extends SegmentationParticipant<JobRe
         catch (Exception e) {
             logger.fatal("Analyse en erreur : " + todo.getContent(), e);
             send(informOfFailure(todo, fromLevel).dueTo(e));
+            task.reportError();
+        }
+        finally {
+            task.close();
         }
     }
 
@@ -102,8 +116,8 @@ public class JobRequestAnalyzerParticipant extends SegmentationParticipant<JobRe
                 SegmentationContext conflictContext = hasComputeConflict(session, segmentationContext);
                 if (conflictContext != null) {
                     send(informOfFailure(todo, fromLevel)
-                          .dueTo("L'axe '" + conflictContext.getSegmentationPreference().getSegmentationName()
-                                 + "' est en cours de calcul."));
+                               .dueTo("L'axe '" + conflictContext.getSegmentationPreference().getSegmentationName()
+                                      + "' est en cours de calcul."));
                     return true;
                 }
             }

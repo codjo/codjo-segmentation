@@ -1,13 +1,21 @@
 package net.codjo.segmentation.server.participant.context;
-import net.codjo.segmentation.server.blackboard.message.Todo;
 import java.util.Collection;
 import java.util.Set;
+import net.codjo.segmentation.server.blackboard.message.Todo;
 /**
  *
  */
 public class SessionContext extends AbstractContext<String, FamilyContext> {
+    private final SegmentationReport report;
 
-    public SessionContext() {
+
+    public SessionContext(SegmentationReport report) {
+        this.report = (report == null) ? SegmentationReporter.NONE.create() : report;
+    }
+
+
+    public SegmentationReport getReport() {
+        return report;
     }
 
 
