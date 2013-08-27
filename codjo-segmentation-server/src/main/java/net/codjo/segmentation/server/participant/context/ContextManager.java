@@ -30,7 +30,14 @@ public class ContextManager extends AbstractContext<String, SessionContext> {
 
     public SessionContext getSessionContext(Todo<TodoContent> todo) {
         synchronized (lock) {
-            return get(todo.getContent().getRequestJobId());
+            return getSessionContext(todo.getContent().getRequestJobId());
+        }
+    }
+
+
+    public SessionContext getSessionContext(String requestJobId) {
+        synchronized (lock) {
+            return get(requestJobId);
         }
     }
 
