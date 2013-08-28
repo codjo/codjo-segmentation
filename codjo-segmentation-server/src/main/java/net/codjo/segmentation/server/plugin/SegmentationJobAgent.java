@@ -4,6 +4,7 @@
  * Common Apache License 2.0
  */
 package net.codjo.segmentation.server.plugin;
+import java.util.List;
 import net.codjo.agent.Behaviour;
 import net.codjo.agent.DFService;
 import net.codjo.aspect.AspectManager;
@@ -12,9 +13,8 @@ import net.codjo.segmentation.server.blackboard.BlackboardListener;
 import net.codjo.segmentation.server.blackboard.message.Level;
 import net.codjo.segmentation.server.blackboard.message.Todo;
 import net.codjo.segmentation.server.participant.SegmentationLevels;
-import static net.codjo.segmentation.server.participant.SegmentationParticipant.BLACKBOARD_SERVICE;
-import static net.codjo.segmentation.server.participant.SegmentationParticipant.SEGMENTATION_SERVICE;
 import net.codjo.segmentation.server.participant.context.ContextManager;
+import net.codjo.segmentation.server.participant.context.SessionContext;
 import net.codjo.sql.server.JdbcServiceUtil;
 import net.codjo.workflow.common.message.Arguments;
 import net.codjo.workflow.common.message.JobAudit;
@@ -22,8 +22,10 @@ import net.codjo.workflow.common.message.JobException;
 import net.codjo.workflow.common.message.JobRequest;
 import net.codjo.workflow.common.protocol.JobProtocolParticipant;
 import net.codjo.workflow.server.api.JobAgent;
-import java.util.List;
 import org.apache.log4j.Logger;
+
+import static net.codjo.segmentation.server.participant.SegmentationParticipant.BLACKBOARD_SERVICE;
+import static net.codjo.segmentation.server.participant.SegmentationParticipant.SEGMENTATION_SERVICE;
 
 class SegmentationJobAgent extends JobAgent {
     private static final Logger LOG = Logger.getLogger(SegmentationJobAgent.class);
@@ -127,6 +129,8 @@ class SegmentationJobAgent extends JobAgent {
                     break;
                 case DECLARE_JOB_DONE:
                     LOG.debug("DECLARE_JOB_DONE : Request traitée");
+                    SessionContext sessionContext = manager.getSessionContext(request.getId());
+                    sessionContext.getReport().close();
                     isDone = true;
                     state = State.POST_TODO;
                     manager.remove(request.getId());

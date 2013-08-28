@@ -1,13 +1,19 @@
 package net.codjo.segmentation.server.participant.context;
+import java.util.Collection;
 import net.codjo.segmentation.server.blackboard.message.Todo;
 import net.codjo.segmentation.server.preference.family.XmlFamilyPreference;
 import net.codjo.segmentation.server.preference.family.XmlPreferenceLoader;
-import java.util.Collection;
 /**
  *
  */
 public class ContextManager extends AbstractContext<String, SessionContext> {
     private final XmlPreferenceLoader xmlPreferenceLoader;
+
+    /**
+     * The {@link SegmentationReporter} to use for reporting progress of segmentation and computing its statistics. Uses
+     * {@link SegmentationReporter#NONE} to disable these features.
+     */
+    private final SegmentationReporter reporter = /*SegmentationReporter.NONE;*/ new DetailedSegmentationReporter();
 
 
     public ContextManager(XmlPreferenceLoader xmlPreferenceLoader) {
@@ -22,9 +28,23 @@ public class ContextManager extends AbstractContext<String, SessionContext> {
     }
 
 
+    public SessionContext getSessionContext(Todo<TodoContent> todo) {
+        synchronized (lock) {
+            return getSessionContext(todo.getContent().getRequestJobId());
+        }
+    }
+
+
+    public SessionContext getSessionContext(String requestJobId) {
+        synchronized (lock) {
+            return get(requestJobId);
+        }
+    }
+
+
     public FamilyContext getFamilyContext(Todo<TodoContent> todo) {
         synchronized (lock) {
-            return get(todo.getContent().getRequestJobId()).getFamilyContext(todo);
+            return getSessionContext(todo).getFamilyContext(todo);
         }
     }
 
@@ -40,5 +60,10 @@ public class ContextManager extends AbstractContext<String, SessionContext> {
         synchronized (lock) {
             return getContexts().values();
         }
+    }
+
+
+    public SegmentationReport createReport() {
+        return reporter.create();
     }
 }

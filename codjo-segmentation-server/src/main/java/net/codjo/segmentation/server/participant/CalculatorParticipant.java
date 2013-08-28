@@ -17,6 +17,8 @@ import net.codjo.segmentation.server.participant.common.Page;
 import net.codjo.segmentation.server.participant.common.SegmentationResult;
 import net.codjo.segmentation.server.participant.context.ContextManager;
 import net.codjo.segmentation.server.participant.context.SegmentationContext;
+import net.codjo.segmentation.server.participant.context.SegmentationReport;
+import net.codjo.segmentation.server.participant.context.SegmentationReport.Task;
 import net.codjo.segmentation.server.participant.context.TodoContent;
 import net.codjo.segmentation.server.preference.family.Row;
 import net.codjo.segmentation.server.preference.family.RowFilter;
@@ -34,9 +36,10 @@ public class CalculatorParticipant extends SegmentationParticipant<TodoContent> 
 
     @Override
     protected void handleTodo(Todo<TodoContent> todo, Level fromLevel, Connection connection) {
-        try {
-//            logger.info("Début du calcul de : " + todo.getContent());
+        SegmentationReport report = getReport(todo);
+        Task task = report.createTask(getName());
 
+        try {
             SegmentationContext context = contextManager.getSegmentationContext(todo);
             XmlFamilyPreference familyPreference = context.getFamilyPreference();
 
@@ -47,11 +50,10 @@ public class CalculatorParticipant extends SegmentationParticipant<TodoContent> 
                 final int pageId = todo.getContent().getPageId();
                 final Page page = context.removePage(pageId);
                 final int nbRows = page.getRowCount();
-                int nbComputeErrors = 0;
                 int filterIndex = -1;
 
-//                logger.info("Calcul de la page " + pageId);
                 for (int i = 0; i < nbRows; i++) {
+                    Task rowTask = task.createTask("row");
                     Row row = page.getRow(i);
                     try {
                         filterIndex = determineFilterIndex(filterIndex, familyPreference, row);
@@ -62,16 +64,16 @@ public class CalculatorParticipant extends SegmentationParticipant<TodoContent> 
                         }
                     }
                     catch (ComputeException e) {
-                        nbComputeErrors++;
                         if (logger.isDebugEnabled()) {
                             logComputeError(todo, e, row);
                         }
                         segmentationResult.addError(e);
+                        rowTask.reportError();
+                    }
+                    finally {
+                        rowTask.close();
                     }
                 }
-//                logger.info("Résultat du calcul de la page " + pageId + " : " + nbComputeErrors + "/"
-//                            + nbRows
-//                            + " lignes ont une erreur de calcul (voir les détails dans la base de données)");
             }
             finally {
                 segmentationResult.close();
@@ -80,11 +82,13 @@ public class CalculatorParticipant extends SegmentationParticipant<TodoContent> 
             send(write(createTodoAudit(fromLevel, familyPreference), SegmentationLevels.INFORMATION)
                        .then()
                        .erase(todo, fromLevel));
-//            logger.info("Fin du calcul de " + todo.getContent());
         }
         catch (Exception error) {
             logger.fatal("Calcul en erreur de " + todo.getContent(), error);
             send(informOfFailure(todo, fromLevel).dueTo(error));
+        }
+        finally {
+            task.close();
         }
     }
 

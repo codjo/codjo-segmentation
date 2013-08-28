@@ -76,7 +76,7 @@ public class SegmentationServerPlugin extends AbstractServerPlugin {
         madServerPlugin.getConfiguration().addHandlerCommand(ExpressionCompilerCommand.class);
         madServerPlugin.getConfiguration().addHandlerCommand(DuplicateAxisCommand.class);
 
-        LOG.info("Starting segmentation with configuration " + configuration);
+        LOG.info("Starting segmentation plugin with configuration " + configuration);
         for (int i = 0; i < configuration.getMaxSegmentationJobAgents(); i++) {
             container.acceptNewAgent(String.format("segmentation-job-agent-%s", i),
                                      createSegmentationAgent(MODE.NOT_DELEGATE))
