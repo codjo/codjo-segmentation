@@ -14,8 +14,17 @@ public class SegmentationStringifier extends StringifierImpl {
 
     public String toString(JobRequest jobRequest) {
         String segmentationIds = new SegmentationJobRequest(jobRequest).getSegmentationIds();
-        String[] splits = segmentationIds.replaceAll(" ", "").split(",");
-        StringBuilder stringBuilder = new StringBuilder("Axes : ").append(splits[0]);
+        final String[] splits;
+
+        StringBuilder stringBuilder = new StringBuilder("Axes : ");
+        if (segmentationIds == null) {
+            splits = new String[0];
+        }
+        else {
+            splits = segmentationIds.replaceAll(" ", "").split(",");
+            stringBuilder.append(splits[0]);
+        }
+
         int nbIds = splits.length;
         for (int i = 1; i < Math.min(nbIds, 3); i++) {
             stringBuilder.append(", ").append(splits[i]);
