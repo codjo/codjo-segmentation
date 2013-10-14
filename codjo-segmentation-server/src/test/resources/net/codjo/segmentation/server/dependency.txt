@@ -94,7 +94,6 @@ net.codjo.segmentation.server.plugin
 	-> net.codjo.database.api
 	-> net.codjo.plugin.server
 	-> net.codjo.plugin.common
-	-> net.codjo.plugin.common.session
 	-> net.codjo.segmentation.server.audit
 	-> net.codjo.segmentation.server.blackboard
 	-> net.codjo.segmentation.server.blackboard.message
