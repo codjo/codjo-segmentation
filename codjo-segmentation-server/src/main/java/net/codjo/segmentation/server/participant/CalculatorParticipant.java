@@ -7,6 +7,7 @@ package net.codjo.segmentation.server.participant;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.Connection;
+import java.sql.SQLException;
 import net.codjo.expression.ExpressionException;
 import net.codjo.segmentation.common.MidAuditKey;
 import net.codjo.segmentation.server.blackboard.message.Level;
@@ -18,7 +19,7 @@ import net.codjo.segmentation.server.participant.common.SegmentationResult;
 import net.codjo.segmentation.server.participant.context.ContextManager;
 import net.codjo.segmentation.server.participant.context.SegmentationContext;
 import net.codjo.segmentation.server.participant.context.SegmentationReport;
-import net.codjo.segmentation.server.participant.context.SegmentationReport.Task;
+import net.codjo.segmentation.server.participant.context.TaskTemplate;
 import net.codjo.segmentation.server.participant.context.TodoContent;
 import net.codjo.segmentation.server.preference.family.Row;
 import net.codjo.segmentation.server.preference.family.RowFilter;
@@ -35,61 +36,64 @@ public class CalculatorParticipant extends SegmentationParticipant<TodoContent> 
 
 
     @Override
-    protected void handleTodo(Todo<TodoContent> todo, Level fromLevel, Connection connection) {
-        SegmentationReport report = getReport(todo);
-        Task task = report.createTask(getName());
+    protected void handleTodo(final Todo<TodoContent> todo, final Level fromLevel, final Connection connection) {
+        final SegmentationReport report = getReport(todo);
+        new TaskTemplate(report, getName()) {
+            @Override
+            protected void doRun() throws Exception {
+                final SegmentationContext context = contextManager.getSegmentationContext(todo);
+                final XmlFamilyPreference familyPreference = context.getFamilyPreference();
 
-        try {
-            SegmentationContext context = contextManager.getSegmentationContext(todo);
-            XmlFamilyPreference familyPreference = context.getFamilyPreference();
+                final ExpressionsEvaluator expressionsEvaluator = context.createExpressionsEvaluator();
+                final SegmentationResult segmentationResult = context.createSegmentationResult(connection);
 
-            ExpressionsEvaluator expressionsEvaluator = context.createExpressionsEvaluator();
-            SegmentationResult segmentationResult = context.createSegmentationResult(connection);
+                try {
+                    final int pageId = todo.getContent().getPageId();
+                    final Page page = context.removePage(pageId);
+                    final int nbRows = page.getRowCount();
+                    final int[] filterIndex = {-1};
 
-            try {
-                final int pageId = todo.getContent().getPageId();
-                final Page page = context.removePage(pageId);
-                final int nbRows = page.getRowCount();
-                int filterIndex = -1;
+                    for (int i = 0; i < nbRows; i++) {
+                        final Row row = page.getRow(i);
+                        new TaskTemplate(report, "row") {
+                            @Override
+                            protected void doRun() throws Exception {
+                                filterIndex[0] = determineFilterIndex(filterIndex[0], familyPreference, row);
 
-                for (int i = 0; i < nbRows; i++) {
-                    Task rowTask = task.createTask("row");
-                    Row row = page.getRow(i);
-                    try {
-                        filterIndex = determineFilterIndex(filterIndex, familyPreference, row);
+                                if (!isFiltered(familyPreference, context, row, filterIndex[0])) {
+                                    Row resultRow = expressionsEvaluator.compute(row);
+                                    segmentationResult.add(resultRow);
+                                }
+                            }
 
-                        if (!isFiltered(familyPreference, context, row, filterIndex)) {
-                            Row resultRow = expressionsEvaluator.compute(row);
-                            segmentationResult.add(resultRow);
-                        }
-                    }
-                    catch (ComputeException e) {
-                        if (logger.isDebugEnabled()) {
-                            logComputeError(todo, e, row);
-                        }
-                        segmentationResult.addError(e);
-                        rowTask.reportError();
-                    }
-                    finally {
-                        rowTask.close();
+
+                            @Override
+                            protected void handleComputeException(ComputeException exception) throws SQLException {
+                                if (logger.isDebugEnabled()) {
+                                    logComputeError(todo, exception, row);
+                                }
+                                segmentationResult.addError(exception);
+                            }
+                        }.runComputation();
                     }
                 }
-            }
-            finally {
-                segmentationResult.close();
+                finally {
+                    segmentationResult.close();
+                }
+
+                send(write(createTodoAudit(fromLevel, familyPreference),
+                           SegmentationLevels.INFORMATION)
+                           .then()
+                           .erase(todo, fromLevel));
             }
 
-            send(write(createTodoAudit(fromLevel, familyPreference), SegmentationLevels.INFORMATION)
-                       .then()
-                       .erase(todo, fromLevel));
-        }
-        catch (Exception error) {
-            logger.fatal("Calcul en erreur de " + todo.getContent(), error);
-            send(informOfFailure(todo, fromLevel).dueTo(error));
-        }
-        finally {
-            task.close();
-        }
+
+            @Override
+            protected void handleException(Exception e) {
+                logger.fatal("Calcul en erreur de " + todo.getContent(), e);
+                send(informOfFailure(todo, fromLevel).dueTo(e));
+            }
+        }.run();
     }
 
 

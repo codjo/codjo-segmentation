@@ -19,8 +19,8 @@ import net.codjo.segmentation.server.participant.context.ContextManager;
 import net.codjo.segmentation.server.participant.context.FamilyContext;
 import net.codjo.segmentation.server.participant.context.SegmentationContext;
 import net.codjo.segmentation.server.participant.context.SegmentationReport;
-import net.codjo.segmentation.server.participant.context.SegmentationReport.Task;
 import net.codjo.segmentation.server.participant.context.SessionContext;
+import net.codjo.segmentation.server.participant.context.TaskTemplate;
 import net.codjo.segmentation.server.participant.context.TodoContent;
 import net.codjo.segmentation.server.preference.family.TableMetaData;
 import net.codjo.segmentation.server.preference.family.XmlFamilyPreference;
@@ -43,69 +43,67 @@ public class JobRequestAnalyzerParticipant extends SegmentationParticipant<JobRe
 
 
     @Override
-    protected void handleTodo(Todo<JobRequest> todo, Level fromLevel, Connection connection) {
-        SegmentationReport report = createReport();
-        Task task = report.createTask(getName());
+    protected void handleTodo(final Todo<JobRequest> todo, final Level fromLevel, final Connection connection) {
+        final SegmentationReport report = createReport();
+        new TaskTemplate(report, getName()) {
+            @Override
+            protected void doRun() throws Exception {
+                logger.info("Analyse de la requete : " + todo.getContent());
+                SessionContext sessionContext = new SessionContext(report);
+                contextManager.put(todo.getContent().getId(), sessionContext);
 
-        try {
-            logger.info("Analyse de la requete : " + todo.getContent());
-            SessionContext sessionContext = new SessionContext(report);
-            contextManager.put(todo.getContent().getId(), sessionContext);
+                final Arguments arguments = todo.getContent().getArguments();
+                String[] segmentationIds = extractSegmentationId(arguments);
 
-            Arguments arguments = todo.getContent().getArguments();
-            String[] segmentationIds = extractSegmentationId(arguments);
+                for (final String segmentationId : segmentationIds) {
+                    new TaskTemplate(this, "segment") {
+                        protected void doRun() throws Exception {
+                            Map<String, String> parameters = new TreeMap<String, String>();
+                            parameters.putAll(arguments.toMap());
+                            parameters.put(SEGMENTATION_ID, segmentationId);
+                            parameters.remove(SEGMENTATIONS);
 
-            for (String segmentationId : segmentationIds) {
-                Task segmentTask = task.createTask("segment");
-                try {
-                    Map<String, String> parameters = new TreeMap<String, String>();
-                    parameters.putAll(arguments.toMap());
-                    parameters.put(SEGMENTATION_ID, segmentationId);
-                    parameters.remove(SEGMENTATIONS);
+                            SegmentationPreference segmentationPreference =
+                                  SegmentationPreference.createPreference(connection, Integer.parseInt(segmentationId),
+                                                                          parameters);
 
-                    SegmentationPreference segmentationPreference =
-                          SegmentationPreference.createPreference(connection, Integer.parseInt(segmentationId),
-                                                                  parameters);
+                            FamilyContext familyContext = getFamilyContext(connection, segmentationPreference, todo);
 
-                    FamilyContext familyContext = getFamilyContext(connection, segmentationPreference, todo);
+                            SegmentationUtil.checkParameters(familyContext.getFamilyPreference().getArgumentNameList(),
+                                                             arguments.toMap());
 
-                    SegmentationUtil.checkParameters(familyContext.getFamilyPreference().getArgumentNameList(),
-                                                     arguments.toMap());
-
-                    familyContext.putSegmentationContext(new SegmentationContext(
-                          segmentationPreference.getSegmentationId(),
-                          familyContext.getFamilyPreference(),
-                          segmentationPreference,
-                          parameters));
+                            familyContext.putSegmentationContext(new SegmentationContext(
+                                  segmentationPreference.getSegmentationId(),
+                                  familyContext.getFamilyPreference(),
+                                  segmentationPreference,
+                                  parameters));
+                        }
+                    }.run();
                 }
-                finally {
-                    segmentTask.close();
+
+                Level nextLevel = nextLevel(fromLevel);
+
+                if (hasComputeConflict(sessionContext, todo, fromLevel)) {
+                    return;
                 }
+
+                BlackboardAction action = erase(todo, fromLevel);
+                StringBuffer ids = new StringBuffer();
+                for (String familyId : sessionContext.getFamilyIds()) {
+                    action.then().write(createTodo(todo, familyId), nextLevel);
+                    appendToBuffer(ids, familyId);
+                }
+                createAudit(action, fromLevel, ids);
+                send(action);
             }
 
-            Level nextLevel = nextLevel(fromLevel);
 
-            if (hasComputeConflict(sessionContext, todo, fromLevel)) {
-                return;
+            @Override
+            protected void handleException(Exception e) {
+                logger.fatal("Analyse en erreur : " + todo.getContent(), e);
+                send(informOfFailure(todo, fromLevel).dueTo(e));
             }
-
-            BlackboardAction action = erase(todo, fromLevel);
-            StringBuffer ids = new StringBuffer();
-            for (String familyId : sessionContext.getFamilyIds()) {
-                action.then().write(createTodo(todo, familyId), nextLevel);
-                appendToBuffer(ids, familyId);
-            }
-            createAudit(action, fromLevel, ids);
-            send(action);
-        }
-        catch (Exception e) {
-            logger.fatal("Analyse en erreur : " + todo.getContent(), e);
-            send(informOfFailure(todo, fromLevel).dueTo(e));
-            task.reportError();
-        }
-        finally {
-            task.close();
-        }
+        }.run();
     }
 
 
@@ -181,6 +179,10 @@ public class JobRequestAnalyzerParticipant extends SegmentationParticipant<JobRe
         }
 
         XmlFamilyPreference familyPreference = contextManager.getFamilyPreference(familyId);
+        if (familyPreference == null) {
+            throw new SQLException("no familyPreference found for familyId=" + familyId);
+        }
+
         familyContext = new FamilyContext(familyPreference, jobRequest.getArguments().toMap());
         sessionContext.put(familyId, familyContext);
 

@@ -12,7 +12,7 @@ import net.codjo.segmentation.server.participant.context.ContextManager;
 import net.codjo.segmentation.server.participant.context.FamilyContext;
 import net.codjo.segmentation.server.participant.context.SegmentationContext;
 import net.codjo.segmentation.server.participant.context.SegmentationReport;
-import net.codjo.segmentation.server.participant.context.SegmentationReport.Task;
+import net.codjo.segmentation.server.participant.context.TaskTemplate;
 import net.codjo.segmentation.server.participant.context.TodoContent;
 import net.codjo.segmentation.server.preference.family.XmlFamilyPreference;
 import net.codjo.sql.builder.JoinKey;
@@ -34,40 +34,42 @@ public class DeleteParticipant extends SegmentationParticipant<TodoContent> {
 
 
     @Override
-    protected void handleTodo(Todo<TodoContent> todo, Level fromLevel, Connection connection) {
+    protected void handleTodo(final Todo<TodoContent> todo, final Level fromLevel, final Connection connection) {
         SegmentationReport report = getReport(todo);
-        Task task = report.createTask(getName());
+        new TaskTemplate(report, getName()) {
+            @Override
+            protected void doRun() throws Exception {
+                logger.info("Suppression des tables de résultat : " + todo.getContent());
 
-        try {
-            logger.info("Suppression des tables de résultat : " + todo.getContent());
+                FamilyContext familyContext = contextManager.getFamilyContext(todo);
 
-            FamilyContext familyContext = contextManager.getFamilyContext(todo);
+                send(write(createAudit(fromLevel, false, familyContext.getFamilyPreference()),
+                           INFORMATION));
 
-            send(write(createAudit(fromLevel, false, familyContext.getFamilyPreference()), INFORMATION));
-
-            for (SegmentationContext context : familyContext.getSegmentationContexts()) {
-                Task segmentTask = task.createTask("segment");
-                try {
-                    deletePreviousResults(context, connection);
+                for (final SegmentationContext context : familyContext.getSegmentationContexts()) {
+                    new TaskTemplate(this, "segment") {
+                        @Override
+                        protected void doRun() throws Exception {
+                            deletePreviousResults(context, connection);
+                        }
+                    }.run();
                 }
-                finally {
-                    segmentTask.close();
-                }
+
+                send(write(createAudit(fromLevel, true, familyContext.getFamilyPreference()),
+                           INFORMATION)
+                           .then()
+                           .write(todo, nextLevel(fromLevel))
+                           .then()
+                           .erase(todo, fromLevel));
             }
 
-            send(write(createAudit(fromLevel, true, familyContext.getFamilyPreference()), INFORMATION)
-                       .then()
-                       .write(todo, nextLevel(fromLevel))
-                       .then()
-                       .erase(todo, fromLevel));
-        }
-        catch (Exception e) {
-            logger.fatal("Suppression en erreur : " + todo.getContent(), e);
-            send(informOfFailure(todo, fromLevel).dueTo(e));
-        }
-        finally {
-            task.close();
-        }
+
+            @Override
+            protected void handleException(Exception e) {
+                logger.fatal("Suppression en erreur : " + todo.getContent(), e);
+                send(informOfFailure(todo, fromLevel).dueTo(e));
+            }
+        }.run();
     }
 
 
@@ -133,9 +135,6 @@ public class DeleteParticipant extends SegmentationParticipant<TodoContent> {
         String interpretedClause = new TemplateInterpreter().evaluate(whereClause, segmentationContext.getParameters());
         buffer.append(" where ");
         buffer.append(interpretedClause);
-        if (logger.isDebugEnabled()) {
-            logger.debug(new StringBuilder("Delete query: ").append(buffer).toString());
-        }
 
         Statement statement = connection.createStatement();
         try {

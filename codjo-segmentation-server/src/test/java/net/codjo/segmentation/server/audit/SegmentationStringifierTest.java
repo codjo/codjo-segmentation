@@ -1,13 +1,40 @@
 package net.codjo.segmentation.server.audit;
 import net.codjo.workflow.common.message.Arguments;
 import net.codjo.workflow.common.message.JobRequest;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 /**
  *
  */
 public class SegmentationStringifierTest {
     private SegmentationStringifier stringifier = new SegmentationStringifier();
+
+
+    @Test
+    public void test_toString_blankIds() throws Exception {
+        test_toString_noIds(" ");
+    }
+
+
+    @Test
+    public void test_toString_emptyIds() throws Exception {
+        test_toString_noIds("");
+    }
+
+
+    @Test
+    public void test_toString_nullIds() throws Exception {
+        test_toString_noIds(null);
+    }
+
+
+    private void test_toString_noIds(String segmentations) throws Exception {
+        Arguments arguments = new Arguments("segmentations", segmentations);
+
+        assertEquals("Axes : ",
+                     stringifier.toString(new JobRequest("segmentation", arguments)));
+    }
 
 
     @Test
