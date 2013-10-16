@@ -29,7 +29,7 @@ import net.codjo.segmentation.server.participant.context.ContextManager;
 import net.codjo.segmentation.server.participant.context.FamilyContext;
 import net.codjo.segmentation.server.participant.context.SegmentationContext;
 import net.codjo.segmentation.server.participant.context.SegmentationReport;
-import net.codjo.segmentation.server.participant.context.SegmentationReport.Task;
+import net.codjo.segmentation.server.participant.context.TaskTemplate;
 import net.codjo.segmentation.server.participant.context.TodoContent;
 import net.codjo.segmentation.server.preference.family.Row;
 import net.codjo.segmentation.server.preference.family.RowFilter;
@@ -55,14 +55,8 @@ public class PaginatorParticipant extends SegmentationParticipant<TodoContent> {
 
     @Override
     protected void handleTodo(Todo<TodoContent> todo, Level fromLevel, Connection connection) {
-        try {
-            logger.info("Pagination des données input : " + todo.getContent());
-            new Paginator().run(todo, fromLevel, connection);
-        }
-        catch (Exception e) {
-            logger.fatal("Pagination en erreur : " + todo.getContent(), e);
-            send(informOfFailure(todo, fromLevel).dueTo(e));
-        }
+        logger.info("Pagination des données input : " + todo.getContent());
+        new Paginator().run(todo, fromLevel, connection);
     }
 
 
@@ -95,19 +89,22 @@ public class PaginatorParticipant extends SegmentationParticipant<TodoContent> {
         private XmlFamilyPreference familyPreference;
 
 
-        public void run(Todo<TodoContent> todo, Level fromLevel, Connection connection)
-              throws SQLException, UnknownVariableException, InvalidExpressionException {
+        public void run(final Todo<TodoContent> todo, final Level fromLevel, final Connection connection) {
             SegmentationReport report = getReport(todo);
-            Task task = report.createTask(getName());
+            new TaskTemplate(report, getName()) {
+                @Override
+                protected void doRun() throws Exception {
+                    initialize(todo, fromLevel);
+                    pagineData(connection, this);
+                }
 
-            try {
-                initialize(todo, fromLevel);
 
-                pagineData(connection, task);
-            }
-            finally {
-                task.close();
-            }
+                @Override
+                protected void handleException(Exception e) {
+                    logger.fatal("Pagination en erreur : " + todo.getContent(), e);
+                    send(informOfFailure(todo, fromLevel).dueTo(e));
+                }
+            }.run();
 
             logger.info("Nombre de pages : " + pageToBeComputedCount);
         }
@@ -124,54 +121,51 @@ public class PaginatorParticipant extends SegmentationParticipant<TodoContent> {
         }
 
 
-        private void pagineData(Connection connection, Task task)
+        private void pagineData(Connection connection, TaskTemplate parentTask)
               throws SQLException, UnknownVariableException {
-            Statement statement = connection.createStatement();
+            final Statement statement = connection.createStatement();
             try {
-                int pageId = 1;
-                Page page = new Page();
+                final int[] pageId = {1};
+                final Page[] page = {new Page()};
 
-                String selectQuery = buildSelectQuery(familyContext);
+                final String selectQuery = buildSelectQuery(familyContext);
                 logger.info("selectQuery=" + selectQuery);
 
-                final ResultSet resultSet;
-                Task selectTask = task.createTask("select");
-                try {
-                    resultSet = statement.executeQuery(selectQuery);
-                }
-                finally {
-                    selectTask.close();
-                }
+                final ResultSet[] resultSet = new ResultSet[1];
+                new TaskTemplate(parentTask, "select") {
+                    @Override
+                    protected void doRun() throws Exception {
+                        resultSet[0] = statement.executeQuery(selectQuery);
+                    }
+                }.run();
 
                 try {
-                    PageStructure pageStructure = createPageStructure(resultSet.getMetaData());
+                    PageStructure pageStructure = createPageStructure(resultSet[0].getMetaData());
                     for (SegmentationContext context : familyContext.getSegmentationContexts()) {
                         context.setPageStructure(pageStructure);
                     }
 
-                    hasNext = resultSet.next();
+                    hasNext = resultSet[0].next();
                     while (hasNext) {
-                        Task rowTask = task.createTask("processRow");
-
-                        try {
-                            if (page.isFull()) {
-                                send(createComputeTodos(pageId++, page));
-                                page = new Page();
+                        new TaskTemplate(parentTask, "processRow") {
+                            @Override
+                            protected void doRun() throws Exception {
+                                if (page[0].isFull()) {
+                                    send(createComputeTodos(pageId[0]++, page[0]));
+                                    page[0] = new Page();
+                                }
+                                page[0].addRow(extractRow(resultSet[0]));
+                                hasNext = resultSet[0].next();
                             }
-                            page.addRow(extractRow(resultSet));
-                            hasNext = resultSet.next();
-                        }
-                        finally {
-                            rowTask.close();
-                        }
+                        }.run();
                     }
                 }
                 finally {
-                    resultSet.close();
+                    resultSet[0].close();
                 }
 
-                if (page.getRowCount() > 0) {
-                    send(createComputeTodos(pageId, page).then().erase(currentTodo, currentLevel));
+                if (page[0].getRowCount() > 0) {
+                    send(createComputeTodos(pageId[0], page[0]).then().erase(currentTodo, currentLevel));
                 }
                 else {
                     send(erase(currentTodo, currentLevel));

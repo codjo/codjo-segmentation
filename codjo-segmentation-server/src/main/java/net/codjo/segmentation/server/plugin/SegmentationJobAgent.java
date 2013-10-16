@@ -129,8 +129,7 @@ class SegmentationJobAgent extends JobAgent {
                     break;
                 case DECLARE_JOB_DONE:
                     LOG.debug("DECLARE_JOB_DONE : Request traitée");
-                    SessionContext sessionContext = manager.getSessionContext(request.getId());
-                    sessionContext.getReport().close();
+                    closeReport(request);
                     isDone = true;
                     state = State.POST_TODO;
                     manager.remove(request.getId());
@@ -144,6 +143,21 @@ class SegmentationJobAgent extends JobAgent {
                         errorMessage = null;
                     }
                     break;
+            }
+        }
+
+
+        private void closeReport(JobRequest request) {
+            if ((manager != null) && (request != null)) {
+                SessionContext sessionContext = manager.getSessionContext(request.getId());
+                if ((sessionContext != null) && (sessionContext.getReport() != null)) {
+                    try {
+                        sessionContext.getReport().close();
+                    }
+                    catch (Exception e) {
+                        LOG.error("An error has happened while closing the report", e);
+                    }
+                }
             }
         }
 
