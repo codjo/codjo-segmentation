@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import net.codjo.segmentation.server.blackboard.JdbcBlackboardParticipantTest.Exceptions.RootCause;
 import net.codjo.segmentation.server.blackboard.message.Level;
 import net.codjo.segmentation.server.blackboard.message.Todo;
 import net.codjo.sql.server.JdbcServiceUtilMock;
@@ -114,24 +115,40 @@ public class JdbcBlackboardParticipantTest {
     @Theory
     public void testSameSQLExceptionReportedOnlyOnce_sameTimeWindow(Exceptions exceptions, long startTime)
           throws Exception {
-        testSameSQLExceptionReportedOnlyOnce(exceptions, true, startTime);
+        testSameSQLExceptionReportedOnlyOnce(exceptions, true, startTime, true);
     }
 
 
     @Theory
     public void testSameSQLExceptionReportedOnlyOnce_twoTimeWindows(ExceptionsInTwoTimeWindows exceptions,
                                                                     long startTime) throws Exception {
-        testSameSQLExceptionReportedOnlyOnce(exceptions, false, startTime);
+        testSameSQLExceptionReportedOnlyOnce(exceptions, false, startTime, true);
     }
 
 
-    private void testSameSQLExceptionReportedOnlyOnce(Exceptions exceptions, boolean sameTimePeriod, long startTime)
+    @Theory
+    public void testSameSQLExceptionReportedManyTimes_noErrorLogLimiter(Exceptions exceptions) throws Exception {
+        testSameSQLExceptionReportedOnlyOnce(exceptions, false, 0, false);
+    }
+
+
+    private void testSameSQLExceptionReportedOnlyOnce(Exceptions exceptions,
+                                                      boolean sameTimePeriod,
+                                                      long startTime,
+                                                      boolean enableLimiter)
           throws Exception {
-        MockTimeSource timeSource = new MockTimeSource();
-        final DefaultErrorLogLimiter limiter = new DefaultErrorLogLimiter(timeSource,
-                                                                          TIME_WINDOW_VALUE,
-                                                                          TIME_WINDOW_UNIT);
-        timeSource.inc(startTime);
+        final DefaultErrorLogLimiter limiter;
+        final MockTimeSource timeSource;
+        if (enableLimiter) {
+            timeSource = new MockTimeSource();
+            timeSource.inc(startTime);
+            limiter = new DefaultErrorLogLimiter(timeSource, TIME_WINDOW_VALUE, TIME_WINDOW_UNIT);
+        }
+        else {
+            timeSource = null;
+            limiter = null;
+        }
+
         for (SQLException exception : exceptions.exceptions()) {
             JdbcServiceUtilMock mock = new JdbcServiceUtilMock(log);
             mock.mockGetConnectionPoolFailure(exception);
@@ -158,25 +175,31 @@ public class JdbcBlackboardParticipantTest {
                 // it's expected
             }
 
-            if (!sameTimePeriod) {
+            if (!sameTimePeriod && (timeSource != null)) {
                 // advance mocked time to the next window
                 timeSource.inc(TIME_WINDOW_UNIT.toMillis(TIME_WINDOW_VALUE));
             }
         }
 
-        for (Iterator<SQLException> itEntry = exceptions.rootCauses(); itEntry.hasNext(); ) {
-            SQLException expectedResult = itEntry.next();
-            int expectedCount;
-            if (sameTimePeriod) {
-                expectedCount = 1;
+        for (Iterator<RootCause> itEntry = exceptions.rootCauses(); itEntry.hasNext(); ) {
+            RootCause expectedResult = itEntry.next();
+            SQLException expectedRootCause = expectedResult.rootCause;
+            final int expectedCount;
+            if (enableLimiter) {
+                if (sameTimePeriod) {
+                    expectedCount = 1;
+                }
+                else {
+                    // we assume here that there is only one common root cause
+                    // for all exceptions returned by exceptions()
+                    expectedCount = exceptions.exceptions().length;
+                }
             }
             else {
-                // we assume here that there is only one common root cause
-                // for all exceptions returned by exceptions()
-                expectedCount = exceptions.exceptions().length;
+                expectedCount = expectedResult.count;
             }
-            rule.getAppender().assertHasLog(LogEntryMatcher.exception(expectedResult.getClass(),
-                                                                      expectedResult.getMessage()),
+            rule.getAppender().assertHasLog(LogEntryMatcher.exception(expectedRootCause.getClass(),
+                                                                      expectedRootCause.getMessage()),
                                             count(expectedCount));
         }
     }
@@ -196,17 +219,33 @@ public class JdbcBlackboardParticipantTest {
         }
 
 
-        public Iterator<SQLException> rootCauses() {
-            Map<String, SQLException> rootCauses = new HashMap<String, SQLException>();
+        public Iterator<RootCause> rootCauses() {
+            Map<String, RootCause> rootCauses = new HashMap<String, RootCause>();
             for (Throwable t : exceptions) {
                 SQLException rootCause = (SQLException)getRootCause(t);
                 if (rootCause == null) {
                     rootCause = (SQLException)t;
                 }
                 String key = rootCause.getClass().getName() + '#' + rootCause.getMessage();
-                rootCauses.put(key, rootCause);
+                RootCause r = rootCauses.get(key);
+                if (r == null) {
+                    r = new RootCause(rootCause);
+                    rootCauses.put(key, r);
+                }
+                r.count++;
             }
             return rootCauses.values().iterator();
+        }
+
+
+        public static class RootCause {
+            private final SQLException rootCause;
+            private int count;
+
+
+            public RootCause(SQLException rootCause) {
+                this.rootCause = rootCause;
+            }
         }
 
 

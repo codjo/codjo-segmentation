@@ -78,4 +78,13 @@ final public class DefaultErrorLogLimiter implements ErrorLogLimiter {
         long time = timeSource.getTime();
         return (firstOccurrence.longValue() + timeWindow) <= time;
     }
+
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("DefaultErrorLogLimiter");
+        sb.append("{timeWindow=").append(timeWindow).append(" ms}");
+        return sb.toString();
+    }
 }

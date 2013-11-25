@@ -162,7 +162,7 @@ public class SegmentationServerPlugin extends AbstractServerPlugin {
     }
 
 
-    private static class SegmentationServerPluginConfigurationImpl
+    static class SegmentationServerPluginConfigurationImpl
           implements SegmentationServerPluginConfiguration {
         private URL configurationUrl = getClass().getResource("/META-INF/segmentation-configs.xml");
         private int maxAnalyzerAgents = 2;
@@ -171,8 +171,7 @@ public class SegmentationServerPlugin extends AbstractServerPlugin {
         private int maxCalculatorAgents = 12;
         private int maxSegmentationJobAgents = 1;
 
-        // default time window is 5 minutes
-        private long timeWindowValue = 5 * 60;
+        private long timeWindowValue = 0;
         private TimeUnit timeWindowUnit = TimeUnit.SECONDS;
 
 
@@ -250,6 +249,7 @@ public class SegmentationServerPlugin extends AbstractServerPlugin {
             sb.append(", maxPaginatorAgents=").append(maxPaginatorAgents);
             sb.append(", maxCalculatorAgents=").append(maxCalculatorAgents);
             sb.append(", maxSegmentationJobAgents=").append(maxSegmentationJobAgents);
+            sb.append(", timeWindow=").append(timeWindowValue).append(' ').append(timeWindowUnit);
             sb.append('}');
             return sb.toString();
         }

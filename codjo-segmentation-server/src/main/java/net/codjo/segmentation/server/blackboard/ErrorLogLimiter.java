@@ -12,6 +12,11 @@ public interface ErrorLogLimiter {
 
         public final void close() {
         }
+
+
+        public String toString() {
+            return "NONE";
+        }
     };
 
 
