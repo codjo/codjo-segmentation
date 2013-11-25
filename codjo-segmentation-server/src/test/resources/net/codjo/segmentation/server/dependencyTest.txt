@@ -11,6 +11,8 @@ net.codjo.segmentation.server.blackboard
 	-> net.codjo.segmentation.server.blackboard.message
 	-> net.codjo.sql.server
 	-> net.codjo.test.common
+	-> net.codjo.util.time
+	-> org.apache.commons.lang.exception
 
 net.codjo.segmentation.server.blackboard.message
 	-> net.codjo.agent

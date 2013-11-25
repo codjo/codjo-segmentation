@@ -2,6 +2,7 @@ package net.codjo.segmentation.server.plugin;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 import net.codjo.agent.Agent;
 import net.codjo.agent.AgentContainer;
 import net.codjo.agent.ContainerFailureException;
@@ -83,10 +84,12 @@ public class SegmentationServerPlugin extends AbstractServerPlugin {
                   .start();
         }
 
+        final long timeWindowValue = configuration.getTimeWindowValue();
+        final TimeUnit timeWindowUnit = configuration.getTimeWindowUnit();
         startParticipant(configuration.getMaxAnalyzerAgents(), "segmentation-analyzer",
                          new ParticipantBuilder() {
                              public SegmentationParticipant createParticipant() {
-                                 return new JobRequestAnalyzerParticipant(manager);
+                                 return new JobRequestAnalyzerParticipant(manager, timeWindowValue, timeWindowUnit);
                              }
                          });
         startParticipant(configuration.getMaxDeleteAgents(), "segmentation-delete",
@@ -168,6 +171,10 @@ public class SegmentationServerPlugin extends AbstractServerPlugin {
         private int maxCalculatorAgents = 12;
         private int maxSegmentationJobAgents = 1;
 
+        // default time window is 5 minutes
+        private long timeWindowValue = 5 * 60;
+        private TimeUnit timeWindowUnit = TimeUnit.SECONDS;
+
 
         public int getMaxAnalyzerAgents() {
             return maxAnalyzerAgents;
@@ -219,6 +226,16 @@ public class SegmentationServerPlugin extends AbstractServerPlugin {
         }
 
 
+        public void setTimeWindowValue(long timeWindowValue) {
+            this.timeWindowValue = timeWindowValue;
+        }
+
+
+        public void setTimeWindowUnit(TimeUnit timeWindowUnit) {
+            this.timeWindowUnit = timeWindowUnit;
+        }
+
+
         public void setConfigurationFileUrl(URL url) {
             configurationUrl = url;
         }
@@ -235,6 +252,16 @@ public class SegmentationServerPlugin extends AbstractServerPlugin {
             sb.append(", maxSegmentationJobAgents=").append(maxSegmentationJobAgents);
             sb.append('}');
             return sb.toString();
+        }
+
+
+        public long getTimeWindowValue() {
+            return timeWindowValue;
+        }
+
+
+        public TimeUnit getTimeWindowUnit() {
+            return timeWindowUnit;
         }
     }
 

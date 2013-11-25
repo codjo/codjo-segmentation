@@ -14,6 +14,9 @@ net.codjo.segmentation.server.blackboard
 	-> net.codjo.agent.protocol
 	-> net.codjo.segmentation.server.blackboard.message
 	-> net.codjo.sql.server
+	-> net.codjo.util.time
+	-> org.apache.commons.lang.exception
+	-> org.apache.commons.lang.mutable
 
 net.codjo.segmentation.server.blackboard.message
 	-> net.codjo.agent
@@ -73,6 +76,7 @@ net.codjo.segmentation.server.participant.common
 
 net.codjo.segmentation.server.participant.context
 	-> net.codjo.expression
+	-> net.codjo.segmentation.server.blackboard
 	-> net.codjo.segmentation.server.blackboard.message
 	-> net.codjo.segmentation.server.participant.common
 	-> net.codjo.segmentation.server.preference.family

@@ -1,11 +1,11 @@
 package net.codjo.segmentation.server.blackboard;
+import java.sql.Connection;
+import java.sql.SQLException;
 import net.codjo.agent.DFService;
 import net.codjo.segmentation.server.blackboard.message.Level;
 import net.codjo.segmentation.server.blackboard.message.Todo;
 import net.codjo.sql.server.ConnectionPool;
 import net.codjo.sql.server.JdbcServiceUtil;
-import java.sql.Connection;
-import java.sql.SQLException;
 /**
  *
  */
@@ -62,7 +62,9 @@ public abstract class JdbcBlackboardParticipant<T> extends BlackboardParticipant
             }
         }
         catch (SQLException e) {
-            logger.warn(getClass().getSimpleName() + " a rencontré une erreur d'accès BD", e);
+            if (getActualLogLimiter(todo).logError(e)) {
+                logger.warn(getClass().getSimpleName() + " a rencontré une erreur d'accès BD", e);
+            }
             send(informOfFailure(todo, fromLevel).dueTo("Erreur technique : " + e.getLocalizedMessage()));
         }
     }
@@ -70,4 +72,21 @@ public abstract class JdbcBlackboardParticipant<T> extends BlackboardParticipant
 
     protected abstract void handleTodo(Todo<T> todo, Level fromLevel, Connection connection)
           throws SQLException;
+
+
+    private final ErrorLogLimiter getActualLogLimiter(Todo<T> todo) {
+        ErrorLogLimiter errorLogLimiter = null;
+
+        try {
+            errorLogLimiter = getErrorLogLimiter(todo);
+        }
+        catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+        }
+
+        return (errorLogLimiter == null) ? ErrorLogLimiter.NONE : errorLogLimiter;
+    }
+
+
+    protected abstract ErrorLogLimiter getErrorLogLimiter(Todo<T> todo);
 }

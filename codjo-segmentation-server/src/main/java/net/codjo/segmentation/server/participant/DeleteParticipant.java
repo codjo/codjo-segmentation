@@ -26,7 +26,7 @@ import net.codjo.workflow.common.message.Arguments;
 import static net.codjo.segmentation.server.participant.SegmentationLevels.INFORMATION;
 import static net.codjo.segmentation.server.participant.SegmentationLevels.TO_DELETE;
 
-public class DeleteParticipant extends SegmentationParticipant<TodoContent> {
+public class DeleteParticipant extends BackOfficeSegmentationParticipant {
 
     public DeleteParticipant(ContextManager contextManager) {
         super(contextManager, TransactionType.AUTO_COMMIT, TO_DELETE);

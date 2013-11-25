@@ -5,6 +5,7 @@
  */
 package net.codjo.segmentation.server.participant;
 import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
 import net.codjo.expression.ExpressionManager;
 import net.codjo.expression.FunctionManager;
 import net.codjo.segmentation.server.blackboard.JdbcBlackboardParticipant;
@@ -29,7 +30,7 @@ public abstract class SegmentationParticipantTestCase<T extends JdbcBlackboardPa
     protected final TodoContent todoContent = new TodoContent("jobId", "family-id", 10, 100);
     protected ContextManagerMock contextManager = new ContextManagerMock();
     protected SegmentationContextMock segmentationContext;
-    protected SessionContext sessionContext = new SessionContext(null);
+    protected SessionContext sessionContext = new SessionContext(null, 0, TimeUnit.SECONDS);
     protected FamilyContextMock familyContext = new FamilyContextMock();
 
 

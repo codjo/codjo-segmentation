@@ -28,7 +28,7 @@ import net.codjo.workflow.common.message.Arguments;
 /**
  *
  */
-public class CalculatorParticipant extends SegmentationParticipant<TodoContent> {
+public class CalculatorParticipant extends BackOfficeSegmentationParticipant {
 
     public CalculatorParticipant(ContextManager contextManager) {
         super(contextManager, TransactionType.TRANSACTIONAL, SegmentationLevels.TO_COMPUTE);

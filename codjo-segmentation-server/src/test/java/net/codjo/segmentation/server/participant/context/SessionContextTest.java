@@ -1,11 +1,12 @@
 package net.codjo.segmentation.server.participant.context;
+import java.util.concurrent.TimeUnit;
 import junit.framework.TestCase;
 import net.codjo.segmentation.server.blackboard.message.Todo;
 /**
  *
  */
 public class SessionContextTest extends TestCase {
-    private final SessionContext sessionContext = new SessionContext(null);
+    private final SessionContext sessionContext = new SessionContext(null, 0, TimeUnit.SECONDS);
 
 
     public void test_getFamilyContext() throws Exception {
