@@ -47,7 +47,7 @@ import static net.codjo.segmentation.server.util.SegmentationUtil.determineFullC
 /**
  *
  */
-public class PaginatorParticipant extends SegmentationParticipant<TodoContent> {
+public class PaginatorParticipant extends BackOfficeSegmentationParticipant {
     public PaginatorParticipant(ContextManager contextManager) {
         super(contextManager, TransactionType.AUTO_COMMIT, SegmentationLevels.TO_PAGINATE);
     }

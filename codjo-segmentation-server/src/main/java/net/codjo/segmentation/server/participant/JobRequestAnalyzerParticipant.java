@@ -10,8 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 import net.codjo.segmentation.common.MidAuditKey;
 import net.codjo.segmentation.common.message.SegmentationJobRequest;
+import net.codjo.segmentation.server.blackboard.ErrorLogLimiter;
 import net.codjo.segmentation.server.blackboard.message.BlackboardAction;
 import net.codjo.segmentation.server.blackboard.message.Level;
 import net.codjo.segmentation.server.blackboard.message.Todo;
@@ -36,9 +38,15 @@ public class JobRequestAnalyzerParticipant extends SegmentationParticipant<JobRe
     private static final String SEGMENTATIONS = SegmentationJobRequest.SEGMENTATION_IDS;
     private static final String SEGMENTATION_ID = "segmentationId";
 
+    private final long timeWindowValue;
+    private final TimeUnit timeWindowUnit;
 
-    public JobRequestAnalyzerParticipant(ContextManager contextManager) {
+
+    public JobRequestAnalyzerParticipant(ContextManager contextManager, long timeWindowValue, TimeUnit timeWindowUnit) {
         super(contextManager, TransactionType.AUTO_COMMIT, SegmentationLevels.FIRST);
+
+        this.timeWindowValue = timeWindowValue;
+        this.timeWindowUnit = timeWindowUnit;
     }
 
 
@@ -49,7 +57,7 @@ public class JobRequestAnalyzerParticipant extends SegmentationParticipant<JobRe
             @Override
             protected void doRun() throws Exception {
                 logger.info("Analyse de la requete : " + todo.getContent());
-                SessionContext sessionContext = new SessionContext(report);
+                SessionContext sessionContext = new SessionContext(report, timeWindowValue, timeWindowUnit);
                 contextManager.put(todo.getContent().getId(), sessionContext);
 
                 final Arguments arguments = todo.getContent().getArguments();
@@ -216,5 +224,12 @@ public class JobRequestAnalyzerParticipant extends SegmentationParticipant<JobRe
             ids.append(',');
         }
         ids.append(familyId);
+    }
+
+
+    @Override
+    protected final ErrorLogLimiter getErrorLogLimiter(Todo<JobRequest> todo) {
+        SessionContext context = contextManager.getSessionContext(todo.getContent().getId());
+        return (context == null) ? ErrorLogLimiter.NONE : context.getErrorLogLimiter();
     }
 }

@@ -4,6 +4,8 @@
  * Common Apache License 2.0
  */
 package net.codjo.segmentation.server.participant;
+import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
 import net.codjo.database.common.api.JdbcFixture;
 import net.codjo.segmentation.server.blackboard.message.BlackboardActionStringifier;
 import net.codjo.segmentation.server.blackboard.message.InformOfFailure;
@@ -17,7 +19,6 @@ import net.codjo.segmentation.server.preference.family.XmlFamilyPreferenceMock;
 import net.codjo.test.common.AssertUtil;
 import net.codjo.workflow.common.message.Arguments;
 import net.codjo.workflow.common.message.JobRequest;
-import java.sql.SQLException;
 /**
  *
  */
@@ -143,7 +144,7 @@ public class JobRequestAnalyzerParticipantTest
 
     @Override
     protected JobRequestAnalyzerParticipant createParticipant() {
-        return new JobRequestAnalyzerParticipant(contextManager);
+        return new JobRequestAnalyzerParticipant(contextManager, 0, TimeUnit.SECONDS);
     }
 
 

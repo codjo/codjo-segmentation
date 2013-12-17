@@ -129,7 +129,7 @@ class SegmentationJobAgent extends JobAgent {
                     break;
                 case DECLARE_JOB_DONE:
                     LOG.debug("DECLARE_JOB_DONE : Request traitée");
-                    closeReport(request);
+                    finalizeJob(request);
                     isDone = true;
                     state = State.POST_TODO;
                     manager.remove(request.getId());
@@ -147,15 +147,28 @@ class SegmentationJobAgent extends JobAgent {
         }
 
 
-        private void closeReport(JobRequest request) {
+        private void finalizeJob(JobRequest request) {
             if ((manager != null) && (request != null)) {
                 SessionContext sessionContext = manager.getSessionContext(request.getId());
-                if ((sessionContext != null) && (sessionContext.getReport() != null)) {
-                    try {
-                        sessionContext.getReport().close();
+                if (sessionContext != null) {
+                    // close the report
+                    if (sessionContext.getReport() != null) {
+                        try {
+                            sessionContext.getReport().close();
+                        }
+                        catch (Exception e) {
+                            LOG.error("An error has happened while closing the report", e);
+                        }
                     }
-                    catch (Exception e) {
-                        LOG.error("An error has happened while closing the report", e);
+
+                    //
+                    if (sessionContext.getErrorLogLimiter() != null) {
+                        try {
+                            sessionContext.getErrorLogLimiter().close();
+                        }
+                        catch (Exception e) {
+                            LOG.error("An error has happened while closing the error log limiter", e);
+                        }
                     }
                 }
             }
